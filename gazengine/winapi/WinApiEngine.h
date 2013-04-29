@@ -15,7 +15,11 @@ class WinApiEngine : public Engine
 			
 		void advance();
 
+		void createWindow();
+
 		void destroy();
+
+		void addEntity(Entity* entity);
 
 		int getHeight() const;
 
@@ -25,7 +29,11 @@ class WinApiEngine : public Engine
 
 		HWND getWindow() const;
 
+		void grabFocus();
+
 		void init();
+
+		void removeEntity(const Entity& entity);
 
 		void setDialog(HWND dialog);
 

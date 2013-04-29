@@ -3,7 +3,9 @@
 using namespace std;
 
 GDIMesh::GDIMesh(std::vector<Vector2> vertices, COLORREF colour) :
-	colour(colour), vertices(vertices)
+	colour(colour),
+	vertices(vertices),
+	visible(true)
 {
 }
 
@@ -41,6 +43,11 @@ const vector<Vector2>& GDIMesh::getVertices() const
 	return vertices;
 }
 
+bool GDIMesh::isVisible() const
+{
+	return visible;
+}
+
 void GDIMesh::render(Renderer& renderer) const
 {
 	renderer.render(*this);
@@ -52,4 +59,9 @@ void GDIMesh::setNormalMap(Texture*)
 
 void GDIMesh::setTexture(Texture*)
 {
+}
+
+void GDIMesh::setVisible(bool visible)
+{
+	this->visible = visible;
 }

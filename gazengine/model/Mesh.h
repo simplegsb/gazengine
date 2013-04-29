@@ -5,6 +5,10 @@
 
 class Mesh : public Model
 {
+	public:
+		virtual ~Mesh()
+		{
+		}
 };
 
 #endif /* MESH_H_ */

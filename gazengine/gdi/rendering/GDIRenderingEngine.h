@@ -16,6 +16,8 @@ class GDIRenderingEngine : public RenderingEngine
 
 		virtual ~GDIRenderingEngine();
 
+		void addEntity(Entity* entity);
+
 		void addModel(Model* model);
 
 		void addRenderer(Renderer* renderer);
@@ -33,6 +35,8 @@ class GDIRenderingEngine : public RenderingEngine
 		int getWidth() const;
 
 		void init();
+
+		void removeEntity(const Entity& entity);
 
 		void removeModel(const Model& model);
 

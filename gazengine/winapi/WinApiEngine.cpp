@@ -1,6 +1,7 @@
 #include "../input/KeyboardButtonEvent.h"
 #include "../input/MouseButtonEvent.h"
 #include "../Events.h"
+#include "../GazEngine.h"
 #include "../Messages.h"
 #include "WinApiEngine.h"
 
@@ -12,7 +13,7 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 {
     if (message == WM_DESTROY)
     {
-        PostQuitMessage(0);
+		GazEngine::stop();
         return 0;
     }
 	else if (message == WM_LBUTTONUP)
@@ -23,7 +24,7 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
 		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
 
-		Messages::send(MOUSE_BUTTON_EVENT, &mouseButtonEvent);
+		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
 	}
 	else if (message == WM_KEYDOWN)
 	{
@@ -78,13 +79,17 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		{
 			keyboardButtonEvent.button = Keyboard::F12;
 		}
+		else if (wParam == VK_TAB)
+		{
+			keyboardButtonEvent.button = Keyboard::TAB;
+		}
 		else if (asciiKeyboardButtonMap.find(static_cast<unsigned char>(wParam)) != asciiKeyboardButtonMap.end())
 		{
 			keyboardButtonEvent.button = asciiKeyboardButtonMap[static_cast<unsigned char>(wParam)];
 			keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
 		}
 
-		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
+		Messages::send(Events::KEYBOARD_BUTTON, &keyboardButtonEvent);
 	}
 	else if (message == WM_KEYUP)
 	{
@@ -145,7 +150,7 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 			keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
 		}
 
-		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
+		Messages::send(Events::KEYBOARD_BUTTON, &keyboardButtonEvent);
 	}
 
     return DefWindowProc(window, message, wParam, lParam);
@@ -161,6 +166,10 @@ WinApiEngine::~WinApiEngine()
 {
 }
 
+void WinApiEngine::addEntity(Entity*)
+{
+}
+
 void WinApiEngine::advance()
 {
 	if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
@@ -172,6 +181,18 @@ void WinApiEngine::advance()
 			DispatchMessage(&message);
 		}
     }
+}
+
+void WinApiEngine::createWindow()
+{
+	registerWindowClass();
+
+	RECT adjustedRectangle = getAdjustedRectangle();
+	int adjustedWidth = adjustedRectangle.right - adjustedRectangle.left;
+	int adjustedHeight = adjustedRectangle.bottom - adjustedRectangle.top;
+
+	window = CreateWindowEx(NULL, L"WindowClass", title.data(), WS_OVERLAPPEDWINDOW, 0, 0, adjustedWidth,
+		adjustedHeight, NULL, NULL, instance, NULL);
 }
 
 void WinApiEngine::destroy()
@@ -211,18 +232,19 @@ HWND WinApiEngine::getWindow() const
 	return window;
 }
 
+void WinApiEngine::grabFocus()
+{
+	SetFocus(window);
+}
+
 void WinApiEngine::init()
 {
-	registerWindowClass();
-
-	RECT adjustedRectangle = getAdjustedRectangle();
-	int adjustedWidth = adjustedRectangle.right - adjustedRectangle.left;
-	int adjustedHeight = adjustedRectangle.bottom - adjustedRectangle.top;
-
-	window = CreateWindowEx(NULL, L"WindowClass", title.data(), WS_OVERLAPPEDWINDOW, 0, 0, adjustedWidth,
-		adjustedHeight, NULL, NULL, instance, NULL);
-
     ShowWindow(window, commandShow);
+
+	if (dialog != NULL)
+	{
+		ShowWindow(dialog, commandShow);
+	}
 }
 
 void WinApiEngine::registerWindowClass()
@@ -238,6 +260,10 @@ void WinApiEngine::registerWindowClass()
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
 
     RegisterClassEx(&windowClass);
+}
+
+void WinApiEngine::removeEntity(const Entity&)
+{
 }
 
 void WinApiEngine::setDialog(HWND dialog)

@@ -6,8 +6,25 @@
 namespace GazEngine
 {
 	void addEngine(Engine* engine);
+
+	void addEntity(Entity* entity);
+
+	float getDeltaTime();
+
+	unsigned short getMaxFrameRate();
+
+	float getTotalTime();
+
 	void pause();
+
 	void play();
+
+	void removeEngine(const Engine& engine);
+
+	void removeEntity(const Entity& entity);
+
+	void setMaxFrameRate(unsigned short maxFrameRate);
+
 	void stop();
 }
 

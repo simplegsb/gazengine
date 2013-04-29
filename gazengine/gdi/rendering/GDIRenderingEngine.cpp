@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "../model/GDIMesh.h"
+#include "GDIRenderer.h"
 #include "GDIRenderingEngine.h"
 
 using namespace std;
@@ -22,11 +23,6 @@ GDIRenderingEngine::GDIRenderingEngine(HWND window) :
 
 GDIRenderingEngine::~GDIRenderingEngine()
 {
-	for (unsigned int index = 0; index < models.size(); index++)
-	{
-		delete models.at(index);
-	}
-
 	if (quadTree != NULL)
 	{
 		delete quadTree;
@@ -38,6 +34,15 @@ GDIRenderingEngine::~GDIRenderingEngine()
 	}
 }
 
+void GDIRenderingEngine::addEntity(Entity* entity)
+{
+	vector<Model*> entityModels = entity->getComponents<Model>();
+	for (unsigned int index = 0; index < entityModels.size(); index++)
+	{
+		models.push_back(entityModels[index]);
+	}
+}
+
 void GDIRenderingEngine::addModel(Model* model)
 {
 	models.push_back(model);
@@ -46,6 +51,7 @@ void GDIRenderingEngine::addModel(Model* model)
 void GDIRenderingEngine::addRenderer(Renderer* renderer)
 {
 	renderers.push_back(renderer);
+	static_cast<GDIRenderer*>(renderer)->setBuffer(backBuffer);
 
 	if (quadTree != NULL)
 	{
@@ -63,7 +69,10 @@ void GDIRenderingEngine::advance()
 	{
 		for (unsigned int modelIndex = 0; modelIndex < models.size(); modelIndex++)
 		{
-			models[modelIndex]->render(*renderers[rendererIndex]);
+			if (models[modelIndex]->isVisible())
+			{
+				models[modelIndex]->render(*renderers[rendererIndex]);
+			}
 		}
 
 		if (quadTree != NULL)
@@ -114,6 +123,20 @@ void GDIRenderingEngine::init()
 	backBuffer = CreateCompatibleDC(frontBuffer);
 	backBitmap = CreateCompatibleBitmap(frontBuffer, windowRect.right, windowRect.bottom);
 	backBitmapOld = (HBITMAP) SelectObject(backBuffer, backBitmap);
+
+	for (unsigned int index = 0; index < renderers.size(); index++)
+	{
+		static_cast<GDIRenderer*>(renderers[index])->setBuffer(backBuffer);
+	}
+}
+
+void GDIRenderingEngine::removeEntity(const Entity& entity)
+{
+	vector<Model*> entityModels = entity.getComponents<Model>();
+	for (unsigned int index = 0; index < entityModels.size(); index++)
+	{
+		models.erase(remove(models.begin(), models.end(), entityModels[index]));
+	}
 }
 
 void GDIRenderingEngine::removeModel(const Model& model)
@@ -132,7 +155,10 @@ void GDIRenderingEngine::renderQuadTree(Renderer& renderer, const QuadTree& quad
 {
 	for (unsigned int index = 0; index < quadTree.getModels().size(); index++)
 	{
-		quadTree.getModels()[index]->render(renderer);
+		if (quadTree.getModels()[index]->isVisible())
+		{
+			quadTree.getModels()[index]->render(renderer);
+		}
 	}
 
 	for (unsigned int index = 0; index < quadTree.getChildren().size(); index++)

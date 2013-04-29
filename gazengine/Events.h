@@ -1,18 +1,23 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
-#include <string>
+namespace Events
+{
+	const unsigned short ADD_ENTITY = 0;
 
-const std::string ADD_ENTITY_EVENT = "Simplicity.entity.add";
+	const unsigned short KEYBOARD_BUTTON = 1;
 
-const std::string KEYBOARD_BUTTON_EVENT = "Simplicity.keyboard.button";
+	const unsigned short MOUSE_BUTTON = 2;
 
-const std::string MOUSE_BUTTON_EVENT = "Simplicity.mouse.button";
+	const unsigned short MOUSE_MOVE = 3;
 
-const std::string MOUSE_MOVE_EVENT = "Simplicity.mouse.move";
+	const unsigned short PICK = 4;
 
-const std::string PICK_EVENT = "Simplicity.pick";
+	const unsigned short QUIT = 5;
 
-const std::string REMOVE_ENTITY_EVENT = "Simplicity.entity.remove";
+	const unsigned short REMOVE_ENTITY = 6;
+
+	const unsigned short USER_ID_0 = 128;
+}
 
 #endif /* EVENT_H_ */

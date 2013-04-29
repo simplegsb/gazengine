@@ -1,11 +1,12 @@
+#include "../../model/Text.h"
 #include "../model/GDICircle.h"
 #include "../model/GDIMesh.h"
 #include "GDIRenderer.h"
 
 using namespace std;
 
-GDIRenderer::GDIRenderer(HDC buffer) :
-	buffer(buffer)
+GDIRenderer::GDIRenderer() :
+	buffer(NULL)
 {
 }
 
@@ -53,4 +54,21 @@ void GDIRenderer::render(const Mesh& model)
 	}
 
 	DeleteObject(pen);
+}
+
+void GDIRenderer::setBuffer(HDC buffer)
+{
+	this->buffer = buffer;
+}
+
+void GDIRenderer::render(const Text& model)
+{
+	RECT rectangle;
+	rectangle.bottom = 10000; // Unlimited height
+	rectangle.left = static_cast<LONG>(model.getPosition().x);
+	rectangle.right = 10000; // Unlimited width
+	rectangle.top = static_cast<LONG>(model.getPosition().y);
+	wstring wtext(model.getText().begin(), model.getText().end());
+
+	DrawText(buffer, wtext.c_str(), wtext.size(), &rectangle, DT_LEFT);
 }

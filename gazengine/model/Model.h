@@ -1,10 +1,11 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
+#include "../Component.h"
 #include "../rendering/Renderer.h"
 #include "../rendering/Texture.h"
 
-class Model
+class Model : public Component
 {
 	public:
 		enum PrimitiveType
@@ -24,11 +25,15 @@ class Model
 
 		virtual Texture* getTexture() const = 0;
 
+		virtual bool isVisible() const = 0;
+
 		virtual void render(Renderer& renderer) const = 0;
 
 		virtual void setNormalMap(Texture* texture) = 0;
 
 		virtual void setTexture(Texture* texture) = 0;
+
+		virtual void setVisible(bool visible) = 0;
 };
 
 #endif /* MODEL_H_ */

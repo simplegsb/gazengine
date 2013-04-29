@@ -27,16 +27,22 @@ class GDIMesh : public Mesh
 
 		const std::vector<Vector2>& getVertices() const;
 
+		bool isVisible() const;
+
 		void render(Renderer& renderer) const;
 
 		void setNormalMap(Texture* texture);
 
 		void setTexture(Texture* texture);
 
+		void setVisible(bool visible);
+
 	private:
 		COLORREF colour;
 
 		std::vector<Vector2> vertices;
+
+		bool visible;
 };
 
 #endif /* GDIMESH_H_ */

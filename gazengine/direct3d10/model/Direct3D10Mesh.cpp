@@ -7,7 +7,8 @@ Direct3D10Mesh::Direct3D10Mesh(const Direct3D10Mesh& original) :
 	mesh(NULL),
 	normalMap(NULL),
 	texture(NULL),
-	transformation()
+	transformation(),
+	visible(true)
 {
 	operator=(original);
 }
@@ -105,6 +106,11 @@ void Direct3D10Mesh::init(const vector<Vertex>& vertices, const vector<DWORD>& i
 	mesh->CommitToDevice();
 }
 
+bool Direct3D10Mesh::isVisible() const
+{
+	return visible;
+}
+
 Direct3D10Mesh& Direct3D10Mesh::operator=(const Direct3D10Mesh& original)
 {
 	D3D10_INPUT_ELEMENT_DESC vertexDescription[] =
@@ -143,4 +149,9 @@ void Direct3D10Mesh::setTexture(Texture* texture)
 void Direct3D10Mesh::setTransformation(const D3DXMATRIX& transformation)
 {
 	this->transformation = transformation;
+}
+
+void Direct3D10Mesh::setVisible(bool visible)
+{
+	this->visible = visible;
 }

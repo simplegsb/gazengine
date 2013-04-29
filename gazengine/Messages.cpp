@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <map>
 #include <vector>
 
@@ -7,33 +8,69 @@ using namespace std;
 
 namespace Messages
 {
-	map<const string, vector<Recipient*> > recipients;
+	map<unsigned short, vector<RecipientFunction*> > recipientFunctions;
+	map<unsigned short, vector<Recipient*> > recipients;
 
-	void registerRecipient(const string& subject, Recipient* recipient)
+	void deregisterRecipient(unsigned short subject, Recipient* recipient)
+	{
+		if (recipients.find(subject) != recipients.end())
+		{
+			recipients[subject].erase(
+				remove(recipients[subject].begin(), recipients[subject].end(), recipient));
+		}
+	}
+
+	void deregisterRecipient(unsigned short subject, RecipientFunction* recipient)
+	{
+		if (recipientFunctions.find(subject) != recipientFunctions.end())
+		{
+			recipientFunctions[subject].erase(
+				remove(recipientFunctions[subject].begin(), recipientFunctions[subject].end(), recipient));
+		}
+	}
+
+	void registerRecipient(unsigned short subject, Recipient* recipient)
 	{
 		if (recipients.find(subject) == recipients.end())
 		{
 			recipients.insert(
-				pair<const string, vector<Recipient*> >(subject, vector<Recipient*>()));
+				pair<unsigned short, vector<Recipient*> >(subject, vector<Recipient*>()));
 		}
-
+		
 		recipients.find(subject)->second.push_back(recipient);
 	}
 
-	void send(const string& subject, const void* message)
+	void registerRecipient(unsigned short subject, RecipientFunction* recipient)
 	{
-		if (recipients.find(subject) == recipients.end())
+		if (recipientFunctions.find(subject) == recipientFunctions.end())
 		{
-			return;
+			recipientFunctions.insert(
+				pair<unsigned short, vector<RecipientFunction*> >(subject, vector<RecipientFunction*>()));
 		}
 
-		vector<Recipient*>& registeredRecipients = recipients.find(subject)->second;
+		recipientFunctions.find(subject)->second.push_back(recipient);
+	}
 
-		// Does not use C++11 for loop as elements could be added to the vector while iterating.
-		// Take care - this is a fragile 'solution'.
-		for (unsigned int index = 0; index < registeredRecipients.size(); index++)
+	void send(unsigned short subject, const void* message)
+	{
+		if (recipients.find(subject) != recipients.end())
 		{
-			registeredRecipients.at(index)(message);
+			vector<Recipient*>& registeredRecipients = recipients.find(subject)->second;
+
+			for (unsigned int index = 0; index < registeredRecipients.size(); index++)
+			{
+				registeredRecipients[index]->receive(subject, message);
+			}
+		}
+
+		if (recipientFunctions.find(subject) != recipientFunctions.end())
+		{
+			vector<RecipientFunction*>& registeredRecipients = recipientFunctions.find(subject)->second;
+
+			for (unsigned int index = 0; index < registeredRecipients.size(); index++)
+			{
+				registeredRecipients[index](message);
+			}
 		}
 	}
 }

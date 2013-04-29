@@ -30,6 +30,8 @@ class Direct3D10Mesh : public Mesh
 
 		D3DXMATRIX getTransformation() const;
 
+		bool isVisible() const;
+
 		Direct3D10Mesh& operator=(const Direct3D10Mesh& original);
 
 		void render(Renderer& renderer) const;
@@ -39,6 +41,8 @@ class Direct3D10Mesh : public Mesh
 		void setTexture(Texture* texture);
 
 		void setTransformation(const D3DXMATRIX& transformation);
+
+		void setVisible(bool visible);
 
 	private:
 		ID3D10Device& device;
@@ -50,7 +54,9 @@ class Direct3D10Mesh : public Mesh
 		Texture* texture;
 
 		D3DXMATRIX transformation;
-		
+
+		bool visible;
+
 		void init(const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices);
 };
 
