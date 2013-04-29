@@ -79,7 +79,7 @@ map<unsigned char, Keyboard::Button> createAsciiKeyboardButtonMap()
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>('\b', Keyboard::BACKSPACE));
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>(':', Keyboard::COLON));
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>(',', Keyboard::COMMA));
-	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>(127, Keyboard::DELETE));
+	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>(127, Keyboard::DEL));
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>(27, Keyboard::ESCAPE));
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>('=', Keyboard::EQUALS));
 	asciiButtonMap.insert(pair<unsigned char, Keyboard::Button>('`', Keyboard::GRAVE));

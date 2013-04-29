@@ -105,6 +105,27 @@ Vector2& Vector2::operator*=(const Vector2& other)
 	return *this;
 }
 
+Vector2 Vector2::operator/(float scalar) const
+{
+	Vector2 copy(*this);
+	copy /= scalar;
+
+	return copy;
+}
+
+Vector2& Vector2::operator/=(float scalar)
+{
+	x /= scalar;
+	y /= scalar;
+
+	return *this;
+}
+
+float Vector2::proximity(const Vector2& other) const
+{
+	return (other - *this).length();
+}
+
 void Vector2::rotate(float angle)
 {
 	float tempX = x * cos(angle) - y * sin(angle);

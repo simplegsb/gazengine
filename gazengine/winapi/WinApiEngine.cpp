@@ -1,11 +1,14 @@
 #include "stdafx.h"
 
+#include "../input/KeyboardButtonEvent.h"
 #include "../input/MouseButtonEvent.h"
 #include "../Events.h"
 #include "../Messages.h"
 #include "WinApiEngine.h"
 
 using namespace std;
+
+map<unsigned char, Keyboard::Button> asciiKeyboardButtonMap = createAsciiKeyboardButtonMap();
 
 LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -23,6 +26,24 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
 
 		Messages::send(MOUSE_BUTTON_EVENT, &mouseButtonEvent);
+	}
+	else if (message == WM_KEYDOWN)
+	{
+		KeyboardButtonEvent keyboardButtonEvent;
+		keyboardButtonEvent.button = asciiKeyboardButtonMap[static_cast<unsigned char>(wParam)];
+		keyboardButtonEvent.buttonState = Button::DOWN;
+		keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
+
+		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
+	}
+	else if (message == WM_KEYUP)
+	{
+		KeyboardButtonEvent keyboardButtonEvent;
+		keyboardButtonEvent.button = asciiKeyboardButtonMap[static_cast<unsigned char>(wParam)];
+		keyboardButtonEvent.buttonState = Button::UP;
+		keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
+
+		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
 	}
 
     return DefWindowProc(window, message, wParam, lParam);

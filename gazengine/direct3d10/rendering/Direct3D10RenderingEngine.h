@@ -6,6 +6,7 @@
 #include <d3d10.h>
 #pragma comment (lib, "d3d10.lib")
 
+#include "../../graph/SimpleTree.h"
 #include "../../rendering/RenderingEngine.h"
 #include "../scene/Direct3D10Camera.h"
 #include "../scene/Direct3D10Light.h"
@@ -33,6 +34,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		int getHeight() const;
 
+		const SimpleTree* getTree() const;
+
 		int getWidth() const;
 
 		void init();
@@ -44,6 +47,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		void setClearingColour(const D3DXCOLOR& clearingColour);
 
 		void setHeight(int height);
+
+		void setTree(SimpleTree* tree);
 
 		void setWidth(int width);
 
@@ -64,6 +69,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		IDXGISwapChain* swapChain;
 
+		SimpleTree* tree;
+
 		int width;
 
 		HWND window;
@@ -73,6 +80,10 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		DXGI_SWAP_CHAIN_DESC createSwapChainDescription();
 
 		void initViewport();
+
+		void renderModel(Model& model, const D3DXMATRIX& transformation);
+
+		void renderTree(SimpleTree& tree, const D3DXMATRIX& parentTransformation);
 };
 
 #endif /* DIRECT3D10RENDERINGENGINE_H_ */

@@ -7,7 +7,7 @@
 struct KeyboardButtonEvent
 {
 	KeyboardButtonEvent() :
-		button(Keyboard::Button::UNKNOWN_BUTTON), buttonState(Button::State::UNKNOWN_STATE), character(0)
+		button(Keyboard::UNKNOWN_BUTTON), buttonState(Button::UNKNOWN_STATE), character(0)
 	{
 	}
 

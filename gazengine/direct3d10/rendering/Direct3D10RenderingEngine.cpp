@@ -16,6 +16,7 @@ Direct3D10RenderingEngine::Direct3D10RenderingEngine(HWND window) :
 	models(),
 	renderTargetView(NULL),
 	swapChain(NULL),
+	tree(NULL),
 	width(800),
 	window(window)
 {
@@ -37,6 +38,11 @@ Direct3D10RenderingEngine::~Direct3D10RenderingEngine()
 	{
 		delete models.at(index);
 	}
+
+	if (tree != NULL)
+	{
+		delete tree;
+	}
 }
 
 void Direct3D10RenderingEngine::addLight(Direct3D10Light* light)
@@ -53,24 +59,11 @@ void Direct3D10RenderingEngine::advance()
 {
     device->ClearRenderTargetView(renderTargetView, clearingColour);
 
-	for (unsigned int modelIndex = 0; modelIndex < models.size(); modelIndex++)
+	if (tree != NULL)
 	{
-		Direct3D10Mesh* mesh = dynamic_cast<Direct3D10Mesh*>(models.at(modelIndex));
-		if (mesh != NULL)
-		{
-			Direct3D10Shader* shader = mesh->getShader();
-			shader->setVar("cameraTranslation", camera->getTranslation());
-			shader->setVar("finalTransformation", camera->getFinalTransformation());
-
-			shader->apply();
-
-			for (unsigned int index = 0; index < lights.size(); index++)
-			{
-				lights.at(index)->apply(*shader);
-			}
-		}
-
-		models.at(modelIndex)->draw();
+		D3DXMATRIX origin;
+		D3DXMatrixIdentity(&origin);
+		renderTree(*tree, origin);
 	}
 
     swapChain->Present(0, 0);
@@ -144,6 +137,11 @@ int Direct3D10RenderingEngine::getHeight() const
 	return height;
 }
 
+const SimpleTree* Direct3D10RenderingEngine::getTree() const
+{
+	return tree;
+}
+
 int Direct3D10RenderingEngine::getWidth() const
 {
 	return width;
@@ -180,6 +178,43 @@ void Direct3D10RenderingEngine::removeModel(const Model& model)
 	delete &model;
 }
 
+void Direct3D10RenderingEngine::renderModel(Model& model, const D3DXMATRIX& transformation)
+{
+	const Direct3D10Mesh* mesh = dynamic_cast<const Direct3D10Mesh*>(&model);
+	if (mesh != NULL)
+	{
+		Direct3D10Shader* shader = mesh->getShader();
+
+		shader->setVar("cameraTransformation", camera->getFinalTransformation());
+		shader->setVar("cameraTranslation", camera->getTranslation());
+		shader->setVar("worldTransformation", transformation);
+
+		for (unsigned int index = 0; index < lights.size(); index++)
+		{
+			lights.at(index)->apply(*mesh->getShader());
+		}
+
+		shader->apply();
+	}
+
+	model.draw();
+}
+
+void Direct3D10RenderingEngine::renderTree(SimpleTree& tree, const D3DXMATRIX& parentTransformation)
+{
+	D3DXMATRIX worldTransformation = parentTransformation * tree.getTransformation();
+
+	if (tree.getModel() != NULL)
+	{
+		renderModel(*tree.getModel(), worldTransformation);
+	}
+
+	for (unsigned int index = 0; index < tree.getChildren().size(); index++)
+	{
+		renderTree(*tree.getChildren().at(index), worldTransformation);
+	}
+}
+
 void Direct3D10RenderingEngine::setCamera(Direct3D10Camera* camera)
 {
 	this->camera = camera;
@@ -193,6 +228,11 @@ void Direct3D10RenderingEngine::setClearingColour(const D3DXCOLOR& clearingColou
 void Direct3D10RenderingEngine::setHeight(int height)
 {
 	this->height = height;
+}
+
+void Direct3D10RenderingEngine::setTree(SimpleTree* tree)
+{
+	this->tree = tree;
 }
 
 void Direct3D10RenderingEngine::setWidth(int width)

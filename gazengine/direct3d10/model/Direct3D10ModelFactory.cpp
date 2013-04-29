@@ -237,7 +237,7 @@ namespace Direct3D10ModelFactory
      * 
      * @return The Model created from the data in the OBJ format.
      */
-	Model* loadObjModel(ID3D10Device& device, string fileName)
+	Model* loadObjModel(ID3D10Device& device, const string& fileName, const D3DXCOLOR& color)
 	{
 		ifstream inputFileStream(fileName.c_str());
 		if (inputFileStream.fail())
@@ -305,7 +305,7 @@ namespace Direct3D10ModelFactory
 				vector<string> splitVertex = splitString(inputFaceStream, MAX_WORD_LENGTH, '/');
 				
 				Vertex vertex;
-				vertex.color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				vertex.color = color;
 
 				if (!normals.empty())
 				{
