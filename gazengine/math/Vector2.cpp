@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include <cmath>
 
 #include "Vector2.h"

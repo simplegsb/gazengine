@@ -16,6 +16,8 @@ class Direct3D10Text : public Model
 		
 		void draw();
 		
+		PrimitiveType getPrimitiveType() const;
+		
 		const std::wstring getText() const;
 		
 		void setText(const std::wstring text);

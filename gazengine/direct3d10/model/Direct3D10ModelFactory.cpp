@@ -1,343 +1,186 @@
-#include "stdafx.h"
+#include <fstream>
+#include <sstream>
+#include <string>
 
-#include "../../math/Math.h"
 #include "Direct3D10Mesh.h"
 #include "Direct3D10ModelFactory.h"
-#include "Line3D.h"
 
 using namespace std;
 
 namespace Direct3D10ModelFactory
 {
-	Model* create2DTerrainFromSegments(ID3D10Device& device, float floor, const vector<Line3D>& segments,
-		const D3DXCOLOR& color);
-	Model* create3DTerrainFromPoints(ID3D10Device& device, unsigned int segmentCount,
-		const vector<D3DXVECTOR3>& points, const D3DXCOLOR& color);
-	D3DXVECTOR3 createNormal(unsigned int segmentXIndex, unsigned int segmentYIndex, unsigned int segmentCount,
-		const vector<D3DXVECTOR3>& points);
-	float interpolateCosine(float a, float b, float x);
-	float interpolateLinear(float a, float b, float x);
-	float interpolateNoise(float x);
-	float interpolateNoise(float x, float y);
-	float noise(int x);
-	float noise(int x, int y);
-	float perlinNoise(float x, unsigned int octaves, float persistence);
-	float perlinNoise(float x, float y, unsigned int octaves, float persistence);
-	float smoothNoise(int x);
-	float smoothNoise(int x, int y);
+	const unsigned int MAX_SPLIT_LENGTH = 256;
 
-	Model* create2DPerlinTerrain(ID3D10Device& device, float width, unsigned int segmentCount, unsigned int octaves,
-		float persistence, const D3DXCOLOR& color)
-	{
-		float segmentWidth = width / segmentCount;
-		vector<Line3D> segments;
-		float x = width / 2.0f * -1.0f;
-
-		for (unsigned int segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++)
-		{
-			Line3D segment;
-
-			if (segmentIndex == 0)
-			{
-				segment.a = D3DXVECTOR3(x, perlinNoise(x, octaves, persistence), 0.0f);
-			}
-			else
-			{
-				segment.a = segments.back().b;
-			}
-
-			x += segmentWidth;
-
-			segment.b = D3DXVECTOR3(x, perlinNoise(x, octaves, persistence), 0.0f);
-
-			segments.push_back(segment);
-		}
-
-		return create2DTerrainFromSegments(device, width / 2.0f * -1.0f, segments, color);
-	}
-
-	Model* create2DTerrainFromSegments(ID3D10Device& device, float floor, const vector<Line3D>& segments,
-		const D3DXCOLOR& color)
-	{
-		vector<Vertex> vertices;
-		vertices.reserve(segments.size() * 4);
-		for (unsigned int segmentIndex = 0; segmentIndex < segments.size(); segmentIndex++)
-		{
-			Vertex vertexA;
-			vertexA.color = color;
-			vertexA.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexA.pos = segments.at(segmentIndex).a;
-			vertices.push_back(vertexA);
-
-			Vertex vertexAFloor;
-			vertexAFloor.color = color;
-			vertexAFloor.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexAFloor.pos = segments.at(segmentIndex).a;
-			vertexAFloor.pos.y = floor;
-			vertices.push_back(vertexAFloor);
-
-			Vertex vertexB;
-			vertexB.color = color;
-			vertexB.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexB.pos = segments.at(segmentIndex).b;
-			vertices.push_back(vertexB);
-
-			Vertex vertexBFloor;
-			vertexBFloor.color = color;
-			vertexBFloor.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexBFloor.pos = segments.at(segmentIndex).b;
-			vertexBFloor.pos.y = floor;
-			vertices.push_back(vertexBFloor);
-		}
-
-		vector<DWORD> indices;
-		indices.reserve(segments.size() * 6);
-		for (unsigned int segmentIndex = 0; segmentIndex < segments.size(); segmentIndex++)
-		{
-			indices.push_back(segmentIndex * 4 + 0);
-			indices.push_back(segmentIndex * 4 + 3);
-			indices.push_back(segmentIndex * 4 + 1);
-			indices.push_back(segmentIndex * 4 + 2);
-			indices.push_back(segmentIndex * 4 + 3);
-			indices.push_back(segmentIndex * 4 + 0);
-		}
-
-		return new Direct3D10Mesh(device, indices, vertices);
-	}
-
-	Model* create3DPerlinTerrain(ID3D10Device& device, float width, float depth, float heightScalar,
-		unsigned int segmentCount, unsigned int octaves, float persistence, const D3DXCOLOR& color)
-	{
-		float segmentWidth = width / segmentCount;
-		float segmentDepth = depth / segmentCount;
-		vector<D3DXVECTOR3> points;
-
-		float x = width / 2.0f * -1.0f;
-		for (unsigned int segmentXIndex = 0; segmentXIndex < segmentCount; segmentXIndex++)
-		{
-			float z = depth / 2.0f * -1.0f;
-			for (unsigned int segmentZIndex = 0; segmentZIndex < segmentCount; segmentZIndex++)
-			{
-				points.push_back(D3DXVECTOR3(x, perlinNoise(x, z, octaves, persistence) * heightScalar, z));
-				z += segmentDepth;
-			}
-			x += segmentWidth;
-		}
-
-		return create3DTerrainFromPoints(device, segmentCount, points, color);
-	}
-
-	Model* create3DTerrainFromPoints(ID3D10Device& device, unsigned int segmentCount,
-		const vector<D3DXVECTOR3>& points, const D3DXCOLOR& color)
-	{
-		vector<Vertex> vertices;
-		vertices.reserve((segmentCount - 1) * (segmentCount - 1) * 4);
-		DWORD index = 0;
-		vector<DWORD> indices;
-		indices.reserve((segmentCount - 1) * (segmentCount - 1) * 6);
-
-		for (unsigned int segmentXIndex = 0; segmentXIndex < segmentCount - 1; segmentXIndex++)
-		{
-			for (unsigned int segmentZIndex = 0; segmentZIndex < segmentCount - 1; segmentZIndex++)
-			{
-				Vertex v0;
-				v0.color = color;
-				v0.normal = createNormal(segmentXIndex, segmentZIndex, segmentCount, points);
-				v0.pos = points.at(segmentCount * segmentXIndex + segmentZIndex);
-				vertices.push_back(v0);
-				
-				Vertex v1;
-				v1.color = color;
-				v1.normal = createNormal(segmentXIndex, segmentZIndex + 1, segmentCount, points);
-				v1.pos = points.at(segmentCount * segmentXIndex + segmentZIndex + 1);
-				vertices.push_back(v1);
-				
-				Vertex v2;
-				v2.color = color;
-				v2.normal = createNormal(segmentXIndex + 1, segmentZIndex, segmentCount, points);
-				v2.pos = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex);
-				vertices.push_back(v2);
-				
-				Vertex v3;
-				v3.color = color;
-				v3.normal = createNormal(segmentXIndex + 1, segmentZIndex + 1, segmentCount, points);
-				v3.pos = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex + 1);
-				vertices.push_back(v3);
-
-				indices.push_back(index);
-				indices.push_back(index + 1);
-				indices.push_back(index + 2);
-				indices.push_back(index + 1);
-				indices.push_back(index + 3);
-				indices.push_back(index + 2);
-
-				index += 4;
-			}
-		}
-
-		return new Direct3D10Mesh(device, indices, vertices);
-	}
+	vector<string> splitString(char* rawSplit, istream& source, char delimiter, unsigned int estimatedSplitCount);
 	
-	Model* createCube(ID3D10Device& device, float size, const D3DXCOLOR& color)
+	void colorizeVertices(vector<Vertex>& vertices, const D3DXCOLOR& color)
+	{
+		for (unsigned int index = 0; index < vertices.size(); index++)
+		{
+			vertices[index].color = color;
+		}
+	}
+
+	Direct3D10Mesh* createCube(ID3D10Device& device, float size, const D3DXCOLOR& color)
 	{
 		// Vertices
 		vector<Vertex> vertices(24);
 		D3DXVECTOR3 toFirst;
 		D3DXVECTOR3 toSecond;
 
-		vertices[0].pos = D3DXVECTOR3(-size, size, size);
+		vertices[0].position = D3DXVECTOR3(-size, size, size);
 		vertices[0].color = color;
-		vertices[1].pos = D3DXVECTOR3(size, size, size);
+		vertices[1].position = D3DXVECTOR3(size, size, size);
 		vertices[1].color = color;
-		vertices[2].pos = D3DXVECTOR3(size, -size, size);
+		vertices[2].position = D3DXVECTOR3(size, -size, size);
 		vertices[2].color = color;
-		vertices[3].pos = D3DXVECTOR3(-size, -size, size);
+		vertices[3].position = D3DXVECTOR3(-size, -size, size);
 		vertices[3].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[2].pos - vertices[0].pos);
-		toSecond = D3DXVECTOR3(vertices[1].pos - vertices[0].pos);
+		toFirst = D3DXVECTOR3(vertices[2].position - vertices[0].position);
+		toSecond = D3DXVECTOR3(vertices[1].position - vertices[0].position);
 		D3DXVec3Cross(&vertices[0].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[0].normal, &vertices[0].normal);
-		toFirst = D3DXVECTOR3(vertices[3].pos - vertices[1].pos);
-		toSecond = D3DXVECTOR3(vertices[2].pos - vertices[1].pos);
+		toFirst = D3DXVECTOR3(vertices[3].position - vertices[1].position);
+		toSecond = D3DXVECTOR3(vertices[2].position - vertices[1].position);
 		D3DXVec3Cross(&vertices[1].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[1].normal, &vertices[1].normal);
-		toFirst = D3DXVECTOR3(vertices[1].pos - vertices[2].pos);
-		toSecond = D3DXVECTOR3(vertices[3].pos - vertices[2].pos);
+		toFirst = D3DXVECTOR3(vertices[1].position - vertices[2].position);
+		toSecond = D3DXVECTOR3(vertices[3].position - vertices[2].position);
 		D3DXVec3Cross(&vertices[2].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[2].normal, &vertices[2].normal);
-		toFirst = D3DXVECTOR3(vertices[2].pos - vertices[3].pos);
-		toSecond = D3DXVECTOR3(vertices[0].pos - vertices[3].pos);
+		toFirst = D3DXVECTOR3(vertices[2].position - vertices[3].position);
+		toSecond = D3DXVECTOR3(vertices[0].position - vertices[3].position);
 		D3DXVec3Cross(&vertices[3].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[3].normal, &vertices[3].normal);
 		
-		vertices[4].pos = D3DXVECTOR3(-size, -size, -size);
+		vertices[4].position = D3DXVECTOR3(-size, -size, -size);
 		vertices[4].color = color;
-		vertices[5].pos = D3DXVECTOR3(size, -size, -size);
+		vertices[5].position = D3DXVECTOR3(size, -size, -size);
 		vertices[5].color = color;
-		vertices[6].pos = D3DXVECTOR3(size, size, -size);
+		vertices[6].position = D3DXVECTOR3(size, size, -size);
 		vertices[6].color = color;
-		vertices[7].pos = D3DXVECTOR3(-size, size, -size);
+		vertices[7].position = D3DXVECTOR3(-size, size, -size);
 		vertices[7].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[7].pos - vertices[4].pos);
-		toSecond = D3DXVECTOR3(vertices[5].pos - vertices[4].pos);
+		toFirst = D3DXVECTOR3(vertices[7].position - vertices[4].position);
+		toSecond = D3DXVECTOR3(vertices[5].position - vertices[4].position);
 		D3DXVec3Cross(&vertices[4].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[4].normal, &vertices[4].normal);
-		toFirst = D3DXVECTOR3(vertices[4].pos - vertices[5].pos);
-		toSecond = D3DXVECTOR3(vertices[6].pos - vertices[5].pos);
+		toFirst = D3DXVECTOR3(vertices[4].position - vertices[5].position);
+		toSecond = D3DXVECTOR3(vertices[6].position - vertices[5].position);
 		D3DXVec3Cross(&vertices[5].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[5].normal, &vertices[5].normal);
-		toFirst = D3DXVECTOR3(vertices[5].pos - vertices[6].pos);
-		toSecond = D3DXVECTOR3(vertices[7].pos - vertices[6].pos);
+		toFirst = D3DXVECTOR3(vertices[5].position - vertices[6].position);
+		toSecond = D3DXVECTOR3(vertices[7].position - vertices[6].position);
 		D3DXVec3Cross(&vertices[6].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[6].normal, &vertices[6].normal);
-		toFirst = D3DXVECTOR3(vertices[6].pos - vertices[7].pos);
-		toSecond = D3DXVECTOR3(vertices[4].pos - vertices[7].pos);
+		toFirst = D3DXVECTOR3(vertices[6].position - vertices[7].position);
+		toSecond = D3DXVECTOR3(vertices[4].position - vertices[7].position);
 		D3DXVec3Cross(&vertices[7].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[7].normal, &vertices[7].normal);
 
-		vertices[8].pos = D3DXVECTOR3(-size, size, -size);
+		vertices[8].position = D3DXVECTOR3(-size, size, -size);
 		vertices[8].color = color;
-		vertices[9].pos = D3DXVECTOR3(size, size, -size);
+		vertices[9].position = D3DXVECTOR3(size, size, -size);
 		vertices[9].color = color;
-		vertices[10].pos = D3DXVECTOR3(size, size, size);
+		vertices[10].position = D3DXVECTOR3(size, size, size);
 		vertices[10].color = color;
-		vertices[11].pos = D3DXVECTOR3(-size, size, size);
+		vertices[11].position = D3DXVECTOR3(-size, size, size);
 		vertices[11].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[11].pos - vertices[8].pos);
-		toSecond = D3DXVECTOR3(vertices[9].pos - vertices[8].pos);
+		toFirst = D3DXVECTOR3(vertices[11].position - vertices[8].position);
+		toSecond = D3DXVECTOR3(vertices[9].position - vertices[8].position);
 		D3DXVec3Cross(&vertices[8].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[8].normal, &vertices[8].normal);
-		toFirst = D3DXVECTOR3(vertices[8].pos - vertices[9].pos);
-		toSecond = D3DXVECTOR3(vertices[10].pos - vertices[9].pos);
+		toFirst = D3DXVECTOR3(vertices[8].position - vertices[9].position);
+		toSecond = D3DXVECTOR3(vertices[10].position - vertices[9].position);
 		D3DXVec3Cross(&vertices[9].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[9].normal, &vertices[9].normal);
-		toFirst = D3DXVECTOR3(vertices[9].pos - vertices[10].pos);
-		toSecond = D3DXVECTOR3(vertices[11].pos - vertices[10].pos);
+		toFirst = D3DXVECTOR3(vertices[9].position - vertices[10].position);
+		toSecond = D3DXVECTOR3(vertices[11].position - vertices[10].position);
 		D3DXVec3Cross(&vertices[10].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[10].normal, &vertices[10].normal);
-		toFirst = D3DXVECTOR3(vertices[10].pos - vertices[11].pos);
-		toSecond = D3DXVECTOR3(vertices[8].pos - vertices[11].pos);
+		toFirst = D3DXVECTOR3(vertices[10].position - vertices[11].position);
+		toSecond = D3DXVECTOR3(vertices[8].position - vertices[11].position);
 		D3DXVec3Cross(&vertices[11].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[11].normal, &vertices[11].normal);
 
-		vertices[12].pos = D3DXVECTOR3(-size, size, -size);
+		vertices[12].position = D3DXVECTOR3(-size, size, -size);
 		vertices[12].color = color;
-		vertices[13].pos = D3DXVECTOR3(-size, size, size);
+		vertices[13].position = D3DXVECTOR3(-size, size, size);
 		vertices[13].color = color;
-		vertices[14].pos = D3DXVECTOR3(-size, -size, size);
+		vertices[14].position = D3DXVECTOR3(-size, -size, size);
 		vertices[14].color = color;
-		vertices[15].pos = D3DXVECTOR3(-size, -size, -size);
+		vertices[15].position = D3DXVECTOR3(-size, -size, -size);
 		vertices[15].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[15].pos - vertices[12].pos);
-		toSecond = D3DXVECTOR3(vertices[13].pos - vertices[12].pos);
+		toFirst = D3DXVECTOR3(vertices[15].position - vertices[12].position);
+		toSecond = D3DXVECTOR3(vertices[13].position - vertices[12].position);
 		D3DXVec3Cross(&vertices[12].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[12].normal, &vertices[12].normal);
-		toFirst = D3DXVECTOR3(vertices[12].pos - vertices[13].pos);
-		toSecond = D3DXVECTOR3(vertices[14].pos - vertices[13].pos);
+		toFirst = D3DXVECTOR3(vertices[12].position - vertices[13].position);
+		toSecond = D3DXVECTOR3(vertices[14].position - vertices[13].position);
 		D3DXVec3Cross(&vertices[13].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[13].normal, &vertices[13].normal);
-		toFirst = D3DXVECTOR3(vertices[13].pos - vertices[14].pos);
-		toSecond = D3DXVECTOR3(vertices[15].pos - vertices[14].pos);
+		toFirst = D3DXVECTOR3(vertices[13].position - vertices[14].position);
+		toSecond = D3DXVECTOR3(vertices[15].position - vertices[14].position);
 		D3DXVec3Cross(&vertices[14].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[14].normal, &vertices[14].normal);
-		toFirst = D3DXVECTOR3(vertices[14].pos - vertices[15].pos);
-		toSecond = D3DXVECTOR3(vertices[12].pos - vertices[15].pos);
+		toFirst = D3DXVECTOR3(vertices[14].position - vertices[15].position);
+		toSecond = D3DXVECTOR3(vertices[12].position - vertices[15].position);
 		D3DXVec3Cross(&vertices[15].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[15].normal, &vertices[15].normal);
 
-		vertices[16].pos = D3DXVECTOR3(size, size, size);
+		vertices[16].position = D3DXVECTOR3(size, size, size);
 		vertices[16].color = color;
-		vertices[17].pos = D3DXVECTOR3(size, size, -size);
+		vertices[17].position = D3DXVECTOR3(size, size, -size);
 		vertices[17].color = color;
-		vertices[18].pos = D3DXVECTOR3(size, -size, -size);
+		vertices[18].position = D3DXVECTOR3(size, -size, -size);
 		vertices[18].color = color;
-		vertices[19].pos = D3DXVECTOR3(size, -size, size);
+		vertices[19].position = D3DXVECTOR3(size, -size, size);
 		vertices[19].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[19].pos - vertices[16].pos);
-		toSecond = D3DXVECTOR3(vertices[17].pos - vertices[16].pos);
+		toFirst = D3DXVECTOR3(vertices[19].position - vertices[16].position);
+		toSecond = D3DXVECTOR3(vertices[17].position - vertices[16].position);
 		D3DXVec3Cross(&vertices[16].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[16].normal, &vertices[16].normal);
-		toFirst = D3DXVECTOR3(vertices[16].pos - vertices[17].pos);
-		toSecond = D3DXVECTOR3(vertices[18].pos - vertices[17].pos);
+		toFirst = D3DXVECTOR3(vertices[16].position - vertices[17].position);
+		toSecond = D3DXVECTOR3(vertices[18].position - vertices[17].position);
 		D3DXVec3Cross(&vertices[17].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[17].normal, &vertices[17].normal);
-		toFirst = D3DXVECTOR3(vertices[17].pos - vertices[18].pos);
-		toSecond = D3DXVECTOR3(vertices[19].pos - vertices[18].pos);
+		toFirst = D3DXVECTOR3(vertices[17].position - vertices[18].position);
+		toSecond = D3DXVECTOR3(vertices[19].position - vertices[18].position);
 		D3DXVec3Cross(&vertices[18].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[18].normal, &vertices[18].normal);
-		toFirst = D3DXVECTOR3(vertices[18].pos - vertices[19].pos);
-		toSecond = D3DXVECTOR3(vertices[16].pos - vertices[19].pos);
+		toFirst = D3DXVECTOR3(vertices[18].position - vertices[19].position);
+		toSecond = D3DXVECTOR3(vertices[16].position - vertices[19].position);
 		D3DXVec3Cross(&vertices[19].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[19].normal, &vertices[19].normal);
 
-		vertices[20].pos = D3DXVECTOR3(-size, -size, size);
+		vertices[20].position = D3DXVECTOR3(-size, -size, size);
 		vertices[20].color = color;
-		vertices[21].pos = D3DXVECTOR3(size, -size, size);
+		vertices[21].position = D3DXVECTOR3(size, -size, size);
 		vertices[21].color = color;
-		vertices[22].pos = D3DXVECTOR3(size, -size, -size);
+		vertices[22].position = D3DXVECTOR3(size, -size, -size);
 		vertices[22].color = color;
-		vertices[23].pos = D3DXVECTOR3(-size, -size, -size);
+		vertices[23].position = D3DXVECTOR3(-size, -size, -size);
 		vertices[23].color = color;
 
-		toFirst = D3DXVECTOR3(vertices[23].pos - vertices[20].pos);
-		toSecond = D3DXVECTOR3(vertices[21].pos - vertices[20].pos);
+		toFirst = D3DXVECTOR3(vertices[23].position - vertices[20].position);
+		toSecond = D3DXVECTOR3(vertices[21].position - vertices[20].position);
 		D3DXVec3Cross(&vertices[20].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[20].normal, &vertices[20].normal);
-		toFirst = D3DXVECTOR3(vertices[20].pos - vertices[21].pos);
-		toSecond = D3DXVECTOR3(vertices[22].pos - vertices[21].pos);
+		toFirst = D3DXVECTOR3(vertices[20].position - vertices[21].position);
+		toSecond = D3DXVECTOR3(vertices[22].position - vertices[21].position);
 		D3DXVec3Cross(&vertices[21].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[21].normal, &vertices[21].normal);
-		toFirst = D3DXVECTOR3(vertices[21].pos - vertices[22].pos);
-		toSecond = D3DXVECTOR3(vertices[23].pos - vertices[22].pos);
+		toFirst = D3DXVECTOR3(vertices[21].position - vertices[22].position);
+		toSecond = D3DXVECTOR3(vertices[23].position - vertices[22].position);
 		D3DXVec3Cross(&vertices[22].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[22].normal, &vertices[22].normal);
-		toFirst = D3DXVECTOR3(vertices[22].pos - vertices[23].pos);
-		toSecond = D3DXVECTOR3(vertices[20].pos - vertices[23].pos);
+		toFirst = D3DXVECTOR3(vertices[22].position - vertices[23].position);
+		toSecond = D3DXVECTOR3(vertices[20].position - vertices[23].position);
 		D3DXVec3Cross(&vertices[23].normal, &toFirst, &toSecond);
 		D3DXVec3Normalize(&vertices[23].normal, &vertices[23].normal);
 		
@@ -379,216 +222,161 @@ namespace Direct3D10ModelFactory
 		indices[28] = 19;
 		indices[29] = 18;
 
-		indices[30] = 18;
-		indices[31] = 17;
-		indices[32] = 16;
-		indices[33] = 16;
-		indices[34] = 19;
-		indices[35] = 18;
+		indices[30] = 22;
+		indices[31] = 21;
+		indices[32] = 20;
+		indices[33] = 20;
+		indices[34] = 23;
+		indices[35] = 22;
 
-		return new Direct3D10Mesh(device, indices, vertices);
+		return new Direct3D10Mesh(device, vertices, indices);
 	}
 
-	Model* createMidPointDisplacementTerrain(ID3D10Device& device, float width, unsigned int iterations,
-		const D3DXCOLOR& color)
+	Direct3D10Mesh* loadObj(ID3D10Device& device, const string& fileName, const D3DXCOLOR& color)
 	{
-		vector<Line3D> segments;
+		return loadObj(device, fileName, color, 1.0f);
+	}
 
-		Line3D initialSegment;
-		initialSegment.a = D3DXVECTOR3(width / 2.0f * -1.0f, 0.0f, 0.0f);
-		initialSegment.b = D3DXVECTOR3(width / 2.0f, 0.0f, 0.0f);
-		segments.push_back(initialSegment);
+	Direct3D10Mesh* loadObj(ID3D10Device& device, const std::string& fileName, const D3DXCOLOR& color, float scale)
+	{
+		vector<Vertex> vertices;
 
-		for (unsigned int iteration = 0; iteration < iterations; iteration++)
+		loadObj(fileName, color, scale, vertices, 0, 0, 0, 0);
+
+		return new Direct3D10Mesh(device, vertices);
+	}
+
+	void loadObj(const string& fileName, const D3DXCOLOR& color, float scale, vector<Vertex>& vertices,
+		unsigned int normalCount, unsigned int positionCount, unsigned int texCoordCount, unsigned int vertexCount)
+	{
+		vertices.reserve(vertexCount);
+
+		ifstream inputFileStream(fileName.c_str());
+		if (inputFileStream.fail())
 		{
-			vector<Line3D> subdividedSegments;
-			float randomRange = width / (2.0f * pow((float) iterations, 1.75f));
+			throw exception();
+		}
 
-			for (unsigned int segmentIndex = 0; segmentIndex < segments.size(); segmentIndex++)
+		char* rawSplit = new char[MAX_SPLIT_LENGTH];
+
+        vector<string> lines = splitString(rawSplit, inputFileStream, '\n',
+			normalCount + positionCount + texCoordCount + vertexCount / 3 + 50);
+
+        vector<vector<string> > faces;
+		faces.reserve(vertexCount / 3);
+        vector<D3DXVECTOR3> normals;
+		normals.reserve(normalCount);
+        vector<D3DXVECTOR3> positions;
+		positions.reserve(positionCount);
+        vector<D3DXVECTOR2> texCoords;
+		texCoords.reserve(texCoordCount);
+
+        for (unsigned int lineIndex = 0; lineIndex < lines.size(); lineIndex++)
+        {
+			if (lines[lineIndex].empty())
 			{
-				D3DXVECTOR3 difference = segments.at(segmentIndex).b - segments.at(segmentIndex).a;
-				D3DXVECTOR3 halfDifference = difference / 2.0f;
-				D3DXVECTOR3 midpoint = segments.at(segmentIndex).a + halfDifference;
-
-				midpoint.y += Math::getRandomFloat(-randomRange, randomRange);
-
-				Line3D segment1;
-				segment1.a = segments.at(segmentIndex).a;
-				segment1.b = midpoint;
-				subdividedSegments.push_back(segment1);
-
-				Line3D segment2;
-				segment2.a = midpoint;
-				segment2.b = segments.at(segmentIndex).b;
-				subdividedSegments.push_back(segment2);
+				continue;
 			}
 
-			segments = subdividedSegments;
-		}
+			istringstream inputLineStream(lines[lineIndex]);
+			vector<string> splitLine = splitString(rawSplit, inputLineStream, ' ', 4);
 
-		return create2DTerrainFromSegments(device, width / 2.0f * -1.0f, segments, color);
-	}
+            if (splitLine[0] == "v")
+            {
+				D3DXVECTOR3 position(
+					(float) atof(splitLine[1].c_str()) * scale,
+					(float) atof(splitLine[2].c_str()) * scale,
+					(float) atof(splitLine[3].c_str()) * scale);
+                positions.push_back(position);
+            }
+            else if (splitLine[0] == "vn")
+            {
+                D3DXVECTOR3 normal(
+					(float) atof(splitLine[1].c_str()),
+					(float) atof(splitLine[2].c_str()),
+					(float) atof(splitLine[3].c_str()));
+                normals.push_back(normal);
+            }
+            else if (splitLine[0] == "vt")
+            {
+                D3DXVECTOR2 texCoord(
+					(float) atof(splitLine[1].c_str()),
+					1.0f - (float) atof(splitLine[2].c_str()));
+                texCoords.push_back(texCoord);
+            }
+            else if (splitLine[0] == "f")
+            {
+                faces.push_back(splitLine);
+            }
+        }
 
-	D3DXVECTOR3 createNormal(unsigned int segmentXIndex, unsigned int segmentYIndex, unsigned int segmentCount,
-		const vector<D3DXVECTOR3>& points)
-	{
-		D3DXVECTOR3 normal(0.0f, 0.0f, 0.0f);
-		D3DXVECTOR3 normalTemp;
+        // Read the faces from the file and populate the arrays.
+        for (unsigned int faceIndex = 0; faceIndex < faces.size(); faceIndex++)
+        {
+			vector<string> face = faces[faceIndex];
 
-		if (segmentXIndex < segmentCount - 1 && segmentYIndex < segmentCount - 1)
-		{
-			D3DXVECTOR3 v0tov1 = points.at(segmentCount * segmentXIndex + segmentYIndex + 1) -
-				points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVECTOR3 v0tov2 = points.at(segmentCount * (segmentXIndex + 1) + segmentYIndex) -
-				points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVec3Cross(&normalTemp, &v0tov1, &v0tov2);
+            for (unsigned int vertexIndex = 1; vertexIndex < face.size() - 1; vertexIndex++)
+            {
+				istringstream inputFaceStream(face[vertexIndex]);
+				vector<string> splitVertex = splitString(rawSplit, inputFaceStream, '/', 3);
 
-			normal += normalTemp;
-		}
+				Vertex vertex;
+				vertex.color = color;
 
-		if (segmentXIndex > 0 && segmentYIndex < segmentCount - 1)
-		{
-			D3DXVECTOR3 v0tov1 = points.at(segmentCount * (segmentXIndex - 1) + segmentYIndex) -
-			points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVECTOR3 v0tov2 = points.at(segmentCount * segmentXIndex + segmentYIndex + 1) -
-				points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVec3Cross(&normalTemp, &v0tov1, &v0tov2);
+				if (!normals.empty())
+				{
+					vertex.normal = normals[atoi(splitVertex[2].c_str()) - 1];
+				}
 
-			normal += normalTemp;
-		}
+                vertex.position = positions[atoi(splitVertex[0].c_str()) - 1];
 
-		if (segmentXIndex < segmentCount - 1 && segmentYIndex > 0)
-		{
-			D3DXVECTOR3 v0tov1 = points.at(segmentCount * (segmentXIndex + 1) + segmentYIndex) -
-			points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVECTOR3 v0tov2 = points.at(segmentCount * segmentXIndex + segmentYIndex - 1) -
-				points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVec3Cross(&normalTemp, &v0tov1, &v0tov2);
+				if (!texCoords.empty())
+				{
+					vertex.texCoord = texCoords[atoi(splitVertex[1].c_str()) - 1];
+				}
 
-			normal += normalTemp;
-		}
+				vertices.push_back(vertex);
+            }
 
-		if (segmentXIndex > 0 && segmentYIndex > 0)
-		{
-			D3DXVECTOR3 v0tov1 = points.at(segmentCount * (segmentXIndex - 1) + segmentYIndex) -
-			points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVECTOR3 v0tov2 = points.at(segmentCount * segmentXIndex + segmentYIndex - 1) -
-				points.at(segmentCount * segmentXIndex + segmentYIndex);
-			D3DXVec3Cross(&normalTemp, &v0tov1, &v0tov2);
+			// Create face normals if none were provided.
+			if (normals.empty())
+			{
+				unsigned int vertexCount = vertices.size();
 
-			normal += normalTemp;
-		}
+				D3DXVECTOR3 edge0 = vertices[vertexCount - 1].position - vertices[vertexCount - 2].position;
+				D3DXVECTOR3 edge1 = vertices[vertexCount - 1].position - vertices[vertexCount - 3].position;
+				D3DXVECTOR3 faceNormal;
+				D3DXVec3Cross(&faceNormal, &edge0, &edge1);
+				D3DXVec3Normalize(&faceNormal, &faceNormal);
 
-		D3DXVec3Normalize(&normal, &normal);
-		return normal;
-	}
+				vertices[vertexCount - 1].normal = faceNormal;
+				vertices[vertexCount - 2].normal = faceNormal;
+				vertices[vertexCount - 3].normal = faceNormal;
+			}
+        }
 
-	float interpolateCosine(float a, float b, float x)
-	{
-		float ft = x * 3.1415927f;
-		float f = (1 - cos(ft)) * 0.5f;
-		return a * (1 - f) + b * f;
-	}
-
-	float interpolateNoise(float x)
-	{
-		int intX = int(x);
-		float remainderX = x - intX;
-
-		//float v1 = noise(intX);
-		//float v2 = noise(intX + 1);
-		float v1 = smoothNoise(intX);
-		float v2 = smoothNoise(intX + 1);
-
-		//return interpolateLinear(v1, v2, remainderX);
-		return interpolateCosine(v1, v2, remainderX);
-	}
-
-	float interpolateNoise(float x, float y)
-	{
-		int intX = int(x);
-		float remainderX = x - intX;
-
-		int intY = int(y);
-		float remainderY = y - intY;
-
-		//float v1 = noise(intX, intY);
-		//float v2 = noise(intX + 1, intY);
-		//float v3 = noise(intX, intY + 1);
-		//float v4 = noise(intX + 1, intY + 1);
-		float v1 = smoothNoise(intX, intY);
-		float v2 = smoothNoise(intX + 1, intY);
-		float v3 = smoothNoise(intX, intY + 1);
-		float v4 = smoothNoise(intX + 1, intY + 1);
-
-		//float i1 = interpolateLinear(v1, v2, remainderX);
-		//float i2 = interpolateLinear(v3, v4, remainderX);
-		float i1 = interpolateCosine(v1, v2, remainderX);
-		float i2 = interpolateCosine(v3, v4, remainderX);
-
-		//return interpolateLinear(i1, i2, remainderY);
-		return interpolateCosine(i1, i2, remainderY);
-	}
-
-	float interpolateLinear(float a, float b, float x)
-	{
-		return a * (1 - x) + b * x;
-	}
-
-	float noise(int x)
-	{
-		x = (x<<13) ^ x;
-		return 1.0f - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0f;
+		delete rawSplit;
 	}
 	
-	float noise(int x, int y)
+	void scaleVertices(vector<Vertex>& vertices, float scale)
 	{
-		int n = x + y * 57;
-		n = (n<<13) ^ n;
-		return 1.0f - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0f;
-	}
-	
-	float perlinNoise(float x, unsigned int octaves, float persistence)
-	{
-		float y = 0;
-
-		for(unsigned int octave = 0; octave < octaves - 1; octave++)
+		for (unsigned int index = 0; index < vertices.size(); index++)
 		{
-			float frequency = pow(2.0f, (int) octave);
-			float amplitude = pow(persistence, (int) octave);
+			vertices[index].position *= scale;
+		}
+	}
 
-			y += interpolateNoise(x * frequency) * amplitude;
+	vector<string> splitString(char* rawSplit, istream& source, char delimiter, unsigned int estimatedSplitCount)
+	{
+		vector<string> splits;
+		splits.reserve(estimatedSplitCount);
+
+		while (!source.eof())
+		{
+			source.getline(rawSplit, MAX_SPLIT_LENGTH, delimiter);
+			splits.push_back(rawSplit);
 		}
 
-		return y;
-	}
-	
-	float perlinNoise(float x, float y, unsigned int octaves, float persistence)
-	{
-		float z = 0;
-
-		for(unsigned int octave = 0; octave < octaves - 1; octave++)
-		{
-			float frequency = pow(2.0f, (int) octave);
-			float amplitude = pow(persistence, (int) octave);
-
-			z += interpolateNoise(x * frequency, y * frequency) * amplitude;
-		}
-
-		return z;
-	}
-	
-	float smoothNoise(int x)
-	{
-		return noise(x) / 2  +  noise(x - 1) / 4  +  noise(x + 1) / 4;
-	}
-	
-	float smoothNoise(int x, int y)
-	{
-		float corners = (noise(x - 1, y - 1) + noise(x + 1, y - 1) + noise(x - 1, y + 1) + noise(x + 1, y + 1)) / 16;
-		float sides = (noise(x - 1, y) + noise(x+1, y) + noise(x, y - 1) + noise(x, y + 1)) / 8;
-		float center = noise(x, y) / 4;
-
-		return corners + sides + center;
+		return splits;
 	}
 }

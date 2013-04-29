@@ -1,15 +1,18 @@
 #ifndef DIRECT3D10RENDERINGENGINE_H_
 #define DIRECT3D10RENDERINGENGINE_H_
 
+#include <map>
 #include <vector>
 
 #include <d3d10.h>
 #pragma comment (lib, "d3d10.lib")
 
+#include "../../graph/SimpleTree.h"
+#include "../../rendering/Renderer.h"
 #include "../../rendering/RenderingEngine.h"
 #include "../scene/Direct3D10Camera.h"
 #include "../scene/Direct3D10Light.h"
-#include "Direct3D10Shader.h"
+#include "Direct3D10Renderer.h"
 
 class Direct3D10RenderingEngine : public RenderingEngine
 {
@@ -22,6 +25,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		void addModel(Model* model);
 
+		void addRenderer(Renderer* renderer);
+
 		void advance();
 
 		void destroy();
@@ -30,11 +35,13 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		const D3DXCOLOR& getClearingColour() const;
 
+		ID3D10DepthStencilView* getDepthStencilView() const;
+
 		ID3D10Device* getDevice() const;
 
 		int getHeight() const;
 
-		Direct3D10Shader* getShader() const;
+		const SimpleTree* getTree() const;
 
 		int getWidth() const;
 
@@ -42,13 +49,17 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		void removeModel(const Model& model);
 
+		void removeRenderer(const Renderer& renderer);
+
 		void setCamera(Direct3D10Camera* camera);
 
 		void setClearingColour(const D3DXCOLOR& clearingColour);
 
 		void setHeight(int height);
 
-		void setShader(Direct3D10Shader* shader);
+		void setRendererRoot(const Renderer& renderer, const Tree& node);
+
+		void setTree(SimpleTree* tree);
 
 		void setWidth(int width);
 
@@ -56,6 +67,10 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		Direct3D10Camera* camera;
 
 		D3DXCOLOR clearingColour;
+
+		ID3D10Texture2D* depthStencilBuffer;
+
+		ID3D10DepthStencilView* depthStencilView;
 
 		ID3D10Device* device;
 
@@ -65,21 +80,31 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		std::vector<Model*> models;
 
+		std::map<const Renderer*, const Tree*> rendererRoots;
+
+		std::vector<Renderer*> renderers;
+
 		ID3D10RenderTargetView* renderTargetView;
 
-		Direct3D10Shader* shader;
-
 		IDXGISwapChain* swapChain;
+
+		SimpleTree* tree;
 
 		int width;
 
 		HWND window;
+
+		void createDepthStencilView();
 
 		void createRenderTargetView();
 
 		DXGI_SWAP_CHAIN_DESC createSwapChainDescription();
 
 		void initViewport();
+
+		void renderModel(Direct3D10Renderer& renderer, const Model& model, const D3DXMATRIX& transformation);
+
+		void renderTree(Direct3D10Renderer& renderer, const SimpleTree& tree, const D3DXMATRIX& parentTransformation);
 };
 
 #endif /* DIRECT3D10RENDERINGENGINE_H_ */

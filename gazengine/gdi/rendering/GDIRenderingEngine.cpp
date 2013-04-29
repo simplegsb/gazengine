@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include <algorithm>
 
 #include "../model/GDIMesh.h"
@@ -8,8 +6,17 @@
 using namespace std;
 
 GDIRenderingEngine::GDIRenderingEngine(HWND window) :
-	backBitmap(NULL), backBitmapOld(NULL), backBuffer(NULL), frontBuffer(NULL), height(600), models(), quadTree(NULL),
-	width(800), window(window)
+	backBitmap(NULL),
+	backBitmapOld(NULL),
+	backBuffer(NULL),
+	frontBuffer(NULL),
+	height(600),
+	models(),
+	quadTree(NULL),
+	rendererRoots(),
+	renderers(),
+	width(800),
+	window(window)
 {
 }
 
@@ -24,11 +31,26 @@ GDIRenderingEngine::~GDIRenderingEngine()
 	{
 		delete quadTree;
 	}
+
+	for (unsigned int index = 0; index < renderers.size(); index++)
+	{
+		delete renderers.at(index);
+	}
 }
 
 void GDIRenderingEngine::addModel(Model* model)
 {
 	models.push_back(model);
+}
+
+void GDIRenderingEngine::addRenderer(Renderer* renderer)
+{
+	renderers.push_back(renderer);
+
+	if (quadTree != NULL)
+	{
+		rendererRoots[renderer] = quadTree;
+	}
 }
 
 void GDIRenderingEngine::advance()
@@ -37,14 +59,18 @@ void GDIRenderingEngine::advance()
 	GetClientRect(window, &windowRect);
 	BitBlt(backBuffer, 0, 0, windowRect.right, windowRect.bottom, NULL, 0, 0, WHITENESS);
 
-	for (unsigned int index = 0; index < models.size(); index++)
+	for (unsigned int rendererIndex = 0; rendererIndex < renderers.size(); rendererIndex++)
 	{
-		models.at(index)->draw();
-	}
+		for (unsigned int modelIndex = 0; modelIndex < models.size(); modelIndex++)
+		{
+			models[modelIndex]->render(*renderers[rendererIndex]);
+		}
 
-	if (quadTree != NULL)
-	{
-		drawQuadTree(*quadTree);
+		if (quadTree != NULL)
+		{
+			const QuadTree& quadTree = static_cast<const QuadTree&>(*rendererRoots[renderers[rendererIndex]]);
+			renderQuadTree(*renderers[rendererIndex], quadTree);
+		}
 	}
 
 	BitBlt(frontBuffer, 0, 0, windowRect.right, windowRect.bottom, backBuffer, 0, 0, SRCCOPY);
@@ -57,19 +83,6 @@ void GDIRenderingEngine::destroy()
 	DeleteObject(backBitmap);
 	ReleaseDC(window, backBuffer);
 	ReleaseDC(window, frontBuffer);
-}
-
-void GDIRenderingEngine::drawQuadTree(const QuadTree& quadTree) const
-{
-	for (unsigned int index = 0; index < quadTree.getModels().size(); index++)
-	{
-		quadTree.getModels().at(index)->draw();
-	}
-
-	for (unsigned int index = 0; index < quadTree.getChildren().size(); index++)
-	{
-		drawQuadTree(*quadTree.getChildren().at(index));
-	}
 }
 
 HDC GDIRenderingEngine::getBuffer() const
@@ -108,6 +121,19 @@ void GDIRenderingEngine::removeModel(const Model& model)
 	models.erase(remove(models.begin(), models.end(), &model));
 }
 
+void GDIRenderingEngine::renderQuadTree(Renderer& renderer, const QuadTree& quadTree) const
+{
+	for (unsigned int index = 0; index < quadTree.getModels().size(); index++)
+	{
+		quadTree.getModels()[index]->render(renderer);
+	}
+
+	for (unsigned int index = 0; index < quadTree.getChildren().size(); index++)
+	{
+		renderQuadTree(renderer, *quadTree.getChildren()[index]);
+	}
+}
+
 void GDIRenderingEngine::setHeight(int height)
 {
 	this->height = height;
@@ -116,6 +142,11 @@ void GDIRenderingEngine::setHeight(int height)
 void GDIRenderingEngine::setQuadTree(QuadTree* quadTree)
 {
 	this->quadTree = quadTree;
+}
+
+void GDIRenderingEngine::setRendererRoot(const Renderer& renderer, const Tree& node)
+{
+	rendererRoots[&renderer] = &node;
 }
 
 void GDIRenderingEngine::setWidth(int width)

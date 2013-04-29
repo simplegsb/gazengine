@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Direct3D10Text.h"
 
 using namespace std;
@@ -39,6 +37,11 @@ void Direct3D10Text::draw()
 	device.OMSetDepthStencilState(0, 0);
 	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	device.OMSetBlendState(0, blendFactors, 0xffffffff);
+}
+
+Model::PrimitiveType Direct3D10Text::getPrimitiveType() const
+{
+	return Model::NA;
 }
 		
 const wstring Direct3D10Text::getText() const

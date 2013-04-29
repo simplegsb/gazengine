@@ -1,62 +1,146 @@
-#include "stdafx.h"
-
 #include "Direct3D10Mesh.h"
 
 using namespace std;
 
-Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<DWORD>& indices, const vector<Vertex>& vertices) :
-	device(device), indexBuffer(NULL), indexCount(indices.size()), vertexBuffer(NULL)
+Direct3D10Mesh::Direct3D10Mesh(const Direct3D10Mesh& original) :
+	device(original.device),
+	mesh(NULL),
+	normalMap(NULL),
+	texture(NULL),
+	transformation()
 {
-	D3D10_BUFFER_DESC vertexBufferDescription;
-    vertexBufferDescription.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-    vertexBufferDescription.ByteWidth = sizeof(Vertex) * vertices.size();
-    vertexBufferDescription.CPUAccessFlags = 0;
-    vertexBufferDescription.MiscFlags = 0;
-    vertexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
+	operator=(original);
+}
 
-	D3D10_SUBRESOURCE_DATA vertexData;
-    vertexData.pSysMem = &vertices[0];
+Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices) :
+	device(device),
+	mesh(NULL),
+	normalMap(NULL),
+	texture(NULL),
+	transformation()
+{
+	vector<DWORD> indices;
+	indices.reserve(vertices.size());
+	for (unsigned int index = 0; index < vertices.size(); index++)
+	{
+		indices.push_back(index);
+	}
 
-    device.CreateBuffer(&vertexBufferDescription, &vertexData, &vertexBuffer);
+	init(vertices, indices);
+}
 
-	D3D10_BUFFER_DESC indexBufferDescription;
-    indexBufferDescription.BindFlags = D3D10_BIND_INDEX_BUFFER;
-    indexBufferDescription.ByteWidth = sizeof(DWORD) * indexCount;
-    indexBufferDescription.CPUAccessFlags = 0;
-    indexBufferDescription.MiscFlags = 0;
-    indexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
-
-    D3D10_SUBRESOURCE_DATA indexData;
-    indexData.pSysMem = &indices[0];
-
-    device.CreateBuffer(&indexBufferDescription, &indexData, &indexBuffer);
+Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<Vertex>& vertices, const vector<DWORD>& indices) :
+	device(device),
+	mesh(NULL),
+	normalMap(NULL),
+	texture(NULL),
+	transformation()
+{
+	init(vertices, indices);
 }
 
 Direct3D10Mesh::~Direct3D10Mesh()
 {
-	if (indexBuffer != NULL)
+	if (mesh != NULL)
 	{
-		indexBuffer->Release();
+		mesh->Release();
 	}
 
-	if (vertexBuffer != NULL)
+	if (normalMap != NULL)
 	{
-		vertexBuffer->Release();
+		delete normalMap;
+	}
+
+	if (texture != NULL)
+	{
+		delete texture;
 	}
 }
 
-void Direct3D10Mesh::draw()
+ID3DX10Mesh* Direct3D10Mesh::getMesh() const
 {
-	UINT offset = 0;
-	UINT stride = sizeof(Vertex);
+	return mesh;
+}
 
-	device.IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	device.IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	device.IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    device.DrawIndexed(indexCount, 0, 0);
+Texture* Direct3D10Mesh::getNormalMap() const
+{
+	return normalMap;
 }
 
 Model::PrimitiveType Direct3D10Mesh::getPrimitiveType() const
 {
 	return Model::TRIANGLE_LIST;
+}
+
+Texture* Direct3D10Mesh::getTexture() const
+{
+	return texture;
+}
+
+D3DXMATRIX Direct3D10Mesh::getTransformation() const
+{
+	return transformation;
+}
+
+void Direct3D10Mesh::init(const vector<Vertex>& vertices, const vector<DWORD>& indices)
+{
+	D3D10_INPUT_ELEMENT_DESC vertexDescription[] =
+	{
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D10_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	D3DX10CreateMesh(&device, vertexDescription, 4, "POSITION", vertices.size(), vertices.size() / 3,
+		D3DX10_MESH_32_BIT, &mesh);
+
+	mesh->SetVertexData(0, &vertices[0]);
+	mesh->SetIndexData(&indices[0], indices.size());
+
+	//mesh->GenerateAdjacencyAndPointReps(0.0001f);
+	//mesh->Optimize(D3DX10_MESHOPT_ATTR_SORT | D3DX10_MESHOPT_VERTEX_CACHE, NULL, NULL);
+	//mesh->GenerateGSAdjacency();
+
+	mesh->CommitToDevice();
+}
+
+Direct3D10Mesh& Direct3D10Mesh::operator=(const Direct3D10Mesh& original)
+{
+	D3D10_INPUT_ELEMENT_DESC vertexDescription[] =
+	{
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D10_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	if (mesh != NULL)
+	{
+		mesh->Release();
+	}
+
+	original.mesh->CloneMesh(original.mesh->GetFlags(), "POSITION", vertexDescription, 4, &mesh);
+
+	return *this;
+}
+
+void Direct3D10Mesh::render(Renderer& renderer) const
+{
+	renderer.render(*this);
+}
+
+void Direct3D10Mesh::setNormalMap(Texture* normalMap)
+{
+	this->normalMap = normalMap;
+}
+
+void Direct3D10Mesh::setTexture(Texture* texture)
+{
+	this->texture = texture;
+}
+
+void Direct3D10Mesh::setTransformation(const D3DXMATRIX& transformation)
+{
+	this->transformation = transformation;
 }

@@ -1,11 +1,12 @@
-#include "stdafx.h"
-
+#include "../input/KeyboardButtonEvent.h"
 #include "../input/MouseButtonEvent.h"
 #include "../Events.h"
 #include "../Messages.h"
 #include "WinApiEngine.h"
 
 using namespace std;
+
+map<unsigned char, Keyboard::Button> asciiKeyboardButtonMap = createAsciiKeyboardButtonMap();
 
 LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -23,6 +24,128 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
 
 		Messages::send(MOUSE_BUTTON_EVENT, &mouseButtonEvent);
+	}
+	else if (message == WM_KEYDOWN)
+	{
+		KeyboardButtonEvent keyboardButtonEvent;
+		keyboardButtonEvent.buttonState = Button::DOWN;
+
+		if (wParam == VK_F1)
+		{
+			keyboardButtonEvent.button = Keyboard::F1;
+		}
+		else if (wParam == VK_F2)
+		{
+			keyboardButtonEvent.button = Keyboard::F2;
+		}
+		else if (wParam == VK_F3)
+		{
+			keyboardButtonEvent.button = Keyboard::F3;
+		}
+		else if (wParam == VK_F4)
+		{
+			keyboardButtonEvent.button = Keyboard::F4;
+		}
+		else if (wParam == VK_F5)
+		{
+			keyboardButtonEvent.button = Keyboard::F5;
+		}
+		else if (wParam == VK_F6)
+		{
+			keyboardButtonEvent.button = Keyboard::F6;
+		}
+		else if (wParam == VK_F7)
+		{
+			keyboardButtonEvent.button = Keyboard::F7;
+		}
+		else if (wParam == VK_F8)
+		{
+			keyboardButtonEvent.button = Keyboard::F8;
+		}
+		else if (wParam == VK_F9)
+		{
+			keyboardButtonEvent.button = Keyboard::F9;
+		}
+		else if (wParam == VK_F10)
+		{
+			keyboardButtonEvent.button = Keyboard::F10;
+		}
+		else if (wParam == VK_F11)
+		{
+			keyboardButtonEvent.button = Keyboard::F11;
+		}
+		else if (wParam == VK_F12)
+		{
+			keyboardButtonEvent.button = Keyboard::F12;
+		}
+		else if (asciiKeyboardButtonMap.find(static_cast<unsigned char>(wParam)) != asciiKeyboardButtonMap.end())
+		{
+			keyboardButtonEvent.button = asciiKeyboardButtonMap[static_cast<unsigned char>(wParam)];
+			keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
+		}
+
+		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
+	}
+	else if (message == WM_KEYUP)
+	{
+		KeyboardButtonEvent keyboardButtonEvent;
+		keyboardButtonEvent.buttonState = Button::UP;
+
+		if (wParam == VK_F1)
+		{
+			keyboardButtonEvent.button = Keyboard::F1;
+		}
+		else if (wParam == VK_F2)
+		{
+			keyboardButtonEvent.button = Keyboard::F2;
+		}
+		else if (wParam == VK_F3)
+		{
+			keyboardButtonEvent.button = Keyboard::F3;
+		}
+		else if (wParam == VK_F4)
+		{
+			keyboardButtonEvent.button = Keyboard::F4;
+		}
+		else if (wParam == VK_F5)
+		{
+			keyboardButtonEvent.button = Keyboard::F5;
+		}
+		else if (wParam == VK_F6)
+		{
+			keyboardButtonEvent.button = Keyboard::F6;
+		}
+		else if (wParam == VK_F7)
+		{
+			keyboardButtonEvent.button = Keyboard::F7;
+		}
+		else if (wParam == VK_F8)
+		{
+			keyboardButtonEvent.button = Keyboard::F8;
+		}
+		else if (wParam == VK_F9)
+		{
+			keyboardButtonEvent.button = Keyboard::F9;
+		}
+		else if (wParam == VK_F10)
+		{
+			keyboardButtonEvent.button = Keyboard::F10;
+		}
+		else if (wParam == VK_F11)
+		{
+			keyboardButtonEvent.button = Keyboard::F11;
+		}
+		else if (wParam == VK_F12)
+		{
+			keyboardButtonEvent.button = Keyboard::F12;
+		}
+		else if (asciiKeyboardButtonMap.find(static_cast<unsigned char>(wParam)) != asciiKeyboardButtonMap.end())
+		{
+			keyboardButtonEvent.button = asciiKeyboardButtonMap[static_cast<unsigned char>(wParam)];
+			keyboardButtonEvent.character = static_cast<unsigned char>(wParam);
+		}
+
+		Messages::send(KEYBOARD_BUTTON_EVENT, &keyboardButtonEvent);
 	}
 
     return DefWindowProc(window, message, wParam, lParam);

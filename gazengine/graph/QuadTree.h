@@ -5,8 +5,9 @@
 
 #include "../model/Model.h"
 #include "AABB2.h"
+#include "Tree.h"
 
-class QuadTree
+class QuadTree : public Tree
 {
 	public:
 		QuadTree(unsigned int subdivideThreshold, const AABB2& boundary);

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Direct3D10Light.h"
 
 using namespace std;
@@ -17,24 +15,24 @@ void Direct3D10Light::activate()
 
 void Direct3D10Light::apply(Direct3D10Shader& shader)
 {
-	shader.setVar(name + "LightAttenuation", attenuation);
-	shader.setVar(name + "LightDirection", direction);
-	shader.setVar(name + "LightRange", range);
-	shader.setVar(name + "LightSpecular", specular);
-	shader.setVar(name + "LightStrength", strength);
-	shader.setVar(name + "LightTranslation", translation);
+	shader.setVar(name + "Light", "attenuation", attenuation);
+	shader.setVar(name + "Light", "direction", direction);
+	shader.setVar(name + "Light", "range", range);
+	shader.setVar(name + "Light", "specular", specular);
+	shader.setVar(name + "Light", "strength", strength);
+	shader.setVar(name + "Light", "position", translation);
 
 	if (active)
 	{
-		shader.setVar(name + "LightAmbient", ambient);
-		shader.setVar(name + "LightDiffuse", diffuse);
-		shader.setVar(name + "LightSpecular", specular);
+		shader.setVar(name + "Light", "ambient", ambient);
+		shader.setVar(name + "Light", "diffuse", diffuse);
+		shader.setVar(name + "Light", "specular", specular);
 	}
 	else
 	{
-		shader.setVar(name + "LightAmbient", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-		shader.setVar(name + "LightDiffuse", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-		shader.setVar(name + "LightSpecular", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		shader.setVar(name + "Light", "ambient", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		shader.setVar(name + "Light", "diffuse", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		shader.setVar(name + "Light", "specular", D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 }
 

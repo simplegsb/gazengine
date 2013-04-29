@@ -1,6 +1,7 @@
 #ifndef GDIRENDERINGENGINE_H_
 #define GDIRENDERINGENGINE_H_
 
+#include <map>
 #include <vector>
 
 #include <windows.h>
@@ -16,6 +17,8 @@ class GDIRenderingEngine : public RenderingEngine
 		virtual ~GDIRenderingEngine();
 
 		void addModel(Model* model);
+
+		void addRenderer(Renderer* renderer);
 
 		void advance();
 
@@ -37,6 +40,8 @@ class GDIRenderingEngine : public RenderingEngine
 
 		void setQuadTree(QuadTree* quadTree);
 
+		void setRendererRoot(const Renderer& renderer, const Tree& node);
+
 		void setWidth(int width);
 
 	private:
@@ -54,11 +59,15 @@ class GDIRenderingEngine : public RenderingEngine
 
 		QuadTree* quadTree;
 
+		std::map<const Renderer*, const Tree*> rendererRoots;
+
+		std::vector<Renderer*> renderers;
+
 		int width;
 
 		HWND window;
 
-		void drawQuadTree(const QuadTree& quadTree) const;
+		void renderQuadTree(Renderer& renderer, const QuadTree& quadTree) const;
 };
 
 #endif /* GDIRENDERINGENGINE_H_ */

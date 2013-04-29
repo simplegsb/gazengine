@@ -69,7 +69,7 @@ namespace Keyboard
 		BACKSPACE,
 		COLON,
 		COMMA,
-		DELETE,
+		DEL,
 		END,
 		ESCAPE,
 		EQUALS,

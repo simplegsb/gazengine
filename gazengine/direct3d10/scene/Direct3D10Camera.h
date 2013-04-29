@@ -3,6 +3,8 @@
 
 #include <d3dx10.h>
 
+#include "../../graph/SimpleTree.h"
+
 class Direct3D10Camera
 {
 	public:
@@ -12,7 +14,13 @@ class Direct3D10Camera
 
 		D3DXMATRIX getFinalTransformation() const;
 
+		float getFrameHeight() const;
+
+		float getFrameWidth() const;
+
 		float getNearClippingDistance() const;
+
+		SimpleTree* getNode();
 
 		D3DXVECTOR3 getTranslation() const;
 
@@ -22,6 +30,10 @@ class Direct3D10Camera
 
 		void setNearClippingDistance(float nearClippingDistance);
 
+		void setNode(SimpleTree* node);
+
+		void setOrthogonal(float width, float height);
+
 		void setPerspective(float yAxisFieldOfView, float aspectRatio);
 
 		void setTranslation(const D3DXVECTOR3& translation);
@@ -29,13 +41,19 @@ class Direct3D10Camera
 	private:
 		float farClippingDistance;
 
+		float frameHeight;
+
 		float nearClippingDistance;
+
+		SimpleTree* node;
 
 		D3DXMATRIX projection;
 
 		D3DXVECTOR3 translation;
 
 		D3DXMATRIX view;
+
+		float frameWidth;
 };
 
 #endif /* DIRECT3D10SHADER_H_ */

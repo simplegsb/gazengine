@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "DebugEngine.h"
 
 DebugEngine::DebugEngine(Engine* engine) :

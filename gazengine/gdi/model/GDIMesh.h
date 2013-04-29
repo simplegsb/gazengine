@@ -6,22 +6,24 @@
 #include <windows.h>
 
 #include "../../math/Vector2.h"
-#include "../../model/Model.h"
+#include "../../model/Mesh.h"
 
-class GDIMesh : public Model
+class GDIMesh : public Mesh
 {
 	public:
-		GDIMesh(HDC buffer, std::vector<Vector2> vertices, COLORREF colour);
+		GDIMesh(std::vector<Vector2> vertices, COLORREF colour);
 
 		virtual ~GDIMesh();
-		
-		void draw();
-		
+
+		COLORREF getColour() const;
+
 		PrimitiveType getPrimitiveType() const;
 
-	private:
-		HDC buffer;
+		virtual const std::vector<Vector2>& getVertices() const;
 
+		void render(Renderer& renderer) const;
+
+	private:
 		COLORREF colour;
 
 		std::vector<Vector2> vertices;

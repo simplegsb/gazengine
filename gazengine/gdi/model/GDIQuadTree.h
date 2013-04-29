@@ -4,27 +4,27 @@
 #include <windows.h>
 
 #include "../../graph/QuadTree.h"
-#include "../../model/Model.h"
+#include "GDIMesh.h"
 
-class GDIQuadTree : public Model
+class GDIQuadTree : public GDIMesh
 {
 	public:
-		GDIQuadTree(HDC buffer, const QuadTree& quadTree);
+		GDIQuadTree(const QuadTree& quadTree);
 
 		virtual ~GDIQuadTree();
 		
-		void draw();
-		
 		PrimitiveType getPrimitiveType() const;
 
-	private:
-		HDC buffer;
+		const std::vector<Vector2>& getVertices() const;
 
+	private:
 		const QuadTree& quadTree;
+
+		mutable std::vector<Vector2> vertices;
 
 		GDIQuadTree(const GDIQuadTree& original);
 
-		void draw(const QuadTree& quadTree);
+		std::vector<Vector2> getVertices(const QuadTree& quadTree) const;
 
 		GDIQuadTree& operator=(const GDIQuadTree& original);
 };

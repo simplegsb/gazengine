@@ -7,13 +7,24 @@
 class Circle : public Model
 {
 	public:
-		virtual const Vector2& getPosition() const = 0;
+		Circle(const Vector2& position, float radius);
+
+		virtual ~Circle();
+
+		const Vector2& getPosition() const;
 		
-		virtual float getRadius() const = 0;
+		float getRadius() const;
+
+		PrimitiveType getPrimitiveType() const;
 		
-		virtual void setPosition(const Vector2& position) = 0;
+		void setPosition(const Vector2& position);
 		
-		virtual void setRadius(float radius) = 0;
+		void setRadius(float radius);
+
+	private:
+		Vector2 position;
+
+		float radius;
 };
 
 #endif /* CIRCLE_H_ */
