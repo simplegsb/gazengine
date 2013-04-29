@@ -36,6 +36,8 @@ class GDIRenderingEngine : public RenderingEngine
 
 		void removeModel(const Model& model);
 
+		void removeRenderer(const Renderer& renderer);
+
 		void setHeight(int height);
 
 		void setQuadTree(QuadTree* quadTree);

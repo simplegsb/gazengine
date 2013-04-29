@@ -121,6 +121,13 @@ void GDIRenderingEngine::removeModel(const Model& model)
 	models.erase(remove(models.begin(), models.end(), &model));
 }
 
+void GDIRenderingEngine::removeRenderer(const Renderer& renderer)
+{
+	renderers.erase(remove(renderers.begin(), renderers.end(), &renderer));
+	rendererRoots.erase(&renderer);
+	delete &renderer;
+}
+
 void GDIRenderingEngine::renderQuadTree(Renderer& renderer, const QuadTree& quadTree) const
 {
 	for (unsigned int index = 0; index < quadTree.getModels().size(); index++)
