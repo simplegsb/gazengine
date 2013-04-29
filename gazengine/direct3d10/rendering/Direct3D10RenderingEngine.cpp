@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <algorithm>
+
 #include <d3dx10.h>
 #pragma comment (lib, "d3dx10.lib")
 
@@ -167,6 +169,11 @@ void Direct3D10RenderingEngine::initViewport()
     viewport.TopLeftY = 0;
 
     device->RSSetViewports(1, &viewport);
+}
+
+void Direct3D10RenderingEngine::removeModel(const Model& model)
+{
+	models.erase(remove(models.begin(), models.end(), &model));
 }
 
 void Direct3D10RenderingEngine::setCamera(Direct3D10Camera* camera)

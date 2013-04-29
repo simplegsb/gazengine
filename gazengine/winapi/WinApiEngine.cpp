@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include "../input/MouseButtonEvent.h"
+#include "../Events.h"
+#include "../Messages.h"
 #include "WinApiEngine.h"
 
 using namespace std;
@@ -11,6 +14,16 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
         PostQuitMessage(0);
         return 0;
     }
+	else if (message == WM_LBUTTONUP)
+	{
+		MouseButtonEvent mouseButtonEvent;
+		mouseButtonEvent.button = Mouse::LEFT;
+		mouseButtonEvent.buttonState = Button::UP;
+		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(MOUSE_BUTTON_EVENT, &mouseButtonEvent);
+	}
 
     return DefWindowProc(window, message, wParam, lParam);
 }

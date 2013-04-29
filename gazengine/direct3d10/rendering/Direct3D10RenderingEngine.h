@@ -6,13 +6,12 @@
 #include <d3d10.h>
 #pragma comment (lib, "d3d10.lib")
 
-#include "Direct3D10Camera.h"
-#include "Direct3D10Light.h"
+#include "../../rendering/RenderingEngine.h"
+#include "../scene/Direct3D10Camera.h"
+#include "../scene/Direct3D10Light.h"
 #include "Direct3D10Shader.h"
-#include "Engine.h"
-#include "Model.h"
 
-class Direct3D10RenderingEngine : public Engine
+class Direct3D10RenderingEngine : public RenderingEngine
 {
 	public:
 		Direct3D10RenderingEngine(HWND window);
@@ -40,6 +39,8 @@ class Direct3D10RenderingEngine : public Engine
 		int getWidth() const;
 
 		void init();
+
+		void removeModel(const Model& model);
 
 		void setCamera(Direct3D10Camera* camera);
 

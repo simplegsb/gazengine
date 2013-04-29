@@ -1,8 +1,8 @@
 #ifndef DEBUGENGINE_H_
 #define DEBUGENGINE_H_
 
+#include "../Timer.h"
 #include "Engine.h"
-#include "Timer.h"
 
 class DebugEngine : public Engine
 {

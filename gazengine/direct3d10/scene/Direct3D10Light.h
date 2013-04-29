@@ -5,7 +5,7 @@
 
 #include <d3dx10.h>
 
-#include "Direct3D10Shader.h"
+#include "../rendering/Direct3D10Shader.h"
 
 class Direct3D10Light
 {

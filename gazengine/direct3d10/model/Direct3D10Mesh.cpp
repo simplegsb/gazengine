@@ -55,3 +55,8 @@ void Direct3D10Mesh::draw()
 	device.IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
     device.DrawIndexed(indexCount, 0, 0);
 }
+
+Model::PrimitiveType Direct3D10Mesh::getPrimitiveType() const
+{
+	return Model::TRIANGLE_LIST;
+}

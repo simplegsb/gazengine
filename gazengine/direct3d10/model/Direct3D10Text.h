@@ -5,7 +5,7 @@
 
 #include <d3dx10.h>
 
-#include "Model.h"
+#include "../../model/Model.h"
 
 class Direct3D10Text : public Model
 {

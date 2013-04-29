@@ -5,8 +5,8 @@
 
 #include <d3d10.h>
 
-#include "Model.h"
-#include "Vertex.h"
+#include "../../model/Model.h"
+#include "../../model/Vertex.h"
 
 class Direct3D10Mesh : public Model
 {
@@ -16,6 +16,8 @@ class Direct3D10Mesh : public Model
 		virtual ~Direct3D10Mesh();
 		
 		void draw();
+		
+		PrimitiveType getPrimitiveType() const;
 
 	private:
 		Direct3D10Mesh(const Direct3D10Mesh& original);
