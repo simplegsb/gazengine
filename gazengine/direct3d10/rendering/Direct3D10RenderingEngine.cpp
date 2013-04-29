@@ -5,11 +5,19 @@
 #include <d3dx10.h>
 #pragma comment (lib, "d3dx10.lib")
 
+#include "../model/Direct3D10Mesh.h"
 #include "Direct3D10RenderingEngine.h"
 
 Direct3D10RenderingEngine::Direct3D10RenderingEngine(HWND window) :
-	camera(NULL), clearingColour(0.0f, 0.2f, 0.4f, 1.0f), device(NULL), height(600), models(),
-	renderTargetView(NULL), shader(NULL), swapChain(NULL), width(800), window(window)
+	camera(NULL),
+	clearingColour(0.0f, 0.2f, 0.4f, 1.0f),
+	device(NULL),
+	height(600),
+	models(),
+	renderTargetView(NULL),
+	swapChain(NULL),
+	width(800),
+	window(window)
 {
 }
 
@@ -29,11 +37,6 @@ Direct3D10RenderingEngine::~Direct3D10RenderingEngine()
 	{
 		delete models.at(index);
 	}
-
-	if (shader != NULL)
-	{
-		delete shader;
-	}
 }
 
 void Direct3D10RenderingEngine::addLight(Direct3D10Light* light)
@@ -49,19 +52,24 @@ void Direct3D10RenderingEngine::addModel(Model* model)
 void Direct3D10RenderingEngine::advance()
 {
     device->ClearRenderTargetView(renderTargetView, clearingColour);
-    
-	for (unsigned int index = 0; index < lights.size(); index++)
-	{
-		lights.at(index)->apply(*shader);
-	}
-
-	shader->setVar("cameraTranslation", camera->getTranslation());
-	shader->setVar("finalTransformation", camera->getFinalTransformation());
-
-	shader->apply();
 
 	for (unsigned int modelIndex = 0; modelIndex < models.size(); modelIndex++)
 	{
+		Direct3D10Mesh* mesh = dynamic_cast<Direct3D10Mesh*>(models.at(modelIndex));
+		if (mesh != NULL)
+		{
+			Direct3D10Shader* shader = mesh->getShader();
+			shader->setVar("cameraTranslation", camera->getTranslation());
+			shader->setVar("finalTransformation", camera->getFinalTransformation());
+
+			shader->apply();
+
+			for (unsigned int index = 0; index < lights.size(); index++)
+			{
+				lights.at(index)->apply(*shader);
+			}
+		}
+
 		models.at(modelIndex)->draw();
 	}
 
@@ -136,11 +144,6 @@ int Direct3D10RenderingEngine::getHeight() const
 	return height;
 }
 
-Direct3D10Shader* Direct3D10RenderingEngine::getShader() const
-{
-	return shader;
-}
-
 int Direct3D10RenderingEngine::getWidth() const
 {
 	return width;
@@ -190,11 +193,6 @@ void Direct3D10RenderingEngine::setClearingColour(const D3DXCOLOR& clearingColou
 void Direct3D10RenderingEngine::setHeight(int height)
 {
 	this->height = height;
-}
-
-void Direct3D10RenderingEngine::setShader(Direct3D10Shader* shader)
-{
-	this->shader = shader;
 }
 
 void Direct3D10RenderingEngine::setWidth(int width)

@@ -14,6 +14,8 @@ class Direct3D10Shader
 
 		void apply();
 
+		const ID3D10InputLayout& getInputLayout() const;
+
 		void initInputLayout(ID3D10Device& device);
 
 		void setVar(const std::string& name, D3DXCOLOR value);

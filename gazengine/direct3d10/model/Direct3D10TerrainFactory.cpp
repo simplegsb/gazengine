@@ -55,27 +55,27 @@ namespace Direct3D10TerrainFactory
 			Vertex vertexA;
 			vertexA.color = color;
 			vertexA.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexA.pos = points.at(segmentIndex);
+			vertexA.position = points.at(segmentIndex);
 			vertices.push_back(vertexA);
 
 			Vertex vertexAFloor;
 			vertexAFloor.color = color;
 			vertexAFloor.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexAFloor.pos = points.at(segmentIndex);
-			vertexAFloor.pos.y = floor;
+			vertexAFloor.position = points.at(segmentIndex);
+			vertexAFloor.position.y = floor;
 			vertices.push_back(vertexAFloor);
 
 			Vertex vertexB;
 			vertexB.color = color;
 			vertexB.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexB.pos = points.at(segmentIndex + 1);
+			vertexB.position = points.at(segmentIndex + 1);
 			vertices.push_back(vertexB);
 
 			Vertex vertexBFloor;
 			vertexBFloor.color = color;
 			vertexBFloor.normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-			vertexBFloor.pos = points.at(segmentIndex + 1);
-			vertexBFloor.pos.y = floor;
+			vertexBFloor.position = points.at(segmentIndex + 1);
+			vertexBFloor.position.y = floor;
 			vertices.push_back(vertexBFloor);
 		}
 
@@ -132,25 +132,25 @@ namespace Direct3D10TerrainFactory
 				Vertex v0;
 				v0.color = color;
 				v0.normal = createNormal(segmentXIndex, segmentZIndex, segmentCount, points);
-				v0.pos = points.at(segmentCount * segmentXIndex + segmentZIndex);
+				v0.position = points.at(segmentCount * segmentXIndex + segmentZIndex);
 				vertices.push_back(v0);
 				
 				Vertex v1;
 				v1.color = color;
 				v1.normal = createNormal(segmentXIndex, segmentZIndex + 1, segmentCount, points);
-				v1.pos = points.at(segmentCount * segmentXIndex + segmentZIndex + 1);
+				v1.position = points.at(segmentCount * segmentXIndex + segmentZIndex + 1);
 				vertices.push_back(v1);
 				
 				Vertex v2;
 				v2.color = color;
 				v2.normal = createNormal(segmentXIndex + 1, segmentZIndex, segmentCount, points);
-				v2.pos = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex);
+				v2.position = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex);
 				vertices.push_back(v2);
 				
 				Vertex v3;
 				v3.color = color;
 				v3.normal = createNormal(segmentXIndex + 1, segmentZIndex + 1, segmentCount, points);
-				v3.pos = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex + 1);
+				v3.position = points.at(segmentCount * (segmentXIndex + 1) + segmentZIndex + 1);
 				vertices.push_back(v3);
 
 				indices.push_back(index);

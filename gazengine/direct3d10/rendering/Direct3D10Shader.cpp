@@ -36,15 +36,6 @@ Direct3D10Shader::Direct3D10Shader(ID3D10Device& device, const wstring& fileName
 	initInputLayout(device);
 }
 
-void Direct3D10Shader::apply()
-{
-	// It turns out ID3DXFont::DrawText() has no regard for the state of our rendering engine so lets try and restore
-	// it...
-    device.IASetInputLayout(inputLayout);
-
-    technique->GetPassByIndex(0)->Apply(0);
-}
-
 Direct3D10Shader::~Direct3D10Shader()
 {
 	if (effect != NULL)
@@ -58,18 +49,33 @@ Direct3D10Shader::~Direct3D10Shader()
 	}
 }
 
+void Direct3D10Shader::apply()
+{
+	// It turns out ID3DXFont::DrawText() has no regard for the state of our rendering engine so lets try and restore
+	// it...
+    device.IASetInputLayout(inputLayout);
+
+    technique->GetPassByIndex(0)->Apply(0);
+}
+
+const ID3D10InputLayout& Direct3D10Shader::getInputLayout() const
+{
+	return *inputLayout;
+}
+
 void Direct3D10Shader::initInputLayout(ID3D10Device& device)
 {
 	D3D10_INPUT_ELEMENT_DESC vertexDescription[] =
 	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0}
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D10_INPUT_PER_VERTEX_DATA, 0}
 	};
 
     D3D10_PASS_DESC passDescription;
     technique->GetPassByIndex(0)->GetDesc(&passDescription);
-    device.CreateInputLayout(vertexDescription, 3, passDescription.pIAInputSignature,
+    device.CreateInputLayout(vertexDescription, 4, passDescription.pIAInputSignature,
 		passDescription.IAInputSignatureSize, &inputLayout);
 }
 

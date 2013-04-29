@@ -9,7 +9,6 @@
 #include "../../rendering/RenderingEngine.h"
 #include "../scene/Direct3D10Camera.h"
 #include "../scene/Direct3D10Light.h"
-#include "Direct3D10Shader.h"
 
 class Direct3D10RenderingEngine : public RenderingEngine
 {
@@ -34,8 +33,6 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		int getHeight() const;
 
-		Direct3D10Shader* getShader() const;
-
 		int getWidth() const;
 
 		void init();
@@ -47,8 +44,6 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		void setClearingColour(const D3DXCOLOR& clearingColour);
 
 		void setHeight(int height);
-
-		void setShader(Direct3D10Shader* shader);
 
 		void setWidth(int width);
 
@@ -66,8 +61,6 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		std::vector<Model*> models;
 
 		ID3D10RenderTargetView* renderTargetView;
-
-		Direct3D10Shader* shader;
 
 		IDXGISwapChain* swapChain;
 
