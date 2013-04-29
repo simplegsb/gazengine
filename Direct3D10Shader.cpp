@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Direct3D10Shader::Direct3D10Shader(ID3D10Device& device, const wstring fileName, const string techniqueName) :
+Direct3D10Shader::Direct3D10Shader(ID3D10Device& device, const wstring& fileName, const string& techniqueName) :
 	effect(NULL), device(device), inputLayout(NULL), technique(NULL)
 {
 	DWORD flags = D3D10_SHADER_ENABLE_STRICTNESS;
@@ -64,7 +64,7 @@ void Direct3D10Shader::initInputLayout(ID3D10Device& device)
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0},
 		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0}
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 28, D3D10_INPUT_PER_VERTEX_DATA, 0}
 	};
 
     D3D10_PASS_DESC passDescription;
@@ -73,22 +73,22 @@ void Direct3D10Shader::initInputLayout(ID3D10Device& device)
 		passDescription.IAInputSignatureSize, &inputLayout);
 }
 
-void Direct3D10Shader::setVar(const string name, D3DXCOLOR value)
+void Direct3D10Shader::setVar(const string& name, D3DXCOLOR value)
 {
 	effect->GetVariableByName(name.data())->AsVector()->SetFloatVector(value);
 }
 
-void Direct3D10Shader::setVar(const string name, D3DXMATRIX value)
+void Direct3D10Shader::setVar(const string& name, D3DXMATRIX value)
 {
 	effect->GetVariableByName(name.data())->AsMatrix()->SetMatrix(value);
 }
 
-void Direct3D10Shader::setVar(const string name, D3DXVECTOR3 value)
+void Direct3D10Shader::setVar(const string& name, D3DXVECTOR3 value)
 {
 	effect->GetVariableByName(name.data())->AsVector()->SetFloatVector(value);
 }
 
-void Direct3D10Shader::setVar(const string name, float value)
+void Direct3D10Shader::setVar(const string& name, float value)
 {
 	effect->GetVariableByName(name.data())->AsScalar()->SetFloat(value);
 }

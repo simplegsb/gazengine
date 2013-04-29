@@ -8,11 +8,11 @@ Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<DWORD>& indice
 	device(device), indexBuffer(NULL), indexCount(indices.size()), vertexBuffer(NULL)
 {
 	D3D10_BUFFER_DESC vertexBufferDescription;
-    vertexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
-    vertexBufferDescription.ByteWidth = sizeof(Vertex) * vertices.size();
     vertexBufferDescription.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+    vertexBufferDescription.ByteWidth = sizeof(Vertex) * vertices.size();
     vertexBufferDescription.CPUAccessFlags = 0;
     vertexBufferDescription.MiscFlags = 0;
+    vertexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
 
 	D3D10_SUBRESOURCE_DATA vertexData;
     vertexData.pSysMem = &vertices[0];
@@ -20,11 +20,11 @@ Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<DWORD>& indice
     device.CreateBuffer(&vertexBufferDescription, &vertexData, &vertexBuffer);
 
 	D3D10_BUFFER_DESC indexBufferDescription;
-    indexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
-    indexBufferDescription.ByteWidth = sizeof(DWORD) * indexCount;
     indexBufferDescription.BindFlags = D3D10_BIND_INDEX_BUFFER;
+    indexBufferDescription.ByteWidth = sizeof(DWORD) * indexCount;
     indexBufferDescription.CPUAccessFlags = 0;
     indexBufferDescription.MiscFlags = 0;
+    indexBufferDescription.Usage = D3D10_USAGE_IMMUTABLE;
 
     D3D10_SUBRESOURCE_DATA indexData;
     indexData.pSysMem = &indices[0];

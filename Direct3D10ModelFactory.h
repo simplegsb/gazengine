@@ -7,9 +7,16 @@
 
 namespace Direct3D10ModelFactory
 {
-	Model* createCube(ID3D10Device& device, float size, D3DXCOLOR color);
+	Model* create2DPerlinTerrain(ID3D10Device& device, float width, unsigned int segmentCount, unsigned int octaves,
+		float persistence, const D3DXCOLOR& color);
 
-	Model* createHills(ID3D10Device& device, DWORD rows, DWORD columns, float dx, D3DXCOLOR color);
+	Model* create3DPerlinTerrain(ID3D10Device& device, float width, float depth, float heightScalar,
+		unsigned int segmentCount, unsigned int octaves, float persistence, const D3DXCOLOR& color);
+
+	Model* createCube(ID3D10Device& device, float size, const D3DXCOLOR& color);
+
+	Model* createMidPointDisplacementTerrain(ID3D10Device& device, float width, unsigned int iterations,
+		const D3DXCOLOR& color);
 };
 
 #endif /* DIRECT3D10MODELFACTORY_H_ */

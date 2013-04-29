@@ -41,6 +41,8 @@ class Direct3D10RenderingEngine : public Engine
 
 		void init();
 
+		void removeModel(const Model& model);
+
 		void setCamera(Direct3D10Camera* camera);
 
 		void setClearingColour(const D3DXCOLOR& clearingColour);

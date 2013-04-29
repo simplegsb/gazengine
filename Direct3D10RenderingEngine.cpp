@@ -1,13 +1,15 @@
 #include "stdafx.h"
 
+#include <algorithm>
+
 #include <d3dx10.h>
 #pragma comment (lib, "d3dx10.lib")
 
 #include "Direct3D10RenderingEngine.h"
 
 Direct3D10RenderingEngine::Direct3D10RenderingEngine(HWND window) :
-		camera(NULL), clearingColour(0.0f, 0.2f, 0.4f, 1.0f), device(NULL), height(600), models(),
-		renderTargetView(NULL), shader(NULL), swapChain(NULL), width(800), window(window)
+	camera(NULL), clearingColour(0.0f, 0.2f, 0.4f, 1.0f), device(NULL), height(600), models(),
+	renderTargetView(NULL), shader(NULL), swapChain(NULL), width(800), window(window)
 {
 }
 
@@ -46,8 +48,9 @@ void Direct3D10RenderingEngine::addModel(Model* model)
 
 void Direct3D10RenderingEngine::advance()
 {
+	device->ClearDepthStencilView();
     device->ClearRenderTargetView(renderTargetView, clearingColour);
-    
+
 	for (unsigned int index = 0; index < lights.size(); index++)
 	{
 		lights.at(index)->apply(*shader);
@@ -167,6 +170,11 @@ void Direct3D10RenderingEngine::initViewport()
     viewport.TopLeftY = 0;
 
     device->RSSetViewports(1, &viewport);
+}
+
+void Direct3D10RenderingEngine::removeModel(const Model& model)
+{
+	models.erase(remove(models.begin(), models.end(), &model));
 }
 
 void Direct3D10RenderingEngine::setCamera(Direct3D10Camera* camera)
