@@ -76,6 +76,22 @@ Vector2& Vector2::operator*=(const Vector2& other)
 	return *this;
 }
 
+Vector2& Vector2::operator/=(float scalar)
+{
+	x /= scalar;
+	y /= scalar;
+
+	return *this;
+}
+
+Vector2& Vector2::operator/=(const Vector2& other)
+{
+	x /= other.x;
+	y /= other.y;
+
+	return *this;
+}
+
 void Vector2::rotate(float angle)
 {
 	float tempX = x * cos(angle) - y * sin(angle);
@@ -113,6 +129,22 @@ Vector2 operator*(const Vector2& lhs, const Vector2& rhs)
 {
 	Vector2 copy(lhs);
 	copy *= rhs;
+
+	return copy;
+}
+
+Vector2 operator/(const Vector2& lhs, float rhs)
+{
+	Vector2 copy(lhs);
+	copy /= rhs;
+
+	return copy;
+}
+
+Vector2 operator/(const Vector2& lhs, const Vector2& rhs)
+{
+	Vector2 copy(lhs);
+	copy /= rhs;
 
 	return copy;
 }

@@ -9,6 +9,8 @@ class Line2 : public Model
 	public:
 		Line2(const Vector2& pointA, const Vector2& pointB);
 
+		const Vector3& getColor() const;
+
 		Texture* getNormalMap() const;
 
 		const Vector2& getPointA() const;
@@ -23,6 +25,8 @@ class Line2 : public Model
 
 		void render(Renderer& renderer) const;
 
+		void setColor(const Vector3& color);
+
 		void setNormalMap(Texture* texture);
 
 		void setPointA(const Vector2& pointA);
@@ -36,6 +40,8 @@ class Line2 : public Model
 		void setVisible(bool visible);
 
 	private:
+		Vector3 color;
+
 		Vector2 pointA;
 
 		Vector2 pointB;

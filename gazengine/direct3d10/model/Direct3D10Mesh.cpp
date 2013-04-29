@@ -3,6 +3,7 @@
 using namespace std;
 
 Direct3D10Mesh::Direct3D10Mesh(const Direct3D10Mesh& original) :
+	color(0.0f, 0.0f, 0.0f),
 	device(original.device),
 	mesh(NULL),
 	normalMap(NULL),
@@ -14,6 +15,7 @@ Direct3D10Mesh::Direct3D10Mesh(const Direct3D10Mesh& original) :
 }
 
 Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices) :
+	color(0.0f, 0.0f, 0.0f),
 	device(device),
 	mesh(NULL),
 	normalMap(NULL),
@@ -56,6 +58,11 @@ Direct3D10Mesh::~Direct3D10Mesh()
 	{
 		delete texture;
 	}
+}
+
+const Vector3& Direct3D10Mesh::getColor() const
+{
+	return color;
 }
 
 ID3DX10Mesh* Direct3D10Mesh::getMesh() const
@@ -134,6 +141,11 @@ Direct3D10Mesh& Direct3D10Mesh::operator=(const Direct3D10Mesh& original)
 void Direct3D10Mesh::render(Renderer& renderer) const
 {
 	renderer.render(*this);
+}
+
+void Direct3D10Mesh::setColor(const Vector3& color)
+{
+	this->color = color;
 }
 
 void Direct3D10Mesh::setNormalMap(Texture* normalMap)

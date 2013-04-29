@@ -82,6 +82,24 @@ Vector3& Vector3::operator*=(const Vector3& other)
 	return *this;
 }
 
+Vector3& Vector3::operator/=(float scalar)
+{
+	x /= scalar;
+	y /= scalar;
+	z /= scalar;
+
+	return *this;
+}
+
+Vector3& Vector3::operator/=(const Vector3& other)
+{
+	x /= other.x;
+	y /= other.y;
+	z /= other.z;
+
+	return *this;
+}
+
 Vector3 operator-(const Vector3& lhs, const Vector3& rhs)
 {
 	Vector3 copy(lhs);
@@ -115,6 +133,22 @@ Vector3 operator*(const Vector3& lhs, const Vector3& rhs)
 {
 	Vector3 copy(lhs);
 	copy *= rhs;
+
+	return copy;
+}
+
+Vector3 operator/(const Vector3& lhs, float rhs)
+{
+	Vector3 copy(lhs);
+	copy /= rhs;
+
+	return copy;
+}
+
+Vector3 operator/(const Vector3& lhs, const Vector3& rhs)
+{
+	Vector3 copy(lhs);
+	copy /= rhs;
 
 	return copy;
 }

@@ -1,10 +1,16 @@
 #include "Line2.h"
 
 Line2::Line2(const Vector2& pointA, const Vector2& pointB) :
+	color(0.0f, 0.0f, 0.0f),
 	pointA(pointA),
 	pointB(pointB),
 	visible(true)
 {
+}
+
+const Vector3& Line2::getColor() const
+{
+	return color;
 }
 
 Texture* Line2::getNormalMap() const
@@ -40,6 +46,11 @@ bool Line2::isVisible() const
 void Line2::render(Renderer& renderer) const
 {
 	renderer.render(*this);
+}
+
+void Line2::setColor(const Vector3& color)
+{
+	this->color = color;
 }
 
 void Line2::setNormalMap(Texture*)

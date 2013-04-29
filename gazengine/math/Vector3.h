@@ -30,6 +30,10 @@ struct Vector3
 	Vector3& operator*=(float scalar);
 
 	Vector3& operator*=(const Vector3& other);
+
+	Vector3& operator/=(float scalar);
+
+	Vector3& operator/=(const Vector3& other);
 };
 
 Vector3 operator-(const Vector3& lhs, const Vector3& rhs);
@@ -41,6 +45,10 @@ Vector3 operator*(const float lhs, Vector3& rhs);
 Vector3 operator*(const Vector3& lhs, float rhs);
 
 Vector3 operator*(const Vector3& lhs, const Vector3& rhs);
+
+Vector3 operator/(const Vector3& lhs, float rhs);
+
+Vector3 operator/(const Vector3& lhs, const Vector3& rhs);
 
 bool operator==(const Vector3& lhs, const Vector3& rhs);
 

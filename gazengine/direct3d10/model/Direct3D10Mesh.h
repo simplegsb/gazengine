@@ -20,6 +20,8 @@ class Direct3D10Mesh : public Mesh
 
 		virtual ~Direct3D10Mesh();
 
+		const Vector3& getColor() const;
+
 		ID3DX10Mesh* getMesh() const;
 
 		Texture* getNormalMap() const;
@@ -36,6 +38,8 @@ class Direct3D10Mesh : public Mesh
 
 		void render(Renderer& renderer) const;
 
+		void setColor(const Vector3& color);
+
 		void setNormalMap(Texture* normalMap);
 
 		void setPrimitiveType(PrimitiveType primitiveType);
@@ -47,6 +51,8 @@ class Direct3D10Mesh : public Mesh
 		void setVisible(bool visible);
 
 	private:
+		Vector3 color;
+
 		ID3D10Device& device;
 
 		ID3DX10Mesh* mesh;

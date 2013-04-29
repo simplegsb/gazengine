@@ -37,7 +37,8 @@ void GDIRenderer::render(const Circle& model)
 
 void GDIRenderer::render(const Line2& model)
 {
-	HPEN pen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	COLORREF color = RGB(model.getColor().x * 255, model.getColor().y * 255, model.getColor().z * 255);
+	HPEN pen = CreatePen(PS_SOLID, 1, color);
 	SelectObject(buffer, pen);
 
 	MoveToEx(buffer, (int) model.getPointA().x, (int) model.getPointA().y, NULL);

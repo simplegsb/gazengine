@@ -2,6 +2,7 @@
 #define MODEL_H_
 
 #include "../Component.h"
+#include "../math/Vector3.h"
 #include "../rendering/Renderer.h"
 #include "../rendering/Texture.h"
 
@@ -22,6 +23,8 @@ class Model : public Component
 		{
 		}
 
+		virtual const Vector3& getColor() const = 0;
+
 		virtual Texture* getNormalMap() const = 0;
 
 		virtual PrimitiveType getPrimitiveType() const = 0;
@@ -31,6 +34,8 @@ class Model : public Component
 		virtual bool isVisible() const = 0;
 
 		virtual void render(Renderer& renderer) const = 0;
+
+		virtual void setColor(const Vector3& color) = 0;
 
 		virtual void setNormalMap(Texture* texture) = 0;
 
