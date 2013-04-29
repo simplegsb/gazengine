@@ -19,6 +19,30 @@ Vector<Data, 3> crossProduct(const Vector<Data, 3>& lhs, const Vector<Data, 3>& 
 }
 
 template<typename Data>
+Vector<Data, 3> getOut3(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(&matrix[8], false);
+}
+
+template<typename Data>
+const Vector<Data, 3> getOut3(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(const_cast<Data*>(&matrix[8]), false);
+}
+
+template<typename Data>
+Vector<Data, 4> getOut4(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(&matrix[8], false);
+}
+
+template<typename Data>
+const Vector<Data, 4> getOut4(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(const_cast<Data*>(&matrix[8]), false);
+}
+
+template<typename Data>
 Data getProximity(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
 {
 	Vector<Data, 2> difference = lhs;
@@ -34,6 +58,30 @@ Data getProximity(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
 	difference -= rhs;
 
 	return difference.getMagnitude();
+}
+
+template<typename Data>
+Vector<Data, 3> getRight3(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(&matrix[0], false);
+}
+
+template<typename Data>
+const Vector<Data, 3> getRight3(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(const_cast<Data*>(&matrix[0]), false);
+}
+
+template<typename Data>
+Vector<Data, 4> getRight4(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(&matrix[0], false);
+}
+
+template<typename Data>
+const Vector<Data, 4> getRight4(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(const_cast<Data*>(&matrix[0]), false);
 }
 
 template<typename Data>
@@ -58,6 +106,30 @@ template<typename Data>
 const Vector<Data, 4> getTranslation4(const Matrix<Data, 4, 4>& matrix)
 {
 	return Vector<Data, 4>(const_cast<Data*>(&matrix[12]), false);
+}
+
+template<typename Data>
+Vector<Data, 3> getUp3(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(&matrix[4], false);
+}
+
+template<typename Data>
+const Vector<Data, 3> getUp3(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 3>(const_cast<Data*>(&matrix[4]), false);
+}
+
+template<typename Data>
+Vector<Data, 4> getUp4(Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(&matrix[4], false);
+}
+
+template<typename Data>
+const Vector<Data, 4> getUp4(const Matrix<Data, 4, 4>& matrix)
+{
+	return Vector<Data, 4>(const_cast<Data*>(&matrix[4]), false);
 }
 
 template<typename Data>

@@ -13,30 +13,84 @@ PhysXBody::PhysXBody(PxPhysics& physics, PxCooking& cooking, const Material& mat
 					 const Matrix44& transformation, bool dynamic) :
 	actor(NULL),
 	dynamic(dynamic),
-	linearAcceleration(0.0f, 0.0f, 0.0f),
+	geometries(),
 	linearVelocity(0.0f, 0.0f, 0.0f),
 	material(material),
-	model(model),
+	models(),
 	physxMaterial(NULL),
-	physxModel(NULL),
 	transformation(transformation)
 {
-	physxMaterial = physics.createMaterial(material.friction, material.friction, material.restitution);
+	models.push_back(model);
 
-	const Plane* plane = dynamic_cast<const Plane*>(model);
-	if (plane != NULL)
+	init(physics, cooking);
+}
+
+PhysXBody::PhysXBody(PxPhysics& physics, PxCooking& cooking, const Material& material,
+					 const vector<const Model*>& models, const Matrix44& transformation, bool dynamic) :
+	actor(NULL),
+	dynamic(dynamic),
+	geometries(),
+	linearVelocity(0.0f, 0.0f, 0.0f),
+	material(material),
+	models(models),
+	physxMaterial(NULL),
+	transformation(transformation)
+{
+	init(physics, cooking);
+}
+
+PhysXBody::~PhysXBody()
+{
+	for (unsigned int index = 0; index < geometries.size(); index++)
 	{
-		actor = PxCreatePlane(physics, PxPlane(PhysXVector::toPxVec3(plane->getPositionOnPlane()),
-			PhysXVector::toPxVec3(plane->getNormal())), *physxMaterial);
-		return;
+		delete geometries[index];
 	}
+}
 
+void PhysXBody::applyForce(const Vector3& force)
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		rigidBody->addForce(PhysXVector::toPxVec3(force));
+	}
+}
+
+void PhysXBody::applyForce(const Vector3& force, const Vector3& /*position*/)
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		rigidBody->addForce(PhysXVector::toPxVec3(force));
+	}
+}
+
+void PhysXBody::applyTorque(const Vector3& torque)
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		rigidBody->addTorque(PhysXVector::toPxVec3(torque));
+	}
+}
+
+void PhysXBody::clearForces()
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		rigidBody->clearForce();
+	}
+}
+
+PxGeometry* PhysXBody::createGeometry(PxPhysics& physics, PxCooking& cooking, const Model* model)
+{
 	const Cube* cube = dynamic_cast<const Cube*>(model);
 	if (cube != NULL)
 	{
-		physxModel = new PxBoxGeometry(cube->getHalfEdgeLength(), cube->getHalfEdgeLength(),
-			cube->getHalfEdgeLength());
+		return new PxBoxGeometry(cube->getHalfEdgeLength(), cube->getHalfEdgeLength(), cube->getHalfEdgeLength());
 	}
+
 	const Mesh* mesh = dynamic_cast<const Mesh*>(model);
 	if (mesh != NULL)
 	{
@@ -65,59 +119,16 @@ PhysXBody::PhysXBody(PxPhysics& physics, PxCooking& cooking, const Material& mat
 		cooking.cookConvexMesh(convexMeshDesc, buffer);
 		PxDefaultMemoryInputData input(buffer.getData(), buffer.getSize());
 
-		physxModel = new PxConvexMeshGeometry(physics.createConvexMesh(input));
+		return new PxConvexMeshGeometry(physics.createConvexMesh(input));
 	}
+
 	const Sphere* sphere = dynamic_cast<const Sphere*>(model);
 	if (sphere != NULL)
 	{
-		physxModel = new PxSphereGeometry(sphere->getRadius());
+		return new PxSphereGeometry(sphere->getRadius());
 	}
 
-	if (dynamic)
-	{
-		actor = PxCreateDynamic(physics, PhysXMatrix::toPxTransform(transformation), *physxModel, *physxMaterial,
-			material.density);
-		PxRigidBodyExt::updateMassAndInertia(*static_cast<PxRigidBody*>(actor), &material.density, 1);
-	}
-	else
-	{
-		actor = PxCreateStatic(physics, PhysXMatrix::toPxTransform(transformation), *physxModel, *physxMaterial);
-	}
-}
-
-PhysXBody::~PhysXBody()
-{
-	if (physxModel != NULL)
-	{
-		delete physxModel;
-	}
-}
-
-void PhysXBody::applyForce(const Vector3& force, const Vector3&)
-{
-	PxRigidBody* rigidBody = actor->isRigidBody();
-	if (rigidBody != NULL)
-	{
-		rigidBody->addForce(PhysXVector::toPxVec3(force));
-	}
-}
-
-void PhysXBody::applyTorque(const Vector3& torque)
-{
-	PxRigidBody* rigidBody = actor->isRigidBody();
-	if (rigidBody != NULL)
-	{
-		rigidBody->addTorque(PhysXVector::toPxVec3(torque));
-	}
-}
-
-void PhysXBody::clearForces()
-{
-	PxRigidBody* rigidBody = actor->isRigidBody();
-	if (rigidBody != NULL)
-	{
-		rigidBody->clearForce();
-	}
+	return NULL;
 }
 
 PxActor* PhysXBody::getActor()
@@ -125,9 +136,9 @@ PxActor* PhysXBody::getActor()
 	return actor;
 }
 
-const Vector3& PhysXBody::getLinearAcceleration() const
+const vector<PxGeometry*> PhysXBody::getGeometries()
 {
-	return linearAcceleration; // ???
+	return geometries;
 }
 
 const Vector3& PhysXBody::getLinearVelocity() const
@@ -157,14 +168,9 @@ const Body::Material& PhysXBody::getMaterial() const
 	return material;
 }
 
-const Model* PhysXBody::getModel() const
+const vector<const Model*>& PhysXBody::getModels() const
 {
-	return model;
-}
-
-physx::PxGeometry* PhysXBody::getPhysXModel()
-{
-	return physxModel;
+	return models;
 }
 
 Matrix44& PhysXBody::getTransformation()
@@ -187,6 +193,44 @@ const Matrix44& PhysXBody::getTransformation() const
 	}
 
 	return transformation;
+}
+
+void PhysXBody::init(PxPhysics& physics, PxCooking& cooking)
+{
+	physxMaterial = physics.createMaterial(material.friction, material.friction, material.restitution);
+
+	if (dynamic)
+	{
+		actor = physics.createRigidDynamic(PhysXMatrix::toPxTransform(transformation));
+	}
+	else
+	{
+		const Plane* plane = dynamic_cast<const Plane*>(models[0]);
+		if (plane != NULL)
+		{
+			actor = PxCreatePlane(physics, PxPlane(PhysXVector::toPxVec3(plane->getPositionOnPlane()),
+				PhysXVector::toPxVec3(plane->getNormal())), *physxMaterial);
+			return;
+		}
+
+		actor = physics.createRigidStatic(PhysXMatrix::toPxTransform(transformation));
+	}
+
+	for (unsigned int index = 0; index < models.size(); index++)
+	{
+		PxGeometry* geometry = createGeometry(physics, cooking, models[index]);
+		PxShape* shape = actor->createShape(*geometry, *physxMaterial);
+		if (geometry->getType() == PxGeometryType::eSPHERE)
+		{
+			shape->setFlag(PxShapeFlag::eUSE_SWEPT_BOUNDS, true);
+		}
+		geometries.push_back(geometry);
+	}
+
+	if (dynamic)
+	{
+		PxRigidBodyExt::updateMassAndInertia(*static_cast<PxRigidBody*>(actor), material.density);
+	}
 }
 
 bool PhysXBody::isDynamic()
@@ -226,9 +270,9 @@ void PhysXBody::setNode(SimpleTree* node)
 	PxRigidBody* rigidBody = actor->isRigidBody();
 	if (rigidBody != NULL)
 	{
-		PxShape* shapes;
-		rigidBody->getShapes(&shapes, 1);
-		shapes->userData = node;
+		PxShape* shape;
+		rigidBody->getShapes(&shape, 1);
+		shape->userData = node;
 	}
 }
 

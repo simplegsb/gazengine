@@ -1,6 +1,8 @@
 #ifndef GAZENGINE_H_
 #define GAZENGINE_H_
 
+#include <vld.h>
+
 #include "engine/Engine.h"
 #include "graph/SimpleTree.h"
 
@@ -10,13 +12,19 @@ namespace GazEngine
 
 	void addEntity(Entity* entity);
 
+	void addToWorld(SimpleTree* node);
+
 	void addWorldRepresentation(SimpleTree* tree);
+
+	const std::vector<Entity*> getAllEntities();
 
 	float getDeltaTime();
 
 	unsigned short getMaxFrameRate();
 
 	float getTotalTime();
+
+	const std::vector<SimpleTree*> getWorldRepresentations();
 
 	void pause();
 

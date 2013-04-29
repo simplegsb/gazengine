@@ -4,7 +4,6 @@ using namespace std;
 
 Text::Text(const Vector2& position, const std::string& text) :
 	colour(0.0f, 0.0f, 0.0f, 1.0f),
-	material(),
 	position(position),
 	text(text),
 	visible(true)
@@ -14,11 +13,6 @@ Text::Text(const Vector2& position, const std::string& text) :
 const Vector4& Text::getColour() const
 {
 	return colour;
-}
-
-const Model::Material& Text::getMaterial() const
-{
-	return material;
 }
 
 Texture* Text::getNormalMap() const
@@ -59,11 +53,6 @@ void Text::render(Renderer& renderer) const
 void Text::setColour(const Vector4& colour)
 {
 	this->colour = colour;
-}
-
-void Text::setMaterial(const Material& material)
-{
-	this->material = material;
 }
 
 void Text::setNormalMap(Texture*)

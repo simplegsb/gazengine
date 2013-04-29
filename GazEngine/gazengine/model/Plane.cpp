@@ -2,7 +2,6 @@
 
 Plane::Plane(const Vector3& normal, const Vector3& positionOnPlane) :
 	colour(0.0f, 0.0f, 0.0f, 1.0f),
-	material(),
 	normal(normal),
 	positionOnPlane(positionOnPlane)
 {
@@ -11,11 +10,6 @@ Plane::Plane(const Vector3& normal, const Vector3& positionOnPlane) :
 const Vector4& Plane::getColour() const
 {
 	return colour;
-}
-
-const Model::Material& Plane::getMaterial() const
-{
-	return material;
 }
 
 const Vector3& Plane::getNormal() const
@@ -55,11 +49,6 @@ void Plane::render(Renderer&) const
 void Plane::setColour(const Vector4& colour)
 {
 	this->colour = colour;
-}
-
-void Plane::setMaterial(const Material& material)
-{
-	this->material = material;
 }
 
 void Plane::setNormal(const Vector3& normal)

@@ -27,7 +27,7 @@ class SimplePhysicsEngine : public Engine
 		void setIntegrator(Integrator* integrator);
 
 	private:
-		std::vector<Body*> bodies;
+		std::vector<SimpleBody*> bodies;
 
 		std::vector<Constraint*> constraints;
 

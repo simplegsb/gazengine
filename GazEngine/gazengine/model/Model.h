@@ -9,19 +9,6 @@
 class Model : public Component
 {
 	public:
-		struct Material
-		{
-			Vector4 ambient;
-
-			Vector4 diffuse;
-
-			Vector4 emmissive;
-
-			float specularPower;
-
-			Vector4 specular;
-		};
-
 		enum PrimitiveType
 		{
 			LINE_LIST,
@@ -38,8 +25,6 @@ class Model : public Component
 
 		virtual const Vector4& getColour() const = 0;
 
-		virtual const Material& getMaterial() const = 0;
-
 		virtual Texture* getNormalMap() const = 0;
 
 		virtual PrimitiveType getPrimitiveType() const = 0;
@@ -51,8 +36,6 @@ class Model : public Component
 		virtual void render(Renderer& renderer) const = 0;
 
 		virtual void setColour(const Vector4& color) = 0;
-
-		virtual void setMaterial(const Material& material) = 0;
 
 		virtual void setNormalMap(Texture* texture) = 0;
 

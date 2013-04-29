@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GazEngine;../freeglut/include"
+				AdditionalIncludeDirectories="../GazEngine;../freeglut/include;C:\Program Files (x86)\Visual Leak Detector\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

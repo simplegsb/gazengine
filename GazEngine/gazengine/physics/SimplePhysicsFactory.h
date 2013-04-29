@@ -1,7 +1,7 @@
 #ifndef SIMPLEPHYSICSFACTORY_H_
 #define SIMPLEPHYSICSFACTORY_H_
 
-#include <gazengine/physics/PhysicsFactory.h>
+#include "PhysicsFactory.h"
 
 class SimplePhysicsFactory : public PhysicsFactory
 {

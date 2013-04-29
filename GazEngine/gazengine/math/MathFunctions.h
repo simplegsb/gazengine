@@ -13,10 +13,34 @@ namespace MathFunctions
 	Vector<Data, 3> crossProduct(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs);
 
 	template<typename Data>
+	Vector<Data, 3> getOut3(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 3> getOut3(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	Vector<Data, 4> getOut4(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 4> getOut4(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
 	Data getProximity(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs);
 
 	template<typename Data>
 	Data getProximity(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs);
+
+	template<typename Data>
+	Vector<Data, 3> getRight3(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 3> getRight3(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	Vector<Data, 4> getRight4(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 4> getRight4(const Matrix<Data, 4, 4>& matrix);
 
 	template<typename Data>
 	Vector<Data, 3> getTranslation3(Matrix<Data, 4, 4>& matrix);
@@ -29,6 +53,18 @@ namespace MathFunctions
 
 	template<typename Data>
 	const Vector<Data, 4> getTranslation4(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	Vector<Data, 3> getUp3(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 3> getUp3(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	Vector<Data, 4> getUp4(Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data>
+	const Vector<Data, 4> getUp4(const Matrix<Data, 4, 4>& matrix);
 
 	template<typename Data>
 	void homogenize(Vector<Data, 2>& vector);

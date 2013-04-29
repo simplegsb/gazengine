@@ -10,7 +10,7 @@ class VerletIntegrator : public Integrator
 	public:
 		VerletIntegrator(float damping = 1.0f);
 
-		void integrate(Body& body);
+		void integrate(SimpleBody& body);
 
 	private:
 		float damping;

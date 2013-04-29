@@ -1,7 +1,7 @@
 #ifndef INTEGRATOR_H_
 #define INTEGRATOR_H_
 
-#include "Body.h"
+#include "SimpleBody.h"
 
 class Integrator
 {
@@ -10,7 +10,7 @@ class Integrator
 		{
 		}
 
-		virtual void integrate(Body& body) = 0;
+		virtual void integrate(SimpleBody& body) = 0;
 };
 
 #endif /* INTEGRATOR_H_ */

@@ -11,7 +11,12 @@ class PhysXBody : public Body
 		PhysXBody(physx::PxPhysics& physics, physx::PxCooking& cooking, const Material& material, const Model* model,
 			const Matrix44& transformation, bool dynamic);
 
+		PhysXBody(physx::PxPhysics& physics, physx::PxCooking& cooking, const Material& material,
+			const vector<const Model*>& models, const Matrix44& transformation, bool dynamic);
+
 		~PhysXBody();
+
+		void applyForce(const Vector3& force);
 
 		void applyForce(const Vector3& force, const Vector3& position);
 
@@ -21,7 +26,7 @@ class PhysXBody : public Body
 
 		physx::PxActor* getActor();
 
-		const Vector3& getLinearAcceleration() const;
+		const std::vector<physx::PxGeometry*> getGeometries();
 
 		const Vector3& getLinearVelocity() const;
 
@@ -29,9 +34,7 @@ class PhysXBody : public Body
 
 		const Material& getMaterial() const;
 
-		const Model* getModel() const;
-
-		physx::PxGeometry* getPhysXModel();
+		const std::vector<const Model*>& getModels() const;
 
 		Matrix44& getTransformation();
 
@@ -52,23 +55,25 @@ class PhysXBody : public Body
 		void setTransformation(const Matrix44& transformation);
 
 	private:
-		physx::PxActor* actor;
+		physx::PxRigidActor* actor;
 
 		bool dynamic;
-
-		Vector3 linearAcceleration;
 
 		mutable Vector3 linearVelocity;
 
 		Material material;
 
-		const Model* model;
+		std::vector<const Model*> models;
 
 		physx::PxMaterial* physxMaterial;
 
-		physx::PxGeometry* physxModel;
+		std::vector<physx::PxGeometry*> geometries;
 
 		mutable Matrix44 transformation;
+
+		physx::PxGeometry* createGeometry(physx::PxPhysics& physics, physx::PxCooking& cooking, const Model* model);
+
+		void init(physx::PxPhysics& physics, physx::PxCooking& cooking);
 };
 
 #endif /* PHYSXBODY_H_ */

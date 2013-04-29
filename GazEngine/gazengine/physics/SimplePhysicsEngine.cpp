@@ -22,7 +22,7 @@ SimplePhysicsEngine::~SimplePhysicsEngine()
 
 void SimplePhysicsEngine::addEntity(Entity* entity)
 {
-	vector<Body*> entityBodies = entity->getComponents<Body>();
+	vector<SimpleBody*> entityBodies = entity->getComponents<SimpleBody>();
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
 		bodies.push_back(entityBodies[index]);
@@ -68,7 +68,7 @@ void SimplePhysicsEngine::init()
 
 void SimplePhysicsEngine::removeEntity(const Entity& entity)
 {
-	vector<Body*> entityBodies = entity.getComponents<Body>();
+	vector<SimpleBody*> entityBodies = entity.getComponents<SimpleBody>();
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
 		bodies.erase(remove(bodies.begin(), bodies.end(), entityBodies[index]));

@@ -15,6 +15,10 @@ class Torus;
 class Renderer
 {
 	public:
+		virtual ~Renderer()
+		{
+		}
+
 		virtual void dispose() = 0;
 
 		virtual void init() = 0;

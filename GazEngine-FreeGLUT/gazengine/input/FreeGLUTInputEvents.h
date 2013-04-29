@@ -19,6 +19,8 @@ void fireMouseButtonEvent(const int button, const int state, const int x, const 
 
 void fireMouseMoveEvent(const int x, const int y);
 
+void fireMouseWheelEvent(const int x, const int y);
+
 KeyboardButtonEvent getKeyboardButtonEvent(const unsigned char key);
 
 KeyboardButtonEvent getKeyboardSpecialButtonEvent(const int key);

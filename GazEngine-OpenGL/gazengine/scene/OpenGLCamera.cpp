@@ -21,6 +21,11 @@ float OpenGLCamera::getFarClippingDistance() const
 	return farClippingDistance;
 }
 
+Matrix44 OpenGLCamera::getFinalTransformation() const
+{
+	return node->getAbsoluteTransformation();
+}
+
 float OpenGLCamera::getFrameHeight() const
 {
 	return frameHeight;

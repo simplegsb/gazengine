@@ -8,6 +8,8 @@ namespace Mouse
 		MIDDLE,
 		LEFT,
 		RIGHT,
+		WHEEL_DOWN,
+		WHEEL_UP,
 
 		UNKNOWN_BUTTON
 	};

@@ -56,9 +56,22 @@ namespace GazEngine
 		entitiesToBeAdded.clear();
 	}
 
+	void addToWorld(SimpleTree* node)
+	{
+		for (unsigned int index = 0; index < worldRepresentations.size(); index++)
+		{
+			worldRepresentations[index]->addChild(node);
+		}
+	}
+
 	void addWorldRepresentation(SimpleTree* tree)
 	{
 		worldRepresentations.push_back(tree);
+	}
+
+	const vector<Entity*> getAllEntities()
+	{
+		return entities;
 	}
 
 	float getDeltaTime()
@@ -74,6 +87,11 @@ namespace GazEngine
 	float getTotalTime()
 	{
 		return timer.getGameTime();
+	}
+
+	const vector<SimpleTree*> getWorldRepresentations()
+	{
+		return worldRepresentations;
 	}
 
 	void pause()
@@ -172,12 +190,12 @@ namespace GazEngine
 
 	void removeEntity(const Entity& entity, bool deleteEntity)
 	{
+		entitiesToBeRemoved.push_back(&entity);
+
 		if (deleteEntity)
 		{
 			entitiesToBeDeleted.push_back(&entity);
 		}
-
-		entitiesToBeRemoved.push_back(&entity);
 	}
 
 	void removeModel(SimpleTree* node, const Model& model)
@@ -195,6 +213,18 @@ namespace GazEngine
 
 	void removePendingEntities()
 	{
+		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeRemoved.size(); entityIndex++)
+		{
+			for (unsigned int entityIndex2 = entityIndex + 1; entityIndex2 < entitiesToBeRemoved.size(); entityIndex2++)
+			{
+				if (entitiesToBeRemoved[entityIndex] == entitiesToBeRemoved[entityIndex2])
+				{
+					int i = 0;
+					i++;
+				}
+			}
+		}
+
 		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeRemoved.size(); entityIndex++)
 		{
 			vector<Entity*>::iterator entityIter = find(entities.begin(),

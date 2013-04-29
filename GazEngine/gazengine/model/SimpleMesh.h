@@ -1,14 +1,20 @@
-#ifndef TEXT_H_
-#define TEXT_H_
+#ifndef SIMPLEMESH_H_
+#define SIMPLEMESH_H_
 
-#include "Model.h"
+#include "Mesh.h"
 
-class Text : public Model
+class SimpleMesh : public Mesh
 {
 	public:
-		Text(const Vector2& position, const std::string& text);
+		SimpleMesh();
+
+		SimpleMesh(const std::vector<int>& indices, const std::vector<Vertex>& vertices);
 
 		const Vector4& getColour() const;
+
+		std::vector<int>& getIndices();
+
+		const std::vector<int>& getIndices() const;
 
 		Texture* getNormalMap() const;
 
@@ -16,9 +22,11 @@ class Text : public Model
 
 		PrimitiveType getPrimitiveType() const;
 
-		const std::string& getText() const;
-
 		Texture* getTexture() const;
+
+		std::vector<Vertex>& getVertices();
+
+		const std::vector<Vertex>& getVertices() const;
 
 		bool isVisible() const;
 
@@ -32,8 +40,6 @@ class Text : public Model
 
 		void setPrimitiveType(PrimitiveType primitiveType);
 
-		void setText(const std::string& text);
-
 		void setTexture(Texture* texture);
 
 		void setVisible(bool visible);
@@ -41,11 +47,15 @@ class Text : public Model
 	private:
 		Vector4 colour;
 
+		std::vector<int> indices;
+
 		Vector2 position;
 
-		std::string text;
+		PrimitiveType primitiveType;
+
+		std::vector<Vertex> vertices;
 
 		bool visible;
 };
 
-#endif /* TEXT_H_ */
+#endif /* SIMPLEMESH_H_ */

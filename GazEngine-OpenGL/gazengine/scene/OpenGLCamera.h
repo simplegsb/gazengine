@@ -80,6 +80,8 @@ class OpenGLCamera : public Camera
 
 		float getFarClippingDistance() const;
 
+		Matrix44 getFinalTransformation() const;
+
 		float getFrameHeight() const;
 
 		float getFrameWidth() const;

@@ -7,12 +7,31 @@ SimpleBody::SimpleBody(const Material& material, Model* model, const Matrix44& t
 	linearVelocity(0.0f, 0.0f),
 	mass(1.0f),
 	material(material),
-	model(model),
+	models(),
+	transformation(transformation)
+{
+	models.push_back(model);
+}
+
+SimpleBody::SimpleBody(const Material& material, const vector<const Model*>& models, const Matrix44& transformation,
+					   bool dynamic) :
+	node(NULL),
+	dynamic(dynamic),
+	linearAcceleration(0.0f, 0.0f),
+	linearVelocity(0.0f, 0.0f),
+	mass(1.0f),
+	material(material),
+	models(models),
 	transformation(transformation)
 {
 }
 
-void SimpleBody::applyForce(const Vector3& force, const Vector3&) // Ignore position, no angular simulation yet...
+void SimpleBody::applyForce(const Vector3& force)
+{
+	linearAcceleration += force;// / mass;
+}
+
+void SimpleBody::applyForce(const Vector3& force, const Vector3& /*position*/) // Ignore position, no angular simulation yet...
 {
 	linearAcceleration += force;// / mass;
 }
@@ -46,9 +65,9 @@ const Body::Material& SimpleBody::getMaterial() const
 	return material;
 }
 
-const Model* SimpleBody::getModel() const
+const vector<const Model*>& SimpleBody::getModels() const
 {
-	return model;
+	return models;
 }
 
 Matrix44& SimpleBody::getTransformation()

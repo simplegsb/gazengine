@@ -6,6 +6,7 @@
 #include <gazengine/math/Math.h>
 #include <gazengine/math/MathFunctions.h>
 #include <gazengine/math/Matrix.h>
+#include <gazengine/model/Mesh.h>
 #include <gazengine/model/shape/Capsule.h>
 #include <gazengine/model/shape/Cylinder.h>
 #include <gazengine/model/shape/Sphere.h>
@@ -116,8 +117,26 @@ void SimpleOpenGLRenderer::render(const Line2&)
 {
 }
 
-void SimpleOpenGLRenderer::render(const Mesh&)
+void SimpleOpenGLRenderer::render(const Mesh& model)
 {
+	const vector<int>& indices = model.getIndices();
+	const vector<Vertex>& vertices = model.getVertices();
+
+	glBegin(getOpenGLDrawingMode(model.getPrimitiveType()));
+	{
+		for (unsigned int indicesIndex = 0; indicesIndex < indices.size(); indicesIndex++)
+		{
+			int vertexIndex = indices[indicesIndex];
+
+			glColor4f(vertices[vertexIndex].color.R(), vertices[vertexIndex].color.G(),
+				vertices[vertexIndex].color.B(), vertices[vertexIndex].color.A());
+			glNormal3f(vertices[vertexIndex].normal.X(), vertices[vertexIndex].normal.Y(),
+				vertices[vertexIndex].normal.Z());
+			glVertex3f(vertices[vertexIndex].position.X(), vertices[vertexIndex].position.Y(),
+				vertices[vertexIndex].position.Z());
+		}
+	}
+	glEnd();
 }
 
 void SimpleOpenGLRenderer::render(const Sphere& model)
