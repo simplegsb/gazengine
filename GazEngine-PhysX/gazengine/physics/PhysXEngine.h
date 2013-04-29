@@ -11,8 +11,6 @@ class PhysXEngine : public Engine
 	public:
 		PhysXEngine(const Vector3& gravity, float fixedTimeStep);
 
-		~PhysXEngine();
-
 		void addEntity(Entity* entity);
 
 		void advance();
@@ -37,10 +35,6 @@ class PhysXEngine : public Engine
 		physx::PxCooking* cooking;
 
 		physx::PxDefaultCpuDispatcher* cpuDispatcher;
-
-#if defined(DEBUG) || defined(_DEBUG)
-		PVD::PvdConnection* debuggerConnection;
-#endif
 
 		physx::PxDefaultErrorCallback errorCallback;
 

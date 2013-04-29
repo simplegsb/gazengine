@@ -8,10 +8,10 @@ using namespace std;
 unsigned int Entity::nextId = 0;
 
 Entity::Entity(unsigned short category, const std::string& name) :
-		category(category),
-		components(),
-		id(nextId++),
-		name(name)
+	category(category),
+	components(),
+	id(nextId++),
+	name(name)
 {
 }
 

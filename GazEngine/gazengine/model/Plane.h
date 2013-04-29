@@ -10,6 +10,8 @@ class Plane : public Model
 
 		const Vector4& getColour() const;
 
+		const Material& getMaterial() const;
+
 		const Vector3& getNormal() const;
 
 		Texture* getNormalMap() const;
@@ -26,6 +28,8 @@ class Plane : public Model
 
 		void setColour(const Vector4& colour);
 
+		void setMaterial(const Material& material);
+
 		void setNormal(const Vector3& normal);
 
 		void setNormalMap(Texture* texture);
@@ -40,6 +44,8 @@ class Plane : public Model
 
 	private:
 		Vector4 colour;
+
+		Material material;
 
 		Vector3 normal;
 

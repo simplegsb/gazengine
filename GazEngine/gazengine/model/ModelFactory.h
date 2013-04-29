@@ -14,15 +14,17 @@ class ModelFactory
 
 		void colorizeVertices(std::vector<Vertex>& vertices, const Vector4& color);
 
-		Mesh* createCube(float size, const Vector4& color, bool doubleSided = false);
+		Mesh* createBoxMesh(float length, float width, float height, const Vector4& color, bool doubleSided = false);
+
+		Mesh* createCubeMesh(float size, const Vector4& color, bool doubleSided = false);
 
 		virtual Mesh* createMesh(const std::vector<Vertex>& vertices) = 0;
 
 		virtual Mesh* createMesh(const std::vector<Vertex>& vertices, const std::vector<int>& indices) = 0;
 
-		Mesh* createPrism(float size, const Vector4& color);
+		Mesh* createPrismMesh(float size, const Vector4& color);
 
-		Mesh* createSquare(float size, const Vector4& color, bool doubleSided = false);
+		Mesh* createSquareMesh(float size, const Vector4& color, bool doubleSided = false);
 
 		static ModelFactory* getInstance();
 

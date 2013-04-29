@@ -288,6 +288,12 @@ void Direct3D10RenderingEngine::renderModel(Direct3D10Renderer& renderer, const 
 		static_cast<Direct3D10Texture*>(model.getTexture())->apply(*renderer.getShader());
 	}
 
+	renderer.getShader()->setVar("material", "ambient", model.getMaterial().ambient);
+	renderer.getShader()->setVar("material", "diffuse", model.getMaterial().diffuse);
+	renderer.getShader()->setVar("material", "emmissive", model.getMaterial().emmissive);
+	renderer.getShader()->setVar("material", "specular", model.getMaterial().specular);
+	renderer.getShader()->setVar("material", "specularPower", model.getMaterial().specularPower);
+
 	renderer.getShader()->apply();
 
 	model.render(renderer);

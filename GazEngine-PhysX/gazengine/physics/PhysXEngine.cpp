@@ -33,24 +33,18 @@ PhysXEngine::PhysXEngine(const Vector3& gravity, float fixedTimeStep) :
 	if (physics->getPvdConnectionManager() != NULL)
 	{
 		PxInitExtensions(*physics);
-		debuggerConnection = PxVisualDebuggerExt::createConnection(physics->getPvdConnectionManager(), "localhost",
-			5425, 100, PxVisualDebuggerExt::getAllConnectionFlags());
+		PvdConnection* debuggerConnection = PxVisualDebuggerExt::createConnection(physics->getPvdConnectionManager(),
+			"localhost", 5425, 100, PxVisualDebuggerExt::getAllConnectionFlags());
+		if (debuggerConnection != NULL)
+		{
+			debuggerConnection->release();
+		}
 	}
 #else
 	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 #endif
 
 	cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, PxCookingParams());
-}
-
-PhysXEngine::~PhysXEngine()
-{
-#if defined(DEBUG) || defined(_DEBUG)
-	if (debuggerConnection != NULL)
-	{
-		debuggerConnection->release();
-	}
-#endif
 }
 
 void PhysXEngine::addEntity(Entity* entity)
@@ -83,8 +77,12 @@ void PhysXEngine::advance()
 	{
 		PxShape* shapes;
 		static_cast<PxRigidBody*>(activeTransforms[index].actor)->getShapes(&shapes, 1);
-		SimpleTree* node = static_cast<SimpleTree*>(shapes->userData);
-		node->setTransformation(PhysXMatrix::toMatrix44(activeTransforms[index].actor2World));
+
+		if (shapes->userData != NULL)
+		{
+			SimpleTree* node = static_cast<SimpleTree*>(shapes->userData);
+			node->setTransformation(PhysXMatrix::toMatrix44(activeTransforms[index].actor2World));
+		}
 	}
 }
 

@@ -3,7 +3,6 @@
 #include "../input/KeyboardButtonEvent.h"
 #include "../input/MouseMoveEvent.h"
 #include "../math/MathFunctions.h"
-#include "../Messages.h"
 #include "FlyingCameraEngine.h"
 
 FlyingCameraEngine::FlyingCameraEngine(Camera* camera, float speed, Body* body) :

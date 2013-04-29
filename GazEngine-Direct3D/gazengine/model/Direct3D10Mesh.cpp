@@ -8,6 +8,7 @@ Direct3D10Mesh::Direct3D10Mesh(const Direct3D10Mesh& original) :
 	colour(),
 	device(original.device),
 	indices(),
+	material(),
 	mesh(NULL),
 	normalMap(NULL),
 	texture(NULL),
@@ -22,6 +23,7 @@ Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<Vertex>& verti
 	colour(0.0f, 0.0f, 0.0f, 1.0f),
 	device(device),
 	indices(indices),
+	material(),
 	mesh(NULL),
 	normalMap(NULL),
 	texture(NULL),
@@ -95,6 +97,11 @@ const vector<int>& Direct3D10Mesh::getIndices() const
 	return indices;
 }
 
+const Model::Material& Direct3D10Mesh::getMaterial() const
+{
+	return material;
+}
+
 ID3DX10Mesh* Direct3D10Mesh::getMesh() const
 {
 	return mesh;
@@ -163,6 +170,11 @@ void Direct3D10Mesh::render(Renderer& renderer) const
 void Direct3D10Mesh::setColour(const Vector4& colour)
 {
 	this->colour = colour;
+}
+
+void Direct3D10Mesh::setMaterial(const Material& material)
+{
+	this->material = material;
 }
 
 void Direct3D10Mesh::setNormalMap(Texture* normalMap)

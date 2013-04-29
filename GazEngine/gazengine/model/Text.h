@@ -10,6 +10,8 @@ class Text : public Model
 
 		const Vector4& getColour() const;
 
+		const Material& getMaterial() const;
+
 		Texture* getNormalMap() const;
 
 		const Vector2& getPosition() const;
@@ -26,6 +28,8 @@ class Text : public Model
 
 		void setColour(const Vector4& colour);
 
+		void setMaterial(const Material& material);
+
 		void setNormalMap(Texture* texture);
 
 		void setPosition(const Vector2& position);
@@ -40,6 +44,8 @@ class Text : public Model
 
 	private:
 		Vector4 colour;
+
+		Material material;
 
 		Vector2 position;
 

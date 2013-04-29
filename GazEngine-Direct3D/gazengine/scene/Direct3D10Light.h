@@ -3,6 +3,7 @@
 
 #include <d3dx10.h>
 
+#include <gazengine/graph/SimpleTree.h>
 #include <gazengine/scene/Light.h>
 
 #include "../rendering/Direct3D10Shader.h"
@@ -28,13 +29,19 @@ class Direct3D10Light : public Light
 
 		const Vector3& getDirection() const;
 
+		float getInnerAngle() const;
+
 		const std::string& getName() const;
+
+		float getOuterAngle() const;
 
 		float getRange() const;
 
 		const Vector4& getSpecularComponent() const;
 
-		float getStrength() const;
+		float getStrengthAtOrigin() const;
+
+		float getStrengthAtRange() const;
 
 		const Vector3& getTranslation() const;
 
@@ -48,11 +55,19 @@ class Direct3D10Light : public Light
 
 		void setDirection(const Vector3& direction);
 
+		void setInnerAngle(float innerAngle);
+
+		void setNode(const SimpleTree* node);
+
+		void setOuterAngle(float outerAngle);
+
 		void setRange(float range);
 
 		void setSpecularComponent(const Vector4& specular);
 
-		void setStrength(float strength);
+		void setStrengthAtOrigin(float strengthAtOrigin);
+
+		void setStrengthAtRange(float strengthAtRange);
 
 		void setTranslation(const Vector3& translation);
 
@@ -67,13 +82,21 @@ class Direct3D10Light : public Light
 
 		Vector3 direction;
 
+		float innerAngle;
+
 		std::string name;
+
+		const SimpleTree* node;
+
+		float outerAngle;
 
 		float range;
 
 		Vector4 specular;
 
-		float strength;
+		float strengthAtOrigin;
+
+		float strengthAtRange;
 
 		Vector3 translation;
 };

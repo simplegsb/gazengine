@@ -12,93 +12,93 @@ void ModelFactory::colorizeVertices(vector<Vertex>& vertices, const Vector4& col
 	}
 }
 
-Mesh* ModelFactory::createCube(float size, const Vector4& color, bool doubleSided)
+Mesh* ModelFactory::createBoxMesh(float length, float width, float height, const Vector4& color, bool doubleSided)
 {
 	// Vertices
 	vector<Vertex> vertices(24);
 	Vector3 normal;
 
 	normal = Vector3(0.0f, 0.0f, 1.0f);
-	vertices[0].position = Vector3(-size, size, size);
+	vertices[0].position = Vector3(-width, height, length);
 	vertices[0].color = color;
 	vertices[0].normal = normal;
-	vertices[1].position = Vector3(size, size, size);
+	vertices[1].position = Vector3(width, height, length);
 	vertices[1].color = color;
 	vertices[1].normal = normal;
-	vertices[2].position = Vector3(size, -size, size);
+	vertices[2].position = Vector3(width, -height, length);
 	vertices[2].color = color;
 	vertices[2].normal = normal;
-	vertices[3].position = Vector3(-size, -size, size);
+	vertices[3].position = Vector3(-width, -height, length);
 	vertices[3].color = color;
 	vertices[3].normal = normal;
 
 	normal = Vector3(0.0f, 0.0f, -1.0f);
-	vertices[4].position = Vector3(-size, -size, -size);
+	vertices[4].position = Vector3(-width, -height, -length);
 	vertices[4].color = color;
 	vertices[4].normal = normal;
-	vertices[5].position = Vector3(size, -size, -size);
+	vertices[5].position = Vector3(width, -height, -length);
 	vertices[5].color = color;
 	vertices[5].normal = normal;
-	vertices[6].position = Vector3(size, size, -size);
+	vertices[6].position = Vector3(width, height, -length);
 	vertices[6].color = color;
 	vertices[6].normal = normal;
-	vertices[7].position = Vector3(-size, size, -size);
+	vertices[7].position = Vector3(-width, height, -length);
 	vertices[7].color = color;
 	vertices[7].normal = normal;
 
 	normal = Vector3(0.0f, 1.0f, 0.0f);
-	vertices[8].position = Vector3(-size, size, -size);
+	vertices[8].position = Vector3(-width, height, -length);
 	vertices[8].color = color;
 	vertices[8].normal = normal;
-	vertices[9].position = Vector3(size, size, -size);
+	vertices[9].position = Vector3(width, height, -length);
 	vertices[9].color = color;
 	vertices[9].normal = normal;
-	vertices[10].position = Vector3(size, size, size);
+	vertices[10].position = Vector3(width, height, length);
 	vertices[10].color = color;
 	vertices[10].normal = normal;
-	vertices[11].position = Vector3(-size, size, size);
+	vertices[11].position = Vector3(-width, height, length);
 	vertices[11].color = color;
 	vertices[11].normal = normal;
 
 	normal = Vector3(-1.0f, 0.0f, 0.0f);
-	vertices[12].position = Vector3(-size, size, -size);
+	vertices[12].position = Vector3(-width, height, -length);
 	vertices[12].color = color;
 	vertices[12].normal = normal;
-	vertices[13].position = Vector3(-size, size, size);
+	vertices[13].position = Vector3(-width, height, length);
 	vertices[13].color = color;
 	vertices[13].normal = normal;
-	vertices[14].position = Vector3(-size, -size, size);
+	vertices[14].position = Vector3(-width, -height, length);
 	vertices[14].color = color;
 	vertices[14].normal = normal;
-	vertices[15].position = Vector3(-size, -size, -size);
+	vertices[15].position = Vector3(-width, -height, -length);
 	vertices[15].color = color;
 	vertices[15].normal = normal;
 
 	normal = Vector3(1.0f, 0.0f, 0.0f);
-	vertices[16].position = Vector3(size, size, size);
+	vertices[16].position = Vector3(width, height, length);
 	vertices[16].color = color;
 	vertices[16].normal = normal;
-	vertices[17].position = Vector3(size, size, -size);
+	vertices[17].position = Vector3(width, height, -length);
 	vertices[17].color = color;
 	vertices[17].normal = normal;
-	vertices[18].position = Vector3(size, -size, -size);
+	vertices[18].position = Vector3(width, -height, -length);
 	vertices[18].color = color;
 	vertices[18].normal = normal;
-	vertices[19].position = Vector3(size, -size, size);
+	vertices[19].position = Vector3(width, -height, length);
 	vertices[19].color = color;
 	vertices[19].normal = normal;
 
 	normal = Vector3(0.0f, -1.0f, 0.0f);
-	vertices[20].position = Vector3(-size, -size, size);
+	vertices[20].position = Vector3(-width, -height, length);
 	vertices[20].color = color;
 	vertices[20].normal = normal;
-	vertices[21].position = Vector3(size, -size, size);
+	vertices[21].position = Vector3(width, -height, length);
 	vertices[21].color = color;
 	vertices[21].normal = normal;
-	vertices[22].position = Vector3(size, -size, -size);
+	vertices[22].position = Vector3(width, -height, -length);
 	vertices[22].color = color;
 	vertices[22].normal = normal;
-	vertices[23].position = Vector3(-size, -size, -size);
+	vertices[23].position = Vector3(-width, -height, -length);
 	vertices[23].color = color;
 	vertices[23].normal = normal;
 
@@ -203,7 +203,12 @@ Mesh* ModelFactory::createCube(float size, const Vector4& color, bool doubleSide
 	return createMesh(vertices, indices);
 }
 
-Mesh* ModelFactory::createPrism(float size, const Vector4& color)
+Mesh* ModelFactory::createCubeMesh(float size, const Vector4& color, bool doubleSided)
+{
+	return createBoxMesh(size, size, size, color, doubleSided);
+}
+
+Mesh* ModelFactory::createPrismMesh(float size, const Vector4& color)
 {
 	// Vertices
 	vector<Vertex> vertices(18);
@@ -314,7 +319,7 @@ Mesh* ModelFactory::createPrism(float size, const Vector4& color)
 	return createMesh(vertices, indices);
 }
 
-Mesh* ModelFactory::createSquare(float size, const Vector4& color, bool doubleSided)
+Mesh* ModelFactory::createSquareMesh(float size, const Vector4& color, bool doubleSided)
 {
 	// Vertices
 	vector<Vertex> vertices(4);

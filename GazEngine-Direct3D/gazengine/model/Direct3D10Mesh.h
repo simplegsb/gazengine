@@ -24,6 +24,8 @@ class Direct3D10Mesh : public Mesh
 
 		const std::vector<int>& getIndices() const;
 
+		const Material& getMaterial() const;
+
 		ID3DX10Mesh* getMesh() const;
 
 		Texture* getNormalMap() const;
@@ -46,6 +48,8 @@ class Direct3D10Mesh : public Mesh
 
 		void setColour(const Vector4& colour);
 
+		void setMaterial(const Material& material);
+
 		void setNormalMap(Texture* normalMap);
 
 		void setPrimitiveType(PrimitiveType primitiveType);
@@ -62,6 +66,8 @@ class Direct3D10Mesh : public Mesh
 		ID3D10Device& device;
 
 		std::vector<int> indices;
+
+		Material material;
 
 		ID3DX10Mesh* mesh;
 
