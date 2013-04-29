@@ -27,6 +27,8 @@ class Text : public Model
 
 		void setPosition(const Vector2& position);
 
+		void setPrimitiveType(PrimitiveType primitiveType);
+
 		void setText(const std::string& text);
 
 		void setTexture(Texture* texture);

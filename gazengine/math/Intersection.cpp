@@ -1,5 +1,7 @@
 #include "Intersection.h"
 
+using namespace std;
+
 namespace Intersection
 {
 	bool contains(const AABB2& aabb, const Circle& circle)
@@ -21,6 +23,13 @@ namespace Intersection
 		}
 
 		return false;
+	}
+
+	float getIntersectionTime(const Vector3& lineSegmentStart, const Vector3& lineSegmentFinish,
+			const Plane& plane)
+	{
+		return plane.getNormal().dotProduct(plane.getPositionOnPlane() - lineSegmentStart) /
+			plane.getNormal().dotProduct(lineSegmentFinish - lineSegmentStart);
 	}
 
 	bool intersect(const AABB2& a, const AABB2& b)
@@ -71,5 +80,60 @@ namespace Intersection
 	bool intersect(const Circle& a, const Circle& b)
 	{
 		return (a.getPosition() - b.getPosition()).length() < a.getRadius() + b.getRadius();
+	}
+
+	bool intersect(const Plane& plane, const std::vector<Vector3>& triangle)
+	{
+		if (intersect(plane, triangle[0], triangle[1]))
+		{
+			return true;
+		}
+
+		if (intersect(plane, triangle[1], triangle[2]))
+		{
+			return true;
+		}
+
+		if (intersect(plane, triangle[2], triangle[0]))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	RelativePosition intersect(const Plane& plane, const Vector3& point)
+	{
+		float referenceDistance = plane.getNormal().dotProduct(plane.getPositionOnPlane());
+		float result = plane.getNormal().dotProduct(point) - referenceDistance;
+
+		if (result < 0.0f)
+		{
+			return BEHIND;
+		}
+		else if (result > 0.0f)
+		{
+			return INFRONT;
+		}
+		else
+		{
+			return ON_PLANE;
+		}
+	}
+
+	bool intersect(const Plane& plane, const Vector3& lineSegmentStart, const Vector3& lineSegmentFinish)
+	{
+		int startPosition = intersect(plane, lineSegmentStart);
+		int finishPosition = intersect(plane, lineSegmentFinish);
+
+		if (startPosition == BEHIND && finishPosition == INFRONT ||
+			startPosition == INFRONT && finishPosition == BEHIND ||
+			startPosition == ON_PLANE ||
+			finishPosition == ON_PLANE)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

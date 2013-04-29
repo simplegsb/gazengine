@@ -53,6 +53,10 @@ void Text::setPosition(const Vector2& position)
 	this->position = position;
 }
 
+void Text::setPrimitiveType(PrimitiveType)
+{
+}
+
 void Text::setText(const std::string& text)
 {
 	this->text = text;
