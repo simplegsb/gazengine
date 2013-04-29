@@ -49,6 +49,10 @@ void GDICircle::setNormalMap(Texture*)
 {
 }
 
+void GDICircle::setPrimitiveType(PrimitiveType)
+{
+}
+
 void GDICircle::setTexture(Texture*)
 {
 }

@@ -60,7 +60,20 @@ void GDIRenderer::render(const Mesh& model)
 
 		DeleteObject(brush);
 	}
-	else if (model.getPrimitiveType() == Model::LINE_STREAM)
+	else if (model.getPrimitiveType() == Model::LINE_LIST)
+	{
+		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
+		SelectObject(buffer, pen);
+
+		for (unsigned int index = 0; index < gdiMesh.getVertices().size(); index += 2)
+		{
+			MoveToEx(buffer, (int) gdiMesh.getVertices().at(index).x, (int) gdiMesh.getVertices().at(index).y, NULL);
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index + 1).x, (int) gdiMesh.getVertices().at(index + 1).y);
+		}
+
+		DeleteObject(pen);
+	}
+	else if (model.getPrimitiveType() == Model::LINE_STRIP)
 	{
 		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
 		SelectObject(buffer, pen);
@@ -93,7 +106,7 @@ void GDIRenderer::render(const Mesh& model)
 
 		DeleteObject(pen);
 	}
-	else if (model.getPrimitiveType() == Model::TRIANGLE_STREAM)
+	else if (model.getPrimitiveType() == Model::TRIANGLE_STRIP)
 	{
 		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
 		SelectObject(buffer, pen);

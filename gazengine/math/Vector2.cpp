@@ -29,7 +29,12 @@ float Vector2::dotProduct(const Vector2& other) const
 
 float Vector2::length() const
 {
-	return sqrt(pow(abs(x), 2) + pow(abs(y), 2));
+	return sqrt(lengthSquared());
+}
+
+float Vector2::lengthSquared() const
+{
+	return pow(abs(x), 2) + pow(abs(y), 2);
 }
 
 void Vector2::normalise()

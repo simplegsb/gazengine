@@ -11,11 +11,11 @@ class Model : public Component
 		enum PrimitiveType
 		{
 			LINE_LIST,
-			LINE_STREAM,
+			LINE_STRIP,
 			NA,
 			POINTS,
 			TRIANGLE_LIST,
-			TRIANGLE_STREAM
+			TRIANGLE_STRIP
 		};
 
 		virtual ~Model()

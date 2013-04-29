@@ -19,6 +19,8 @@ struct Vector2
 
 	float length() const;
 
+	float lengthSquared() const;
+
 	void normalise();
 
 	Vector2& operator-=(const Vector2& other);

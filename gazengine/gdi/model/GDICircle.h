@@ -28,6 +28,8 @@ class GDICircle : public Circle
 
 		void setNormalMap(Texture* texture);
 
+		void setPrimitiveType(PrimitiveType primitiveType);
+
 		void setTexture(Texture* texture);
 
 		void setVisible(bool visible);
