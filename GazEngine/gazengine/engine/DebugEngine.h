@@ -8,8 +8,6 @@
 class DebugEngine : public Engine
 {
 	public:
-		DebugEngine();
-
 		DebugEngine(Engine* engine);
 
 		virtual ~DebugEngine();

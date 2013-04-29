@@ -14,22 +14,21 @@ PhysXEngine::PhysXEngine(const Vector3& gravity, float fixedTimeStep) :
 	allocator(),
 	cooking(),
 	cpuDispatcher(NULL),
-	cudaContextManager(NULL),
 	errorCallback(),
 	fixedTimeStep(fixedTimeStep),
 	foundation(NULL),
 	gravity(gravity),
 	physics(NULL),
-	profileZoneManager(NULL),
 	scene(NULL),
 	simulationEventCallback(NULL),
 	simulationFilterShader(PxDefaultSimulationFilterShader)
 {
 	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
-	profileZoneManager = &PxProfileZoneManager::createProfileZoneManager(foundation);
 
 #if defined(DEBUG) || defined(_DEBUG)
-	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, profileZoneManager);
+	PxProfileZoneManager& profileZoneManager =
+		PxProfileZoneManager::createProfileZoneManager(foundation);
+	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, &profileZoneManager);
 
 	if (physics->getPvdConnectionManager() != NULL)
 	{
@@ -41,52 +40,11 @@ PhysXEngine::PhysXEngine(const Vector3& gravity, float fixedTimeStep) :
 			debuggerConnection->release();
 		}
 	}
-
-	physics->getVisualDebugger()->setVisualizeConstraints(true);
-	physics->getVisualDebugger()->setVisualDebuggerFlag(PxVisualDebuggerFlags::eTRANSMIT_CONTACTS, true);
 #else
 	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 #endif
 
 	cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, PxCookingParams());
-
-#ifdef PX_WINDOWS
-    cudaContextManager = pxtask::createCudaContextManager(*foundation, pxtask::CudaContextManagerDesc(),
-		profileZoneManager);
-#endif
-}
-
-PhysXEngine::~PhysXEngine()
-{
-	if (cpuDispatcher != NULL)
-	{
-		cpuDispatcher->release();
-	}
-
-	if (cooking != NULL)
-	{
-		cooking->release();
-	}
-
-	if (physics != NULL)
-	{
-		physics->release();
-	}
-
-	if (cudaContextManager != NULL)
-	{
-		cudaContextManager->release();
-	}
-
-	if (profileZoneManager != NULL)
-	{
-		profileZoneManager->release();
-	}
-
-	if (foundation != NULL)
-	{
-		foundation->release();
-	}
 }
 
 void PhysXEngine::addEntity(Entity* entity)
@@ -117,23 +75,32 @@ void PhysXEngine::advance()
 
 	for (PxU32 index = 0; index < activeTransformCount; index++)
 	{
-		PxShape* shape;
-		static_cast<PxRigidBody*>(activeTransforms[index].actor)->getShapes(&shape, 1);
-		SimpleTree* node = static_cast<SimpleTree*>(shape->userData);
-		node->setTransformation(PhysXMatrix::toMatrix44(activeTransforms[index].actor2World));
+		PxShape* shapes;
+		static_cast<PxRigidBody*>(activeTransforms[index].actor)->getShapes(&shapes, 1);
+
+		if (shapes->userData != NULL)
+		{
+			SimpleTree* node = static_cast<SimpleTree*>(shapes->userData);
+			node->setTransformation(PhysXMatrix::toMatrix44(activeTransforms[index].actor2World));
+		}
 	}
 }
 
 void PhysXEngine::destroy()
 {
-	if (scene != NULL)
-	{
-		scene->release();
-	}
-
 	if (simulationEventCallback != NULL)
 	{
 		delete simulationEventCallback;
+	}
+
+	if (physics != NULL)
+	{
+		physics->release();
+	}
+
+	if (foundation != NULL)
+	{
+		foundation->release();
 	}
 }
 
@@ -149,25 +116,15 @@ PxPhysics* PhysXEngine::getPhysics()
 
 void PhysXEngine::init()
 {
-	cpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-
 	PxSceneDesc sceneDesc(physics->getTolerancesScale());
+	cpuDispatcher = PxDefaultCpuDispatcherCreate(1);
 	sceneDesc.cpuDispatcher = cpuDispatcher;
-	sceneDesc.flags = PxSceneFlag::eENABLE_ACTIVETRANSFORMS | PxSceneFlag::eENABLE_SWEPT_INTEGRATION;
-	if (cudaContextManager != NULL)
-	{
-		sceneDesc.gpuDispatcher = cudaContextManager->getGpuDispatcher();
-	}
+	sceneDesc.flags = PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 	sceneDesc.gravity = PhysXVector::toPxVec3(gravity);
 	sceneDesc.filterShader = simulationFilterShader;
 	sceneDesc.simulationEventCallback = simulationEventCallback;
 
 	scene = physics->createScene(sceneDesc);
-
-#if defined(DEBUG) || defined(_DEBUG)
-	scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
-	scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
-#endif
 }
 
 void PhysXEngine::removeEntity(const Entity& entity)

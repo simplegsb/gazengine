@@ -1,8 +1,6 @@
 #ifndef GAZENGINE_H_
 #define GAZENGINE_H_
 
-#include <vld.h>
-
 #include "engine/Engine.h"
 #include "graph/SimpleTree.h"
 

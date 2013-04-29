@@ -10,7 +10,7 @@ VerletIntegrator::VerletIntegrator(float damping) :
 {
 }
 
-void VerletIntegrator::integrate(SimpleBody& body)
+void VerletIntegrator::integrate(Body& body)
 {
 	if (previousPositions.find(&body) == previousPositions.end())
 	{

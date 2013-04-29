@@ -39,11 +39,6 @@ Matrix44 SimpleTree::getAbsoluteTransformation() const
 	return absoluteMatrix;
 }
 
-vector<SimpleTree*>& SimpleTree::getChildren()
-{
-	return children;
-}
-
 const vector<SimpleTree*>& SimpleTree::getChildren() const
 {
 	return children;

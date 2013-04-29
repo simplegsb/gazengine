@@ -19,6 +19,30 @@ Vector<Data, 3> crossProduct(const Vector<Data, 3>& lhs, const Vector<Data, 3>& 
 }
 
 template<typename Data>
+float getAngleBetween(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
+{
+	return acos(dotProduct(lhs, rhs) / (lhs.getMagnitude() * rhs.getMagnitude()));
+}
+
+template<typename Data>
+float getAngleBetween(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
+{
+	return acos(dotProduct(lhs, rhs) / (lhs.getMagnitude() * rhs.getMagnitude()));
+}
+
+template<typename Data>
+float getAngleBetweenNormalized(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
+{
+	return acos(dotProduct(lhs, rhs));
+}
+
+template<typename Data>
+float getAngleBetweenNormalized(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
+{
+	return acos(dotProduct(lhs, rhs));
+}
+
+template<typename Data>
 Vector<Data, 3> getOut3(Matrix<Data, 4, 4>& matrix)
 {
 	return Vector<Data, 3>(&matrix[8], false);
@@ -40,6 +64,15 @@ template<typename Data>
 const Vector<Data, 4> getOut4(const Matrix<Data, 4, 4>& matrix)
 {
 	return Vector<Data, 4>(const_cast<Data*>(&matrix[8]), false);
+}
+
+template<typename Data, unsigned int Size>
+Vector<Data, Size> getProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs)
+{
+	Vector<Data, Size>& rhsNormalized = rhs;
+	rhsNormalized.normalize();
+
+	return rhsNormalized * getScalarProjection(lhs, rhs);
 }
 
 template<typename Data>
@@ -82,6 +115,12 @@ template<typename Data>
 const Vector<Data, 4> getRight4(const Matrix<Data, 4, 4>& matrix)
 {
 	return Vector<Data, 4>(const_cast<Data*>(&matrix[0]), false);
+}
+
+template<typename Data, unsigned int Size>
+float getScalarProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs)
+{
+	return lhs.getMagnitude() * cos(getAngleBetween(lhs, rhs));
 }
 
 template<typename Data>

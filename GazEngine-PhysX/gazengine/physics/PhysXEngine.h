@@ -11,8 +11,6 @@ class PhysXEngine : public Engine
 	public:
 		PhysXEngine(const Vector3& gravity, float fixedTimeStep);
 
-		~PhysXEngine();
-
 		void addEntity(Entity* entity);
 
 		void advance();
@@ -38,8 +36,6 @@ class PhysXEngine : public Engine
 
 		physx::PxDefaultCpuDispatcher* cpuDispatcher;
 
-		physx::pxtask::CudaContextManager* cudaContextManager;
-
 		physx::PxDefaultErrorCallback errorCallback;
 
 		float fixedTimeStep;
@@ -49,8 +45,6 @@ class PhysXEngine : public Engine
 		Vector3 gravity;
 
 		physx::PxPhysics* physics;
-
-		physx::PxProfileZoneManager* profileZoneManager;
 
 		physx::PxScene* scene;
 

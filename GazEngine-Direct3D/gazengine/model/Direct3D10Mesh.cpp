@@ -75,11 +75,6 @@ Direct3D10Mesh::~Direct3D10Mesh()
 	{
 		delete normalMap;
 	}
-
-	if (texture != NULL)
-	{
-		delete texture;
-	}
 }
 
 const Vector4& Direct3D10Mesh::getColour() const

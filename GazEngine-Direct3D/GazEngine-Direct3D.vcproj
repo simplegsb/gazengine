@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\gazengine\rendering\Direct3D10RenderingFactory.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\gazengine\rendering\Direct3D10Shader.cpp"
 				>
 			</File>
@@ -246,6 +250,10 @@
 			</File>
 			<File
 				RelativePath=".\gazengine\rendering\Direct3D10RenderingEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\gazengine\rendering\Direct3D10RenderingFactory.h"
 				>
 			</File>
 			<File

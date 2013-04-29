@@ -1,37 +1,19 @@
 #include "SimpleBody.h"
 
 SimpleBody::SimpleBody(const Material& material, Model* model, const Matrix44& transformation, bool dynamic) :
+	angularVelocity(0.0f, 0.0f, 0.0f),
 	node(NULL),
 	dynamic(dynamic),
-	linearAcceleration(0.0f, 0.0f),
-	linearVelocity(0.0f, 0.0f),
+	linearAcceleration(0.0f, 0.0f, 0.0f),
+	linearVelocity(0.0f, 0.0f, 0.0f),
 	mass(1.0f),
 	material(material),
-	models(),
-	transformation(transformation)
-{
-	models.push_back(model);
-}
-
-SimpleBody::SimpleBody(const Material& material, const vector<const Model*>& models, const Matrix44& transformation,
-					   bool dynamic) :
-	node(NULL),
-	dynamic(dynamic),
-	linearAcceleration(0.0f, 0.0f),
-	linearVelocity(0.0f, 0.0f),
-	mass(1.0f),
-	material(material),
-	models(models),
+	model(model),
 	transformation(transformation)
 {
 }
 
-void SimpleBody::applyForce(const Vector3& force)
-{
-	linearAcceleration += force;// / mass;
-}
-
-void SimpleBody::applyForce(const Vector3& force, const Vector3& /*position*/) // Ignore position, no angular simulation yet...
+void SimpleBody::applyForce(const Vector3& force, const Vector3&) // Ignore position, no angular simulation yet...
 {
 	linearAcceleration += force;// / mass;
 }
@@ -43,6 +25,11 @@ void SimpleBody::applyTorque(const Vector3& /*torque*/)
 void SimpleBody::clearForces()
 {
 	linearAcceleration = Vector3(0.0f, 0.0f, 0.0f);
+}
+
+const Vector3& SimpleBody::getAngularVelocity() const
+{
+	return angularVelocity;
 }
 
 const Vector3& SimpleBody::getLinearAcceleration() const
@@ -65,9 +52,14 @@ const Body::Material& SimpleBody::getMaterial() const
 	return material;
 }
 
-const vector<const Model*>& SimpleBody::getModels() const
+const Model* SimpleBody::getModel() const
 {
-	return models;
+	return model;
+}
+
+SimpleTree* SimpleBody::getNode() const
+{
+	return node;
 }
 
 Matrix44& SimpleBody::getTransformation()

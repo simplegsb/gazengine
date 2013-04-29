@@ -215,18 +215,6 @@ namespace GazEngine
 	{
 		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeRemoved.size(); entityIndex++)
 		{
-			for (unsigned int entityIndex2 = entityIndex + 1; entityIndex2 < entitiesToBeRemoved.size(); entityIndex2++)
-			{
-				if (entitiesToBeRemoved[entityIndex] == entitiesToBeRemoved[entityIndex2])
-				{
-					int i = 0;
-					i++;
-				}
-			}
-		}
-
-		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeRemoved.size(); entityIndex++)
-		{
 			vector<Entity*>::iterator entityIter = find(entities.begin(),
 				entities.end(), entitiesToBeRemoved[entityIndex]);
 			if (entityIter != entities.end())

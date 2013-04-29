@@ -49,6 +49,11 @@ void Direct3D10Shader::initInputLayout()
 		passDescription.IAInputSignatureSize, &inputLayout);
 }
 
+void Direct3D10Shader::setVar(const string& name, bool value)
+{
+	effect->GetVariableByName(name.data())->AsScalar()->SetBool(value);
+}
+
 void Direct3D10Shader::setVar(const string& name, const Matrix44& value)
 {
 	// I'm trusting Direct3D to not change the value here...
@@ -75,6 +80,11 @@ void Direct3D10Shader::setVar(const string& name, const Vector4& value)
 void Direct3D10Shader::setVar(const string& name, ID3D10ShaderResourceView* value)
 {
 	effect->GetVariableByName(name.data())->AsShaderResource()->SetResource(value);
+}
+
+void Direct3D10Shader::setVar(const string& structName, const string& name, bool value)
+{
+	effect->GetVariableByName(structName.data())->GetMemberByName(name.data())->AsScalar()->SetBool(value);
 }
 
 void Direct3D10Shader::setVar(const string& structName, const string& name, const Matrix44& value)

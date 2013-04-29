@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GazEngine;../PhysX/include;&quot;C:\Program Files (x86)\Visual Leak Detector\include&quot;"
+				AdditionalIncludeDirectories="../GazEngine;../PhysX/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="PhysX3CHECKED_x86.lib PhysX3CommonCHECKED_x86.lib PhysX3CookingCHECKED_x86.lib PhysX3ExtensionsCHECKED.lib PhysXProfileSDKCHECKED.lib PhysXVisualDebuggerSDKCHECKED.lib PxTaskCHECKED.lib"
+				AdditionalDependencies="PhysX3CHECKED_x86.lib PhysX3CommonCHECKED_x86.lib PhysX3CookingCHECKED_x86.lib PhysX3ExtensionsCHECKED.lib PhysXProfileSDKCHECKED.lib PhysXVisualDebuggerSDKCHECKED.lib"
 				AdditionalLibraryDirectories="../PhysX/lib/win32"
 			/>
 			<Tool
@@ -108,7 +108,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../GazEngine;../PhysX/include;&quot;C:\Program Files (x86)\Visual Leak Detector\include&quot;"
+				AdditionalIncludeDirectories="../GazEngine;../PhysX/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -127,7 +127,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="PhysX3_x86.lib PhysX3Common_x86.lib PhysX3Cooking_x86.lib PhysX3Extensions.lib PhysXProfileSDK.lib PxTask.lib"
+				AdditionalDependencies="PhysX3_x86.lib PhysX3Common_x86.lib PhysX3Cooking_x86.lib PhysX3Extensions.lib PhysXProfileSDK.lib"
 				AdditionalLibraryDirectories="../PhysX/lib/win32"
 			/>
 			<Tool
@@ -164,10 +164,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\physics\PhysXFixedConstraint.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\math\PhysXMatrix.cpp"
 				>
 			</File>
@@ -191,10 +187,6 @@
 			</File>
 			<File
 				RelativePath=".\gazengine\physics\PhysXEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\physics\PhysXFixedConstraint.h"
 				>
 			</File>
 			<File

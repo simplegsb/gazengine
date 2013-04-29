@@ -21,6 +21,8 @@ class Direct3D10Shader
 
 		void initInputLayout();
 
+		void setVar(const std::string& name, bool value);
+
 		void setVar(const std::string& name, const Matrix44& value);
 
 		void setVar(const std::string& name, float value);
@@ -30,6 +32,8 @@ class Direct3D10Shader
 		void setVar(const std::string& name, const Vector4& value);
 
 		void setVar(const std::string& name, ID3D10ShaderResourceView* value);
+
+		void setVar(const std::string& structName, const std::string& name, bool value);
 
 		void setVar(const std::string& structName, const std::string& name, const Matrix44& value);
 

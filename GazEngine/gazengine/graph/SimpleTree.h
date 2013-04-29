@@ -18,8 +18,6 @@ class SimpleTree : public Tree
 
 		Matrix44 getAbsoluteTransformation() const;
 
-		std::vector<SimpleTree*>& getChildren();
-
 		const std::vector<SimpleTree*>& getChildren() const;
 
 		Model* getModel();

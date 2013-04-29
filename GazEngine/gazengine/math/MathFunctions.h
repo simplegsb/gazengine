@@ -13,6 +13,18 @@ namespace MathFunctions
 	Vector<Data, 3> crossProduct(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs);
 
 	template<typename Data>
+	float getAngleBetween(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs);
+
+	template<typename Data>
+	float getAngleBetween(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs);
+
+	template<typename Data>
+	float getAngleBetweenNormalized(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs);
+
+	template<typename Data>
+	float getAngleBetweenNormalized(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs);
+
+	template<typename Data>
 	Vector<Data, 3> getOut3(Matrix<Data, 4, 4>& matrix);
 
 	template<typename Data>
@@ -23,6 +35,9 @@ namespace MathFunctions
 
 	template<typename Data>
 	const Vector<Data, 4> getOut4(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data, unsigned int Size>
+	Vector<Data, Size> getProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs);
 
 	template<typename Data>
 	Data getProximity(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs);
@@ -41,6 +56,9 @@ namespace MathFunctions
 
 	template<typename Data>
 	const Vector<Data, 4> getRight4(const Matrix<Data, 4, 4>& matrix);
+
+	template<typename Data, unsigned int Size>
+	float getScalarProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs);
 
 	template<typename Data>
 	Vector<Data, 3> getTranslation3(Matrix<Data, 4, 4>& matrix);

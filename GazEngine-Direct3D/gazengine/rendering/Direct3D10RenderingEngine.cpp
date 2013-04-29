@@ -283,9 +283,15 @@ void Direct3D10RenderingEngine::renderModel(Direct3D10Renderer& renderer, const 
 	{
 		static_cast<Direct3D10Texture*>(model.getNormalMap())->apply(*renderer.getShader());
 	}
+
 	if (model.getTexture() != NULL)
 	{
 		static_cast<Direct3D10Texture*>(model.getTexture())->apply(*renderer.getShader());
+		renderer.getShader()->setVar("textured", true);
+	}
+	else
+	{
+		renderer.getShader()->setVar("textured", false);
 	}
 
 	renderer.getShader()->setVar("material", "ambient", model.getMaterial().ambient);

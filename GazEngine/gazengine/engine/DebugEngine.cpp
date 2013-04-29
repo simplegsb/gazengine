@@ -1,18 +1,7 @@
 #include <sstream>
 
 #include "../GazEngine.h"
-#include "../math/MathFunctions.h"
 #include "DebugEngine.h"
-
-DebugEngine::DebugEngine() :
-	advanceCount(0.0f),
-	advanceTimer(),
-	debugText(NULL),
-	engine(NULL),
-	outputTimer()
-{
-	restart();
-}
 
 DebugEngine::DebugEngine(Engine* engine) :
 	advanceCount(0.0f),
@@ -26,10 +15,7 @@ DebugEngine::DebugEngine(Engine* engine) :
 
 DebugEngine::~DebugEngine()
 {
-	if (engine != NULL)
-	{
-		delete engine;
-	}
+	delete engine;
 }
 
 void DebugEngine::addEntity(Entity* /*entity*/)
@@ -40,10 +26,7 @@ void DebugEngine::advance()
 {
 	advanceTimer.reset();
 
-	if (engine != NULL)
-	{
-		engine->advance();
-	}
+	engine->advance();
 	advanceCount++;
 
 	advanceTimer.tick();
@@ -65,10 +48,7 @@ void DebugEngine::destroy()
 {
 	GazEngine::addEntity(debugText->getEntity());
 
-	if (engine != NULL)
-	{
-		engine->destroy();
-	}
+	engine->destroy();
 }
 
 float DebugEngine::getAdvanceTime() const
@@ -88,17 +68,9 @@ const Text* DebugEngine::getDebugText() const
 
 void DebugEngine::init()
 {
-	if (engine != NULL)
-	{
-		engine->init();
-	}
+	engine->init();
 
 	outputTimer.reset();
-
-	SimpleTree* node = new SimpleTree;
-	node->setModel(debugText);
-	setTranslation(node->getTransformation(), Vector3(-1.0f, 0.75f, -1.0f));
-	GazEngine::addToWorld(node);
 }
 
 void DebugEngine::removeEntity(const Entity& /*entity*/)
