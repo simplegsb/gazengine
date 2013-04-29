@@ -12,6 +12,10 @@ class Direct3D10Camera
 
 		D3DXMATRIX getFinalTransformation() const;
 
+		float getFrameHeight() const;
+
+		float getFrameWidth() const;
+
 		float getNearClippingDistance() const;
 
 		D3DXVECTOR3 getTranslation() const;
@@ -22,12 +26,16 @@ class Direct3D10Camera
 
 		void setNearClippingDistance(float nearClippingDistance);
 
+		void setOrthogonal(float width, float height);
+
 		void setPerspective(float yAxisFieldOfView, float aspectRatio);
 
 		void setTranslation(const D3DXVECTOR3& translation);
 
 	private:
 		float farClippingDistance;
+
+		float frameHeight;
 
 		float nearClippingDistance;
 
@@ -36,6 +44,8 @@ class Direct3D10Camera
 		D3DXVECTOR3 translation;
 
 		D3DXMATRIX view;
+
+		float frameWidth;
 };
 
 #endif /* DIRECT3D10SHADER_H_ */

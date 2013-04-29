@@ -4,8 +4,54 @@
 
 using namespace std;
 
-Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<DWORD>& indices, const vector<Vertex>& vertices) :
+Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices) :
+	device(device), indexBuffer(NULL), indexCount(vertices.size()), vertexBuffer(NULL)
+{
+	vector<DWORD> indices;
+	for (unsigned int index = 0; index < vertices.size(); index++)
+	{
+		indices.push_back(index);
+	}
+
+	init(vertices, indices);
+}
+
+Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<Vertex>& vertices, const vector<DWORD>& indices) :
 	device(device), indexBuffer(NULL), indexCount(indices.size()), vertexBuffer(NULL)
+{
+	init(vertices, indices);
+}
+
+Direct3D10Mesh::~Direct3D10Mesh()
+{
+	if (indexBuffer != NULL)
+	{
+		indexBuffer->Release();
+	}
+
+	if (vertexBuffer != NULL)
+	{
+		vertexBuffer->Release();
+	}
+}
+
+void Direct3D10Mesh::draw()
+{
+	UINT offset = 0;
+	UINT stride = sizeof(Vertex);
+
+	device.IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	device.IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	device.IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    device.DrawIndexed(indexCount, 0, 0);
+}
+
+Model::PrimitiveType Direct3D10Mesh::getPrimitiveType() const
+{
+	return Model::TRIANGLE_LIST;
+}
+
+void Direct3D10Mesh::init(const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices)
 {
 	D3D10_BUFFER_DESC vertexBufferDescription;
     vertexBufferDescription.BindFlags = D3D10_BIND_VERTEX_BUFFER;
@@ -30,33 +76,4 @@ Direct3D10Mesh::Direct3D10Mesh(ID3D10Device& device, const vector<DWORD>& indice
     indexData.pSysMem = &indices[0];
 
     device.CreateBuffer(&indexBufferDescription, &indexData, &indexBuffer);
-}
-
-Direct3D10Mesh::~Direct3D10Mesh()
-{
-	if (indexBuffer != NULL)
-	{
-		indexBuffer->Release();
-	}
-
-	if (vertexBuffer != NULL)
-	{
-		vertexBuffer->Release();
-	}
-}
-
-void Direct3D10Mesh::draw()
-{
-	UINT offset = 0;
-	UINT stride = sizeof(Vertex);
-
-	device.IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	device.IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	device.IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    device.DrawIndexed(indexCount, 0, 0);
-}
-
-Model::PrimitiveType Direct3D10Mesh::getPrimitiveType() const
-{
-	return Model::TRIANGLE_LIST;
 }

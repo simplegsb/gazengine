@@ -215,6 +215,6 @@ namespace Direct3D10ModelFactory
 		indices[34] = 19;
 		indices[35] = 18;
 
-		return new Direct3D10Mesh(device, indices, vertices);
+		return new Direct3D10Mesh(device, vertices, indices);
 	}
 }

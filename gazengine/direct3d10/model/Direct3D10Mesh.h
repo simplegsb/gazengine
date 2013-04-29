@@ -11,13 +11,17 @@
 class Direct3D10Mesh : public Model
 {
 	public:
-		Direct3D10Mesh(ID3D10Device& device, const std::vector<DWORD>& indices, const std::vector<Vertex>& vertices);
+		Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices);
+
+		Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices);
 
 		virtual ~Direct3D10Mesh();
 		
 		void draw();
 		
 		PrimitiveType getPrimitiveType() const;
+		
+		void init(const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices);
 
 	private:
 		Direct3D10Mesh(const Direct3D10Mesh& original);

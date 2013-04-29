@@ -91,7 +91,7 @@ namespace Direct3D10TerrainFactory
 			indices.push_back(segmentIndex * 4 + 0);
 		}
 
-		return new Direct3D10Mesh(device, indices, vertices);
+		return new Direct3D10Mesh(device, vertices, indices);
 	}
 
 	Model* create3DPerlinTerrain(ID3D10Device& device, float width, float depth, float heightScalar,
@@ -164,7 +164,7 @@ namespace Direct3D10TerrainFactory
 			}
 		}
 
-		return new Direct3D10Mesh(device, indices, vertices);
+		return new Direct3D10Mesh(device, vertices, indices);
 	}
 
 	Model* createMidPointDisplacementTerrain(ID3D10Device& device, float width, unsigned int iterations,
