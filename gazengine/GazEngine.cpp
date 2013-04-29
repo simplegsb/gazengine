@@ -11,8 +11,13 @@ using namespace std;
 
 namespace GazEngine
 {
+	void addPendingEntities();
+	void removePendingEntities();
+
 	vector<Engine*> engines;
 	vector<Entity*> entities;
+	vector<Entity*> entitiesToBeAdded;
+	vector<const Entity*> entitiesToBeRemoved;
 	Timer frameTimer;
 	bool initialised = false;
 	unsigned short maxFrameRate = 0;
@@ -32,12 +37,20 @@ namespace GazEngine
 
 	void addEntity(Entity* entity)
 	{
-		for (unsigned int index = 0; index < engines.size(); index++)
-		{
-			engines[index]->addEntity(entity);
-		}
+		entitiesToBeAdded.push_back(entity);
+	}
 
-		entities.push_back(entity);
+	void addPendingEntities()
+	{
+		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeAdded.size(); entityIndex++)
+		{
+			for (unsigned int engineIndex = 0; engineIndex < engines.size(); engineIndex++)
+			{
+				engines[engineIndex]->addEntity(entitiesToBeAdded[entityIndex]);
+			}
+			entities.push_back(entitiesToBeAdded[entityIndex]);
+		}
+		entitiesToBeAdded.clear();
 	}
 
 	float getDeltaTime()
@@ -73,6 +86,7 @@ namespace GazEngine
 		{
 			timer.reset();
 
+			addPendingEntities();
 			for (unsigned int index = 0; index < engines.size(); index++)
 			{
 				engines[index]->init();
@@ -89,10 +103,12 @@ namespace GazEngine
 				frameTimer.reset();
 			}
 
+			addPendingEntities();
 			for (unsigned int index = 0; index < engines.size(); index++)
 			{
 				engines[index]->advance();
 			}
+			removePendingEntities();
 
 			if (maxFrameRate != 0)
 			{
@@ -135,16 +151,26 @@ namespace GazEngine
 
 	void removeEntity(const Entity& entity)
 	{
-		vector<Entity*>::iterator entityIter = find(entities.begin(), entities.end(), &entity);
-		if (entityIter != entities.end())
+		entitiesToBeRemoved.push_back(&entity);
+	}
+
+	void removePendingEntities()
+	{
+		for (unsigned int entityIndex = 0; entityIndex < entitiesToBeRemoved.size(); entityIndex++)
 		{
-			for (unsigned int index = 0; index < engines.size(); index++)
+			vector<Entity*>::iterator entityIter = find(entities.begin(),
+				entities.end(), entitiesToBeRemoved[entityIndex]);
+			if (entityIter != entities.end())
 			{
-				engines[index]->removeEntity(**entityIter);
+				for (unsigned int engineIndex = 0; engineIndex < engines.size(); engineIndex++)
+				{
+					engines[engineIndex]->removeEntity(**entityIter);
+				}
+				delete *entityIter;
+				entities.erase(entityIter);
 			}
-			delete *entityIter;
-			entities.erase(entityIter);
 		}
+		entitiesToBeRemoved.clear();
 	}
 
 	void setMaxFrameRate(unsigned short maxFrameRate)

@@ -9,6 +9,11 @@ Component::~Component()
 {
 }
 
+Entity* Component::getEntity()
+{
+	return entity;
+}
+
 const Entity* Component::getEntity() const
 {
 	return entity;

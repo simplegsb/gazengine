@@ -6,7 +6,7 @@ namespace Messages
 	class Recipient
 	{
 		public:
-			virtual void receive(unsigned short subject, const void*) = 0;
+			virtual void receive(unsigned short subject, const void* message) = 0;
 	};
 
 	typedef void(RecipientFunction)(const void*);

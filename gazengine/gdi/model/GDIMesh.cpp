@@ -4,7 +4,7 @@ using namespace std;
 
 GDIMesh::GDIMesh(std::vector<Vector2> vertices, COLORREF colour) :
 	colour(colour),
-	primitiveType(TRIANGLE_STREAM),
+	primitiveType(TRIANGLE_STRIP),
 	vertices(vertices),
 	visible(true)
 {

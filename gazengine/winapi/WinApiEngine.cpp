@@ -1,5 +1,6 @@
 #include "../input/KeyboardButtonEvent.h"
 #include "../input/MouseButtonEvent.h"
+#include "../input/MouseMoveEvent.h"
 #include "../Events.h"
 #include "../GazEngine.h"
 #include "../Messages.h"
@@ -16,16 +17,6 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		GazEngine::stop();
         return 0;
     }
-	else if (message == WM_LBUTTONUP)
-	{
-		MouseButtonEvent mouseButtonEvent;
-		mouseButtonEvent.button = Mouse::LEFT;
-		mouseButtonEvent.buttonState = Button::UP;
-		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
-		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
-
-		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
-	}
 	else if (message == WM_KEYDOWN)
 	{
 		KeyboardButtonEvent keyboardButtonEvent;
@@ -151,6 +142,44 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		}
 
 		Messages::send(Events::KEYBOARD_BUTTON, &keyboardButtonEvent);
+	}
+	else if (message == WM_LBUTTONDOWN)
+	{
+		MouseButtonEvent mouseButtonEvent;
+		mouseButtonEvent.button = Mouse::LEFT;
+		mouseButtonEvent.buttonState = Button::DOWN;
+		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
+	}
+	else if (message == WM_LBUTTONUP)
+	{
+		MouseButtonEvent mouseButtonEvent;
+		mouseButtonEvent.button = Mouse::LEFT;
+		mouseButtonEvent.buttonState = Button::UP;
+		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
+	}
+	else if (message == WM_MOUSEMOVE)
+	{
+		MouseMoveEvent mouseMoveEvent;
+		mouseMoveEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseMoveEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(Events::MOUSE_MOVE, &mouseMoveEvent);
+	}
+	else if (message == WM_RBUTTONDOWN)
+	{
+		MouseButtonEvent mouseButtonEvent;
+		mouseButtonEvent.button = Mouse::RIGHT;
+		mouseButtonEvent.buttonState = Button::DOWN;
+		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
 	}
 	else if (message == WM_RBUTTONUP)
 	{

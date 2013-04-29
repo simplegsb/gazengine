@@ -10,6 +10,8 @@ class Component
 
 		virtual ~Component();
 
+		Entity* getEntity();
+
 		const Entity* getEntity() const;
 
 		void setEntity(Entity* entity);

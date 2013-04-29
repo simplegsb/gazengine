@@ -14,30 +14,10 @@ class GDICircle : public Circle
 
 		COLORREF getColour() const;
 
-		Texture* getNormalMap() const;
-
-		PrimitiveType getPrimitiveType() const;
-
-		Texture* getTexture() const;
-
-		bool isVisible() const;
-
-		void render(Renderer& renderer) const;
-
 		void setColour(COLORREF colour);
-
-		void setNormalMap(Texture* texture);
-
-		void setPrimitiveType(PrimitiveType primitiveType);
-
-		void setTexture(Texture* texture);
-
-		void setVisible(bool visible);
 
 	private:
 		COLORREF colour;
-
-		bool visible;
 };
 
 #endif /* GDICIRCLE_H_ */
