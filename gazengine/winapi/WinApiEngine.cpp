@@ -152,6 +152,16 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 
 		Messages::send(Events::KEYBOARD_BUTTON, &keyboardButtonEvent);
 	}
+	else if (message == WM_RBUTTONUP)
+	{
+		MouseButtonEvent mouseButtonEvent;
+		mouseButtonEvent.button = Mouse::RIGHT;
+		mouseButtonEvent.buttonState = Button::UP;
+		mouseButtonEvent.x = static_cast<int>(LOWORD(lParam));
+		mouseButtonEvent.y = static_cast<int>(HIWORD(lParam));
+
+		Messages::send(Events::MOUSE_BUTTON, &mouseButtonEvent);
+	}
 
     return DefWindowProc(window, message, wParam, lParam);
 }

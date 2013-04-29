@@ -6,6 +6,8 @@
 #include "Direct3D10RenderingEngine.h"
 #include "Direct3D10Texture.h"
 
+using namespace std;
+
 Direct3D10RenderingEngine::Direct3D10RenderingEngine(HWND window) :
 	camera(NULL),
 	clearingColour(0.0f, 0.2f, 0.4f, 1.0f),
@@ -47,6 +49,15 @@ Direct3D10RenderingEngine::~Direct3D10RenderingEngine()
 	if (tree != NULL)
 	{
 		delete tree;
+	}
+}
+
+void Direct3D10RenderingEngine::addEntity(Entity* entity)
+{
+	vector<Model*> entityModels = entity->getComponents<Model>();
+	for (unsigned int index = 0; index < entityModels.size(); index++)
+	{
+		models.push_back(entityModels[index]);
 	}
 }
 
@@ -252,6 +263,15 @@ void Direct3D10RenderingEngine::initViewport()
     viewport.TopLeftY = 0;
 
     device->RSSetViewports(1, &viewport);
+}
+
+void Direct3D10RenderingEngine::removeEntity(const Entity& entity)
+{
+	vector<Model*> entityModels = entity.getComponents<Model>();
+	for (unsigned int index = 0; index < entityModels.size(); index++)
+	{
+		models.erase(remove(models.begin(), models.end(), entityModels[index]));
+	}
 }
 
 void Direct3D10RenderingEngine::removeModel(const Model& model)

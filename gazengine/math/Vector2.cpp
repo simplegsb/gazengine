@@ -39,28 +39,12 @@ void Vector2::normalise()
 	y = y / length;
 }
 
-Vector2 Vector2::operator-(const Vector2& other) const
-{
-	Vector2 copy(*this);
-	copy -= other;
-
-	return copy;
-}
-
 Vector2& Vector2::operator-=(const Vector2& other)
 {
 	x -= other.x;
 	y -= other.y;
 
 	return *this;
-}
-
-Vector2 Vector2::operator+(const Vector2& other) const
-{
-	Vector2 copy(*this);
-	copy += other;
-
-	return copy;
 }
 
 Vector2& Vector2::operator+=(const Vector2& other)
@@ -71,28 +55,12 @@ Vector2& Vector2::operator+=(const Vector2& other)
 	return *this;
 }
 
-Vector2 Vector2::operator*(float scalar) const
-{
-	Vector2 copy(*this);
-	copy *= scalar;
-
-	return copy;
-}
-
 Vector2& Vector2::operator*=(float scalar)
 {
 	x *= scalar;
 	y *= scalar;
 
 	return *this;
-}
-
-Vector2 Vector2::operator*(const Vector2& other) const
-{
-	Vector2 copy(*this);
-	copy *= other;
-
-	return copy;
 }
 
 Vector2& Vector2::operator*=(const Vector2& other)
@@ -110,4 +78,36 @@ void Vector2::rotate(float angle)
 
 	x = tempX;
 	y = tempY;
+}
+
+Vector2 operator-(const Vector2& lhs, const Vector2& rhs)
+{
+	Vector2 copy(lhs);
+	copy -= rhs;
+
+	return copy;
+}
+
+Vector2 operator+(const Vector2& lhs, const Vector2& rhs)
+{
+	Vector2 copy(lhs);
+	copy += rhs;
+
+	return copy;
+}
+
+Vector2 operator*(const Vector2& lhs, float rhs)
+{
+	Vector2 copy(lhs);
+	copy *= rhs;
+
+	return copy;
+}
+
+Vector2 operator*(const Vector2& lhs, const Vector2& rhs)
+{
+	Vector2 copy(lhs);
+	copy *= rhs;
+
+	return copy;
 }

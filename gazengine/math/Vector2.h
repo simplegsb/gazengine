@@ -21,23 +21,23 @@ struct Vector2
 
 	void normalise();
 
-	Vector2 operator-(const Vector2& other) const;
-
 	Vector2& operator-=(const Vector2& other);
-
-	Vector2 operator+(const Vector2& other) const;
 
 	Vector2& operator+=(const Vector2& other);
 
-	Vector2 operator*(float scalar) const;
-
 	Vector2& operator*=(float scalar);
-
-	Vector2 operator*(const Vector2& other) const;
 
 	Vector2& operator*=(const Vector2& other);
 
 	void rotate(float angle);
 };
+
+Vector2 operator-(const Vector2& lhs, const Vector2& rhs);
+
+Vector2 operator+(const Vector2& lhs, const Vector2& rhs);
+
+Vector2 operator*(const Vector2& lhs, float rhs);
+
+Vector2 operator*(const Vector2& lhs, const Vector2& rhs);
 
 #endif /* VECTOR2_H_ */

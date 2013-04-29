@@ -43,17 +43,71 @@ void GDIRenderer::render(const Mesh& model)
 		return;
 	}
 
-	HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
-	SelectObject(buffer, pen);
-
-	MoveToEx(buffer, (int) gdiMesh.getVertices().at(0).x, (int) gdiMesh.getVertices().at(0).y, NULL);
-
-	for (unsigned int index = 1; index < gdiMesh.getVertices().size(); index++)
+	if (model.getPrimitiveType() == Model::POINTS)
 	{
-		LineTo(buffer, (int) gdiMesh.getVertices().at(index).x, (int) gdiMesh.getVertices().at(index).y);
-	}
+		HBRUSH brush = CreateSolidBrush(gdiMesh.getColour());
 
-	DeleteObject(pen);
+		for (unsigned int index = 0; index < gdiMesh.getVertices().size(); index++)
+		{
+			RECT rectangle;
+			rectangle.bottom = (int) gdiMesh.getVertices().at(index).y;
+			rectangle.left = (int) gdiMesh.getVertices().at(index).x;
+			rectangle.right = (int) gdiMesh.getVertices().at(index).x + 2;
+			rectangle.top = (int) gdiMesh.getVertices().at(index).y + 2;
+
+			FillRect(buffer, &rectangle, brush);
+		}
+
+		DeleteObject(brush);
+	}
+	else if (model.getPrimitiveType() == Model::LINE_STREAM)
+	{
+		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
+		SelectObject(buffer, pen);
+
+		MoveToEx(buffer, (int) gdiMesh.getVertices().at(0).x, (int) gdiMesh.getVertices().at(0).y, NULL);
+
+		for (unsigned int index = 1; index < gdiMesh.getVertices().size(); index++)
+		{
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index).x, (int) gdiMesh.getVertices().at(index).y);
+		}
+
+		DeleteObject(pen);
+	}
+	else if (model.getPrimitiveType() == Model::TRIANGLE_LIST)
+	{
+		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
+		SelectObject(buffer, pen);
+
+		MoveToEx(buffer, (int) gdiMesh.getVertices().at(0).x, (int) gdiMesh.getVertices().at(0).y, NULL);
+
+		for (unsigned int index = 1; index < gdiMesh.getVertices().size(); index++)
+		{
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index).x, (int) gdiMesh.getVertices().at(index).y);
+
+			if ((index + 1) % 3 == 0)
+			{
+				LineTo(buffer, (int) gdiMesh.getVertices().at(index - 2).x, (int) gdiMesh.getVertices().at(index - 2).y);
+			}
+		}
+
+		DeleteObject(pen);
+	}
+	else if (model.getPrimitiveType() == Model::TRIANGLE_STREAM)
+	{
+		HPEN pen = CreatePen(PS_SOLID, 1, gdiMesh.getColour());
+		SelectObject(buffer, pen);
+
+		for (unsigned int index = 2; index < gdiMesh.getVertices().size(); index++)
+		{
+			MoveToEx(buffer, (int) gdiMesh.getVertices().at(index - 2).x, (int) gdiMesh.getVertices().at(index - 2).y, NULL);
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index - 1).x, (int) gdiMesh.getVertices().at(index - 1).y);
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index).x, (int) gdiMesh.getVertices().at(index).y);
+			LineTo(buffer, (int) gdiMesh.getVertices().at(index - 2).x, (int) gdiMesh.getVertices().at(index - 2).y);
+		}
+
+		DeleteObject(pen);
+	}
 }
 
 void GDIRenderer::setBuffer(HDC buffer)

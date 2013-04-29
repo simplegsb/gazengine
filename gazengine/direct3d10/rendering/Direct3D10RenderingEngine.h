@@ -21,6 +21,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		virtual ~Direct3D10RenderingEngine();
 
+		void addEntity(Entity* entity);
+
 		void addLight(Direct3D10Light* light);
 
 		void addModel(Model* model);
@@ -46,6 +48,8 @@ class Direct3D10RenderingEngine : public RenderingEngine
 		int getWidth() const;
 
 		void init();
+
+		void removeEntity(const Entity& entity);
 
 		void removeModel(const Model& model);
 

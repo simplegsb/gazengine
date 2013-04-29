@@ -13,6 +13,8 @@ class SimpleDirect3D10Renderer : public Direct3D10Renderer
 		void render(const Circle& model);
 
 		void render(const Mesh& model);
+
+		void render(const Text& model);
 };
 
 #endif /* SIMPLEDIRECT3D10RENDERER_H_ */

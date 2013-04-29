@@ -33,12 +33,16 @@ class GDIMesh : public Mesh
 
 		void setNormalMap(Texture* texture);
 
+		void setPrimitiveType(PrimitiveType primitiveType);
+
 		void setTexture(Texture* texture);
 
 		void setVisible(bool visible);
 
 	private:
 		COLORREF colour;
+
+		PrimitiveType primitiveType;
 
 		std::vector<Vector2> vertices;
 

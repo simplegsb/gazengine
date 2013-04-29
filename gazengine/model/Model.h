@@ -11,8 +11,11 @@ class Model : public Component
 		enum PrimitiveType
 		{
 			LINE_LIST,
+			LINE_STREAM,
 			NA,
-			TRIANGLE_LIST
+			POINTS,
+			TRIANGLE_LIST,
+			TRIANGLE_STREAM
 		};
 
 		virtual ~Model()
@@ -30,6 +33,8 @@ class Model : public Component
 		virtual void render(Renderer& renderer) const = 0;
 
 		virtual void setNormalMap(Texture* texture) = 0;
+
+		virtual void setPrimitiveType(PrimitiveType primitiveType) = 0;
 
 		virtual void setTexture(Texture* texture) = 0;
 

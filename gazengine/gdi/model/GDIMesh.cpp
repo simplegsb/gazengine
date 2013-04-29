@@ -4,6 +4,7 @@ using namespace std;
 
 GDIMesh::GDIMesh(std::vector<Vector2> vertices, COLORREF colour) :
 	colour(colour),
+	primitiveType(TRIANGLE_STREAM),
 	vertices(vertices),
 	visible(true)
 {
@@ -25,7 +26,7 @@ Texture* GDIMesh::getNormalMap() const
 
 Model::PrimitiveType GDIMesh::getPrimitiveType() const
 {
-	return Model::NA;
+	return primitiveType;
 }
 
 Texture* GDIMesh::getTexture() const
@@ -55,6 +56,11 @@ void GDIMesh::render(Renderer& renderer) const
 
 void GDIMesh::setNormalMap(Texture*)
 {
+}
+
+void GDIMesh::setPrimitiveType(PrimitiveType primitiveType)
+{
+	this->primitiveType = primitiveType;
 }
 
 void GDIMesh::setTexture(Texture*)

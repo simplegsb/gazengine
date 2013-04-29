@@ -19,6 +19,8 @@ class StencilClearingDirect3D10Renderer : public Direct3D10Renderer
 
 		void render(const Mesh& model);
 
+		void render(const Text& model);
+
 	private:
 		ID3D10DepthStencilView& depthStencilView;
 

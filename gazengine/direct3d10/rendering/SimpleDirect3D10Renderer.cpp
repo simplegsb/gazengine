@@ -18,3 +18,8 @@ void SimpleDirect3D10Renderer::render(const Mesh& model)
 {
 	static_cast<const Direct3D10Mesh&>(model).getMesh()->DrawSubset(0);
 }
+
+void SimpleDirect3D10Renderer::render(const Text&)
+{
+	// TODO implement...
+}

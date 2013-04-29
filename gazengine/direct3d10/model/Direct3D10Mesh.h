@@ -38,6 +38,8 @@ class Direct3D10Mesh : public Mesh
 
 		void setNormalMap(Texture* normalMap);
 
+		void setPrimitiveType(PrimitiveType primitiveType);
+
 		void setTexture(Texture* texture);
 
 		void setTransformation(const D3DXMATRIX& transformation);

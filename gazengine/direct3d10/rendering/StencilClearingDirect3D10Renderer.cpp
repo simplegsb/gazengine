@@ -39,3 +39,8 @@ void StencilClearingDirect3D10Renderer::render(const Mesh& model)
 {
 	renderer->render(model);
 }
+
+void StencilClearingDirect3D10Renderer::render(const Text& model)
+{
+	renderer->render(model);
+}
