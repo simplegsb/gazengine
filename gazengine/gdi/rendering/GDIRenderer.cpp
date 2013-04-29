@@ -1,3 +1,4 @@
+#include "../../model/Line2.h"
 #include "../../model/Text.h"
 #include "../model/GDICircle.h"
 #include "../model/GDIMesh.h"
@@ -32,6 +33,17 @@ void GDIRenderer::render(const Circle& model)
 		static_cast<int>(gdiCircle.getPosition().y + gdiCircle.getRadius()));
 
 	DeleteObject(pen);
+}
+
+void GDIRenderer::render(const Line2& model)
+{
+	HPEN pen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	SelectObject(buffer, pen);
+
+	MoveToEx(buffer, (int) model.getPointA().x, (int) model.getPointA().y, NULL);
+	LineTo(buffer, (int) model.getPointB().x, (int) model.getPointB().y);
+
+	DeleteObject(pen);	
 }
 
 void GDIRenderer::render(const Mesh& model)

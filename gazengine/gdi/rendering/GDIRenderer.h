@@ -16,6 +16,8 @@ class GDIRenderer : public Renderer
 
 		void render(const Circle& model);
 
+		void render(const Line2& model);
+
 		void render(const Mesh& model);
 
 		void render(const Text& model);

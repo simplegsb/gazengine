@@ -114,6 +114,7 @@ namespace GazEngine
 			{
 				frameTimer.tick();
 				float sleepTime = 1.0f / maxFrameRate - frameTimer.getDeltaTime();
+				sleepTime *= 1000.0f;
 				if (sleepTime > 0.0f)
 				{
 					Sleep(static_cast<DWORD>(sleepTime));
