@@ -4,7 +4,6 @@
 #include <GL/glut.h>
 
 #include <gazengine/model/shape/Capsule.h>
-#include <gazengine/model/shape/Cube.h>
 #include <gazengine/model/shape/Cylinder.h>
 #include <gazengine/model/shape/Sphere.h>
 #include <gazengine/model/shape/Torus.h>
@@ -46,22 +45,6 @@ void FreeGLUTRenderer::render(const Capsule& model)
 void FreeGLUTRenderer::render(const Circle& model)
 {
 	renderer->render(model);
-}
-
-void FreeGLUTRenderer::render(const Cube& model)
-{
-	glColor4f(model.getColour().R(), model.getColour().G(), model.getColour().B(), model.getColour().A());
-
-	if (model.getPrimitiveType() == Model::LINE_LIST ||
-		model.getPrimitiveType() == Model::LINE_STRIP)
-	{
-		glutWireCube(model.getHalfEdgeLength() * 2.0f);
-	}
-	else if (model.getPrimitiveType() == Model::TRIANGLE_LIST ||
-		model.getPrimitiveType() == Model::TRIANGLE_STRIP)
-	{
-		glutSolidCube(model.getHalfEdgeLength() * 2.0f);
-	}
 }
 
 void FreeGLUTRenderer::render(const Cylinder& model)

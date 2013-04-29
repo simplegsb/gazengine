@@ -19,63 +19,6 @@ Vector<Data, 3> crossProduct(const Vector<Data, 3>& lhs, const Vector<Data, 3>& 
 }
 
 template<typename Data>
-float getAngleBetween(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
-{
-	return acos(dotProduct(lhs, rhs) / (lhs.getMagnitude() * rhs.getMagnitude()));
-}
-
-template<typename Data>
-float getAngleBetween(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
-{
-	return acos(dotProduct(lhs, rhs) / (lhs.getMagnitude() * rhs.getMagnitude()));
-}
-
-template<typename Data>
-float getAngleBetweenNormalized(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
-{
-	return acos(dotProduct(lhs, rhs));
-}
-
-template<typename Data>
-float getAngleBetweenNormalized(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
-{
-	return acos(dotProduct(lhs, rhs));
-}
-
-template<typename Data>
-Vector<Data, 3> getOut3(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(&matrix[8], false);
-}
-
-template<typename Data>
-const Vector<Data, 3> getOut3(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(const_cast<Data*>(&matrix[8]), false);
-}
-
-template<typename Data>
-Vector<Data, 4> getOut4(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(&matrix[8], false);
-}
-
-template<typename Data>
-const Vector<Data, 4> getOut4(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(const_cast<Data*>(&matrix[8]), false);
-}
-
-template<typename Data, unsigned int Size>
-Vector<Data, Size> getProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs)
-{
-	Vector<Data, Size>& rhsNormalized = rhs;
-	rhsNormalized.normalize();
-
-	return rhsNormalized * getScalarProjection(lhs, rhs);
-}
-
-template<typename Data>
 Data getProximity(const Vector<Data, 2>& lhs, const Vector<Data, 2>& rhs)
 {
 	Vector<Data, 2> difference = lhs;
@@ -91,36 +34,6 @@ Data getProximity(const Vector<Data, 3>& lhs, const Vector<Data, 3>& rhs)
 	difference -= rhs;
 
 	return difference.getMagnitude();
-}
-
-template<typename Data>
-Vector<Data, 3> getRight3(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(&matrix[0], false);
-}
-
-template<typename Data>
-const Vector<Data, 3> getRight3(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(const_cast<Data*>(&matrix[0]), false);
-}
-
-template<typename Data>
-Vector<Data, 4> getRight4(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(&matrix[0], false);
-}
-
-template<typename Data>
-const Vector<Data, 4> getRight4(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(const_cast<Data*>(&matrix[0]), false);
-}
-
-template<typename Data, unsigned int Size>
-float getScalarProjection(const Vector<Data, Size>& lhs, const Vector<Data, Size>& rhs)
-{
-	return lhs.getMagnitude() * cos(getAngleBetween(lhs, rhs));
 }
 
 template<typename Data>
@@ -145,30 +58,6 @@ template<typename Data>
 const Vector<Data, 4> getTranslation4(const Matrix<Data, 4, 4>& matrix)
 {
 	return Vector<Data, 4>(const_cast<Data*>(&matrix[12]), false);
-}
-
-template<typename Data>
-Vector<Data, 3> getUp3(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(&matrix[4], false);
-}
-
-template<typename Data>
-const Vector<Data, 3> getUp3(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 3>(const_cast<Data*>(&matrix[4]), false);
-}
-
-template<typename Data>
-Vector<Data, 4> getUp4(Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(&matrix[4], false);
-}
-
-template<typename Data>
-const Vector<Data, 4> getUp4(const Matrix<Data, 4, 4>& matrix)
-{
-	return Vector<Data, 4>(const_cast<Data*>(&matrix[4]), false);
 }
 
 template<typename Data>
@@ -337,16 +226,7 @@ void rotate(Vector<Data, 2>& vector, const Data angle)
 }
 
 template<typename Data>
-void setTranslation(Matrix<Data, 4, 4>& matrix, const Vector<Data, 3>& translation)
-{
-	matrix[12] = translation.X();
-	matrix[13] = translation.Y();
-	matrix[14] = translation.Z();
-	matrix[15] = 1.0f;
-}
-
-template<typename Data>
-void setTranslation(Matrix<Data, 4, 4>& matrix, const Vector<Data, 4>& translation)
+void setTranslation(Matrix<Data, 4, 4> matrix, const Vector<Data, 4>& translation)
 {
 	matrix[12] = translation.X();
 	matrix[13] = translation.Y();
@@ -355,7 +235,7 @@ void setTranslation(Matrix<Data, 4, 4>& matrix, const Vector<Data, 4>& translati
 }
 
 template<typename Data>
-void translate(Matrix<Data, 4, 4>& matrix, const Vector<Data, 4>& translation)
+void translate(Matrix<Data, 4, 4> matrix, const Vector<Data, 4>& translation)
 {
 	matrix[12] += matrix[0] * translation.X() + matrix[4] * translation.Y() + matrix[8] * translation.Z();
 	matrix[13] += matrix[1] * translation.X() + matrix[5] * translation.Y() + matrix[9] * translation.Z();

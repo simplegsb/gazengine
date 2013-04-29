@@ -9,7 +9,7 @@ SimpleDirect3D10Renderer::SimpleDirect3D10Renderer(ID3D10Device& device) :
 	font(NULL)
 {
 	D3DX10_FONT_DESC fontDescription;
-	fontDescription.Height = 16;
+	fontDescription.Height = 24;
     fontDescription.Width = 0;
     fontDescription.Weight = 0;
     fontDescription.MipLevels = 1;
@@ -44,10 +44,6 @@ void SimpleDirect3D10Renderer::render(const Capsule&)
 }
 
 void SimpleDirect3D10Renderer::render(const Circle&)
-{
-}
-
-void SimpleDirect3D10Renderer::render(const Cube&)
 {
 }
 

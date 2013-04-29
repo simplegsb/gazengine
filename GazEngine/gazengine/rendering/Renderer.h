@@ -3,7 +3,6 @@
 
 class Capsule;
 class Circle;
-class Cube;
 class Cylinder;
 class Line2;
 class Mesh;
@@ -22,8 +21,6 @@ class Renderer
 		virtual void render(const Capsule& model) = 0;
 
 		virtual void render(const Circle& model) = 0;
-
-		virtual void render(const Cube& model) = 0;
 
 		virtual void render(const Cylinder& model) = 0;
 

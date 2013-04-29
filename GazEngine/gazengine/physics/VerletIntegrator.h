@@ -15,7 +15,7 @@ class VerletIntegrator : public Integrator
 	private:
 		float damping;
 
-		std::map<Body*, Vector3> previousPositions;
+		std::map<Body*, Vector2> previousPositions;
 };
 
 #endif /* VERLETINTEGRATOR_H_ */

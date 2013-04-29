@@ -6,7 +6,7 @@
 class FreeGLUTEngine : public Engine
 {
 	public:
-		FreeGLUTEngine(const std::string& title, int width, int height);
+		FreeGLUTEngine(const std::string& title);
 
 		void addEntity(Entity* entity);
 
@@ -14,20 +14,12 @@ class FreeGLUTEngine : public Engine
 
 		void destroy();
 
-		int getHeight() const;
-
-		int getWidth() const;
-
 		void init();
 
 		void removeEntity(const Entity& entity);
 
 	private:
-		int height;
-
 		std::string title;
-
-		int width;
 };
 
 #endif /* FREEGLUTENGINE_H_ */

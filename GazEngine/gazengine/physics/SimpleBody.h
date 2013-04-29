@@ -6,19 +6,15 @@
 class SimpleBody : public Body
 {
 	public:
-		SimpleBody(const Material& material, Model* model, const Matrix44& transformation, bool dynamic);
+		SimpleBody(Material material, Model* model, Vector2 position);
 
-		void applyForce(const Vector3& force, const Vector3& position);
-
-		void applyTorque(const Vector3& torque);
+		void applyForce(const Vector2& force, const Vector2& position);
 
 		void clearForces();
 
-		const Vector3& getAngularVelocity() const;
+		const Vector2& getLinearAcceleration() const;
 
-		const Vector3& getLinearAcceleration() const;
-
-		const Vector3& getLinearVelocity() const;
+		const Vector2& getLinearVelocity() const;
 
 		float getMass() const;
 
@@ -26,34 +22,26 @@ class SimpleBody : public Body
 
 		const Model* getModel() const;
 
-		SimpleTree* getNode() const;
-
-		Matrix44& getTransformation();
-
-		const Matrix44& getTransformation() const;
+		const Vector2& getPosition() const;
 
 		bool isDynamic();
 
 		void setDynamic(bool dynamic);
 
-		void setLinearVelocity(const Vector3& linearVelocity);
+		void setLinearVelocity(const Vector2& linearVelocity);
 
 		void setMass(float mass);
 
 		void setMaterial(const Material& material);
 
-		void setNode(SimpleTree* node);
-
-		void setTransformation(const Matrix44& transformation);
+		void setPosition(const Vector2& position);
 
 	private:
-		Vector3 angularVelocity;
-
 		bool dynamic;
 
-		Vector3 linearAcceleration;
+		Vector2 linearAcceleration;
 
-		Vector3 linearVelocity;
+		Vector2 linearVelocity;
 
 		float mass;
 
@@ -61,9 +49,7 @@ class SimpleBody : public Body
 
 		Model* model;
 
-		SimpleTree* node;
-
-		Matrix44 transformation;
+		Vector2 position;
 };
 
 #endif /* SIMPLEBODY_H_ */

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GazEngine"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../GazEngine"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -170,7 +170,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GazEngine"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -236,7 +236,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../GazEngine"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -300,10 +300,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\shape\Cube.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\model\shape\Cylinder.cpp"
 				>
 			</File>
@@ -313,14 +309,6 @@
 			</File>
 			<File
 				RelativePath=".\gazengine\Entity.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\EntityFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\scene\FlyingCameraEngine.cpp"
 				>
 			</File>
 			<File
@@ -352,10 +340,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\ModelFactory.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\odbc\ODBC.cpp"
 				>
 			</File>
@@ -372,10 +356,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\physics\PhysicsFactory.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\model\Plane.cpp"
 				>
 			</File>
@@ -384,15 +364,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\rendering\RenderingFactory.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\model\shape\Shape.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\common\shared_ptr.cpp"
 				>
 			</File>
 			<File
@@ -401,10 +373,6 @@
 			</File>
 			<File
 				RelativePath=".\gazengine\physics\SimplePhysicsEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\physics\SimplePhysicsFactory.cpp"
 				>
 			</File>
 			<File
@@ -638,15 +606,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\slot\detail\counter.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\slot\counter.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\shape\Cube.h"
+				RelativePath=".\boost\preprocessor\slot\detail\counter.hpp"
 				>
 			</File>
 			<File
@@ -714,11 +678,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\tuple\elem.hpp"
+				RelativePath=".\boost\preprocessor\variadic\elem.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\variadic\elem.hpp"
+				RelativePath=".\boost\preprocessor\array\elem.hpp"
 				>
 			</File>
 			<File
@@ -726,7 +690,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\array\elem.hpp"
+				RelativePath=".\boost\preprocessor\tuple\elem.hpp"
 				>
 			</File>
 			<File
@@ -750,7 +714,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\EntityFactory.h"
+				RelativePath=".\boost\preprocessor\tuple\enum.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\repetition\enum.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\array\enum.hpp"
 				>
 			</File>
 			<File
@@ -762,19 +734,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\repetition\enum.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\tuple\enum.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\seq\enum.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\array\enum.hpp"
 				>
 			</File>
 			<File
@@ -782,15 +742,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\enum_params.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\repetition\enum_params.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\repetition\enum_params_with_a_default.hpp"
+				RelativePath=".\boost\preprocessor\enum_params.hpp"
 				>
 			</File>
 			<File
@@ -798,11 +754,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\enum_params_with_defaults.hpp"
+				RelativePath=".\boost\preprocessor\repetition\enum_params_with_a_default.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\repetition\enum_params_with_defaults.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\enum_params_with_defaults.hpp"
 				>
 			</File>
 			<File
@@ -854,11 +814,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\expand.hpp"
+				RelativePath=".\boost\preprocessor\facilities\expand.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\facilities\expand.hpp"
+				RelativePath=".\boost\preprocessor\expand.hpp"
 				>
 			</File>
 			<File
@@ -906,7 +866,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\scene\FlyingCameraEngine.h"
+				RelativePath=".\boost\preprocessor\list\detail\edg\fold_left.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\list\detail\dmc\fold_left.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\list\detail\fold_left.hpp"
 				>
 			</File>
 			<File
@@ -918,23 +886,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\detail\edg\fold_left.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\list\detail\fold_left.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\list\detail\dmc\fold_left.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\list\detail\fold_right.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\list\detail\edg\fold_right.hpp"
+				RelativePath=".\boost\preprocessor\seq\fold_right.hpp"
 				>
 			</File>
 			<File
@@ -942,19 +894,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\fold_right.hpp"
+				RelativePath=".\boost\preprocessor\list\detail\edg\fold_right.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\repetition\for.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\repetition\detail\edg\for.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\for.hpp"
+				RelativePath=".\boost\preprocessor\list\detail\fold_right.hpp"
 				>
 			</File>
 			<File
@@ -970,7 +914,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\for_each.hpp"
+				RelativePath=".\boost\preprocessor\repetition\for.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\repetition\detail\edg\for.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\for.hpp"
 				>
 			</File>
 			<File
@@ -978,11 +930,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\for_each_i.hpp"
+				RelativePath=".\boost\preprocessor\list\for_each.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\list\for_each_i.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\seq\for_each_i.hpp"
 				>
 			</File>
 			<File
@@ -1134,11 +1090,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\if.hpp"
+				RelativePath=".\boost\preprocessor\control\if.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\control\if.hpp"
+				RelativePath=".\boost\preprocessor\if.hpp"
 				>
 			</File>
 			<File
@@ -1158,11 +1114,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\array\insert.hpp"
+				RelativePath=".\boost\preprocessor\seq\insert.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\insert.hpp"
+				RelativePath=".\boost\preprocessor\array\insert.hpp"
 				>
 			</File>
 			<File
@@ -1358,11 +1314,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\selection\max.hpp"
+				RelativePath=".\boost\preprocessor\max.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\max.hpp"
+				RelativePath=".\boost\preprocessor\selection\max.hpp"
 				>
 			</File>
 			<File
@@ -1395,10 +1351,6 @@
 			</File>
 			<File
 				RelativePath=".\gazengine\model\Model.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\ModelFactory.h"
 				>
 			</File>
 			<File
@@ -1490,10 +1442,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\physics\PhysicsFactory.h"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\model\Plane.h"
 				>
 			</File>
@@ -1574,15 +1522,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\rendering\RenderingFactory.h"
+				RelativePath=".\boost\preprocessor\repeat.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\repetition\repeat.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\repeat.hpp"
 				>
 			</File>
 			<File
@@ -1594,11 +1538,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\repetition\repeat_from_to.hpp"
+				RelativePath=".\boost\preprocessor\repeat_from_to.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\repeat_from_to.hpp"
+				RelativePath=".\boost\preprocessor\repetition\repeat_from_to.hpp"
 				>
 			</File>
 			<File
@@ -1622,15 +1566,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\rest_n.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\seq\rest_n.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\reverse.hpp"
+				RelativePath=".\boost\preprocessor\list\rest_n.hpp"
 				>
 			</File>
 			<File
@@ -1643,6 +1583,10 @@
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\tuple\reverse.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\list\reverse.hpp"
 				>
 			</File>
 			<File
@@ -1686,11 +1630,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\iteration\detail\self.hpp"
+				RelativePath=".\boost\preprocessor\iteration\self.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\iteration\self.hpp"
+				RelativePath=".\boost\preprocessor\iteration\detail\self.hpp"
 				>
 			</File>
 			<File
@@ -1710,10 +1654,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\common\shared_ptr.h"
-				>
-			</File>
-			<File
 				RelativePath=".\gazengine\physics\SimpleBody.h"
 				>
 			</File>
@@ -1722,11 +1662,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\physics\SimplePhysicsFactory.h"
+				RelativePath=".\gazengine\graph\SimpleTree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\graph\SimpleTree.h"
+				RelativePath=".\boost\preprocessor\list\size.hpp"
 				>
 			</File>
 			<File
@@ -1739,10 +1679,6 @@
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\array\size.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\list\size.hpp"
 				>
 			</File>
 			<File
@@ -1786,11 +1722,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\detail\split.hpp"
+				RelativePath=".\boost\preprocessor\detail\split.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\detail\split.hpp"
+				RelativePath=".\boost\preprocessor\seq\detail\split.hpp"
 				>
 			</File>
 			<File
@@ -1850,11 +1786,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\to_array.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\variadic\to_array.hpp"
+				RelativePath=".\boost\preprocessor\tuple\to_array.hpp"
 				>
 			</File>
 			<File
@@ -1862,11 +1794,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\tuple\to_array.hpp"
+				RelativePath=".\boost\preprocessor\variadic\to_array.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\variadic\to_list.hpp"
+				RelativePath=".\boost\preprocessor\seq\to_array.hpp"
 				>
 			</File>
 			<File
@@ -1875,6 +1807,10 @@
 			</File>
 			<File
 				RelativePath=".\boost\preprocessor\tuple\to_list.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\variadic\to_list.hpp"
 				>
 			</File>
 			<File
@@ -1898,14 +1834,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\to_tuple.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\variadic\to_tuple.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\seq\to_tuple.hpp"
 				>
 			</File>
@@ -1914,15 +1842,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\boost\preprocessor\list\to_tuple.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\variadic\to_tuple.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\gazengine\model\shape\Torus.h"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\seq\transform.hpp"
+				RelativePath=".\boost\preprocessor\list\transform.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\boost\preprocessor\list\transform.hpp"
+				RelativePath=".\boost\preprocessor\seq\transform.hpp"
 				>
 			</File>
 			<File
@@ -1970,19 +1906,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\Vertex.h"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\control\detail\dmc\while.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\boost\preprocessor\control\while.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\boost\preprocessor\while.hpp"
 				>
 			</File>
 			<File
@@ -1990,7 +1914,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\boost\preprocessor\control\detail\dmc\while.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\boost\preprocessor\control\detail\msvc\while.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\boost\preprocessor\while.hpp"
 				>
 			</File>
 			<File

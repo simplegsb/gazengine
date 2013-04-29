@@ -32,9 +32,7 @@ class Light
 
 		virtual const Vector4& getSpecularComponent() const = 0;
 
-		virtual float getStrengthAtOrigin() const = 0;
-
-		virtual float getStrengthAtRange() const = 0;
+		virtual float getStrength() const = 0;
 
 		virtual const Vector3& getTranslation() const = 0;
 
@@ -52,9 +50,7 @@ class Light
 
 		virtual void setSpecularComponent(const Vector4& specular) = 0;
 
-		virtual void setStrengthAtOrigin(float strengthAtOrigin) = 0;
-
-		virtual void setStrengthAtRange(float strengthAtRange) = 0;
+		virtual void setStrength(float strength) = 0;
 
 		virtual void setTranslation(const Vector3& translation) = 0;
 };

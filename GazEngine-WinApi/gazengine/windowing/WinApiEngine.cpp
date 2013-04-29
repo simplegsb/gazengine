@@ -23,15 +23,7 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		KeyboardButtonEvent keyboardButtonEvent;
 		keyboardButtonEvent.buttonState = Button::DOWN;
 
-		if (wParam == VK_ADD)
-		{
-			keyboardButtonEvent.button = Keyboard::PLUS;
-		}
-		else if (wParam == VK_DOWN)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_DOWN;
-		}
-		else if (wParam == VK_F1)
+		if (wParam == VK_F1)
 		{
 			keyboardButtonEvent.button = Keyboard::F1;
 		}
@@ -79,25 +71,9 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		{
 			keyboardButtonEvent.button = Keyboard::F12;
 		}
-		else if (wParam == VK_LEFT)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_LEFT;
-		}
-		else if (wParam == VK_RIGHT)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_RIGHT;
-		}
-		else if (wParam == VK_SUBTRACT)
-		{
-			keyboardButtonEvent.button = Keyboard::MINUS;
-		}
 		else if (wParam == VK_TAB)
 		{
 			keyboardButtonEvent.button = Keyboard::TAB;
-		}
-		else if (wParam == VK_UP)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_UP;
 		}
 		else if (winapiAsciiKeyboardButtonMap.find(static_cast<unsigned char>(wParam)) != winapiAsciiKeyboardButtonMap.end())
 		{
@@ -112,15 +88,7 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		KeyboardButtonEvent keyboardButtonEvent;
 		keyboardButtonEvent.buttonState = Button::UP;
 
-		if (wParam == VK_ADD)
-		{
-			keyboardButtonEvent.button = Keyboard::PLUS;
-		}
-		else if (wParam == VK_DOWN)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_DOWN;
-		}
-		else if (wParam == VK_F1)
+		if (wParam == VK_F1)
 		{
 			keyboardButtonEvent.button = Keyboard::F1;
 		}
@@ -167,22 +135,6 @@ LRESULT CALLBACK handleEvent(HWND window, UINT message, WPARAM wParam, LPARAM lP
 		else if (wParam == VK_F12)
 		{
 			keyboardButtonEvent.button = Keyboard::F12;
-		}
-		else if (wParam == VK_LEFT)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_LEFT;
-		}
-		else if (wParam == VK_RIGHT)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_RIGHT;
-		}
-		else if (wParam == VK_SUBTRACT)
-		{
-			keyboardButtonEvent.button = Keyboard::MINUS;
-		}
-		else if (wParam == VK_UP)
-		{
-			keyboardButtonEvent.button = Keyboard::ARROW_UP;
 		}
 		else if (winapiAsciiKeyboardButtonMap.find(static_cast<unsigned char>(wParam)) != winapiAsciiKeyboardButtonMap.end())
 		{

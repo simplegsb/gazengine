@@ -156,15 +156,6 @@ void fireMouseButtonEvent(const int button, const int state, const int x, const 
 	{
 		event.button = Mouse::RIGHT;
 	}
-	// Wheel reports as button 3 (up) and button 4 (down)
-	else if (button == 3)
-	{
-		event.button = Mouse::WHEEL_UP;
-	}
-	else if (button == 4)
-	{
-		event.button = Mouse::WHEEL_DOWN;
-	}
 
 	if (state == GLUT_DOWN)
 	{

@@ -8,6 +8,7 @@
 
 #include <gazengine/rendering/RenderingEngine.h>
 
+#include "../scene/Direct3D10Camera.h"
 #include "../scene/Direct3D10Light.h"
 #include "Direct3D10Renderer.h"
 
@@ -60,12 +61,12 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		void setRendererRoot(const Renderer& renderer, const SimpleTree& node);
 
-		void setTree(const SimpleTree* tree);
+		void setTree(SimpleTree* tree);
 
 		void setWidth(int width);
 
 	private:
-		Camera* camera;
+		Direct3D10Camera* camera;
 
 		Vector4 clearingColour;
 
@@ -89,7 +90,7 @@ class Direct3D10RenderingEngine : public RenderingEngine
 
 		IDXGISwapChain* swapChain;
 
-		const SimpleTree* tree;
+		SimpleTree* tree;
 
 		int width;
 

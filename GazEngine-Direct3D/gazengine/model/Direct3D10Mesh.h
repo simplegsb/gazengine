@@ -8,23 +8,20 @@
 #include <gazengine/model/Mesh.h>
 
 #include "../rendering/Direct3D10Texture.h"
+#include "Vertex.h"
 
 class Direct3D10Mesh : public Mesh
 {
 	public:
 		Direct3D10Mesh(const Direct3D10Mesh& original);
 
-		Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices, const std::vector<int>& indices);
+		Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices);
 
-		~Direct3D10Mesh();
+		Direct3D10Mesh(ID3D10Device& device, const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices);
+
+		virtual ~Direct3D10Mesh();
 
 		const Vector4& getColour() const;
-
-		std::vector<int>& getIndices();
-
-		const std::vector<int>& getIndices() const;
-
-		const Material& getMaterial() const;
 
 		ID3DX10Mesh* getMesh() const;
 
@@ -36,10 +33,6 @@ class Direct3D10Mesh : public Mesh
 
 		D3DXMATRIX getTransformation() const;
 
-		std::vector<Vertex>& getVertices();
-
-		const std::vector<Vertex>& getVertices() const;
-
 		bool isVisible() const;
 
 		Direct3D10Mesh& operator=(const Direct3D10Mesh& original);
@@ -47,8 +40,6 @@ class Direct3D10Mesh : public Mesh
 		void render(Renderer& renderer) const;
 
 		void setColour(const Vector4& colour);
-
-		void setMaterial(const Material& material);
 
 		void setNormalMap(Texture* normalMap);
 
@@ -65,10 +56,6 @@ class Direct3D10Mesh : public Mesh
 
 		ID3D10Device& device;
 
-		std::vector<int> indices;
-
-		Material material;
-
 		ID3DX10Mesh* mesh;
 
 		Texture* normalMap;
@@ -77,9 +64,9 @@ class Direct3D10Mesh : public Mesh
 
 		D3DXMATRIX transformation;
 
-		std::vector<Vertex> vertices;
-
 		bool visible;
+
+		void init(const std::vector<Vertex>& vertices, const std::vector<DWORD>& indices);
 };
 
 #endif /* DIRECT3D10MESH_H_ */

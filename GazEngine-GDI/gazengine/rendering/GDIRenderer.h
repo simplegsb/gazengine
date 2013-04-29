@@ -1,11 +1,15 @@
-#ifndef SIMPLEOPENGLRENDERER_H_
-#define SIMPLEOPENGLRENDERER_H_
+#ifndef GDIRENDERER_H_
+#define GDIRENDERER_H_
+
+#include <windows.h>
 
 #include <gazengine/rendering/Renderer.h>
 
-class SimpleOpenGLRenderer : public Renderer
+class GDIRenderer : public Renderer
 {
 	public:
+		GDIRenderer();
+
 		void dispose();
 
 		void init();
@@ -26,8 +30,10 @@ class SimpleOpenGLRenderer : public Renderer
 
 		void render(const Torus& model);
 
+		void setBuffer(HDC buffer);
+
 	private:
-		int getOpenGLDrawingMode(Model::PrimitiveType primitiveType);
+		HDC buffer;
 };
 
-#endif /* SIMPLEOPENGLRENDERER_H_ */
+#endif /* GDIRENDERER_H_ */

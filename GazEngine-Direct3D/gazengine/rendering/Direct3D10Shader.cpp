@@ -49,15 +49,12 @@ void Direct3D10Shader::initInputLayout()
 		passDescription.IAInputSignatureSize, &inputLayout);
 }
 
-void Direct3D10Shader::setVar(const string& name, bool value)
-{
-	effect->GetVariableByName(name.data())->AsScalar()->SetBool(value);
-}
-
 void Direct3D10Shader::setVar(const string& name, const Matrix44& value)
 {
-	// I'm trusting Direct3D to not change the value here...
-	effect->GetVariableByName(name.data())->AsMatrix()->SetMatrix(const_cast<float*>(value.getData()));
+	Matrix44 columnMajorValue = value;
+	columnMajorValue.transpose();
+
+	effect->GetVariableByName(name.data())->AsMatrix()->SetMatrix(columnMajorValue.getData());
 }
 
 void Direct3D10Shader::setVar(const string& name, float value)
@@ -82,16 +79,13 @@ void Direct3D10Shader::setVar(const string& name, ID3D10ShaderResourceView* valu
 	effect->GetVariableByName(name.data())->AsShaderResource()->SetResource(value);
 }
 
-void Direct3D10Shader::setVar(const string& structName, const string& name, bool value)
-{
-	effect->GetVariableByName(structName.data())->GetMemberByName(name.data())->AsScalar()->SetBool(value);
-}
-
 void Direct3D10Shader::setVar(const string& structName, const string& name, const Matrix44& value)
 {
-	// I'm trusting Direct3D to not change the value here...
+	Matrix44 columnMajorValue = value;
+	columnMajorValue.transpose();
+
 	effect->GetVariableByName(structName.data())->GetMemberByName(name.data())->AsMatrix()
-		->SetMatrix(const_cast<float*>(value.getData()));
+		->SetMatrix(columnMajorValue.getData());
 }
 
 void Direct3D10Shader::setVar(const string& structName, const string& name, float value)

@@ -8,7 +8,7 @@
 class SimplePhysicsEngine : public Engine
 {
 	public:
-		SimplePhysicsEngine(const Vector3& gravity);
+		SimplePhysicsEngine(const Vector2& gravity);
 
 		~SimplePhysicsEngine();
 
@@ -31,7 +31,7 @@ class SimplePhysicsEngine : public Engine
 
 		std::vector<Constraint*> constraints;
 
-		Vector3 gravity;
+		Vector2 gravity;
 
 		Integrator* integrator;
 };

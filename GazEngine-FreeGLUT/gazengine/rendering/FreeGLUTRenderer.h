@@ -18,8 +18,6 @@ class FreeGLUTRenderer : public Renderer
 
 		void render(const Circle& model);
 
-		void render(const Cube& model);
-
 		void render(const Cylinder& model);
 
 		void render(const Line2& model);

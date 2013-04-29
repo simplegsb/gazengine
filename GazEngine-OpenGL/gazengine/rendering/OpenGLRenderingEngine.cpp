@@ -13,6 +13,7 @@ OpenGLRenderingEngine::OpenGLRenderingEngine() :
 	clearingColour(0.0f, 0.0f, 0.0f, 1.0f),
 	height(600),
 	lights(),
+	models(),
 	rendererRoots(),
 	renderers(),
 	tree(NULL),
@@ -38,7 +39,7 @@ OpenGLRenderingEngine::~OpenGLRenderingEngine()
 	}
 }
 
-void OpenGLRenderingEngine::addEntity(Entity* /*entity*/)
+void OpenGLRenderingEngine::addEntity(Entity*)
 {
 }
 
@@ -47,8 +48,9 @@ void OpenGLRenderingEngine::addLight(Light* light)
 	lights.push_back(light);
 }
 
-void OpenGLRenderingEngine::addModel(Model* /*model*/)
+void OpenGLRenderingEngine::addModel(Model* model)
 {
+	models.push_back(model);
 }
 
 void OpenGLRenderingEngine::addRenderer(Renderer* renderer)
@@ -160,12 +162,19 @@ void OpenGLRenderingEngine::init()
 	glViewport(0, 0, width, height);
 }
 
-void OpenGLRenderingEngine::removeEntity(const Entity& /*entity*/)
+void OpenGLRenderingEngine::removeEntity(const Entity& entity)
 {
+	vector<Model*> entityModels = entity.getComponents<Model>();
+	for (unsigned int index = 0; index < entityModels.size(); index++)
+	{
+		models.erase(remove(models.begin(), models.end(), entityModels[index]));
+	}
 }
 
-void OpenGLRenderingEngine::removeModel(const Model& /*model*/)
+void OpenGLRenderingEngine::removeModel(const Model& model)
 {
+	models.erase(remove(models.begin(), models.end(), &model));
+	delete &model;
 }
 
 void OpenGLRenderingEngine::removeRenderer(const Renderer& renderer)

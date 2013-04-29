@@ -21,11 +21,6 @@ float OpenGLCamera::getFarClippingDistance() const
 	return farClippingDistance;
 }
 
-Matrix44 OpenGLCamera::getFinalTransformation() const
-{
-	return node->getAbsoluteTransformation();
-}
-
 float OpenGLCamera::getFrameHeight() const
 {
 	return frameHeight;
@@ -99,8 +94,6 @@ void OpenGLCamera::setPerspective(float yAxisFieldOfView, float aspectRatio)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(yAxisFieldOfView, aspectRatio, nearClippingDistance, farClippingDistance);
-
 	float halfYAxisFieldOfView = yAxisFieldOfView / 2.0f;
 	float unitCircleCos = 1 - pow(cos(halfYAxisFieldOfView), 2.0f);
 	float unitCircleSin = 1 - pow(sin(halfYAxisFieldOfView), 2.0f);
@@ -109,6 +102,9 @@ void OpenGLCamera::setPerspective(float yAxisFieldOfView, float aspectRatio)
 
 	frameHeight = sin * 2.0f;
 	frameWidth = frameHeight * aspectRatio;
+
+	glFrustum(-frameWidth / 2, frameWidth / 2, -frameHeight / 2, frameHeight / 2, nearClippingDistance,
+		farClippingDistance);
 
 	glMatrixMode(GL_MODELVIEW);
 }

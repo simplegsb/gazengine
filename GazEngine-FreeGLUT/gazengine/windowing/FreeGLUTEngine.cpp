@@ -5,9 +5,7 @@
 
 using namespace std;
 
-FreeGLUTEngine::FreeGLUTEngine(const string& title, int width, int height) :
-	height(height),
-	width(width),
+FreeGLUTEngine::FreeGLUTEngine(const string& title) :
 	title(title)
 {
 	int argc = 1;
@@ -16,7 +14,7 @@ FreeGLUTEngine::FreeGLUTEngine(const string& title, int width, int height) :
 
 	glutInit(&argc, &argvPtr);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(width, height);
+	glutInitWindowSize(800, 600);
 	glutCreateWindow(title.data());
 
 	glutKeyboardFunc(fireKeyboardButtonDownEvent);
@@ -42,16 +40,6 @@ void FreeGLUTEngine::advance()
 
 void FreeGLUTEngine::destroy()
 {
-}
-
-int FreeGLUTEngine::getHeight() const
-{
-	return height;
-}
-
-int FreeGLUTEngine::getWidth() const
-{
-	return width;
 }
 
 void FreeGLUTEngine::init()

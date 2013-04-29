@@ -283,22 +283,10 @@ void Direct3D10RenderingEngine::renderModel(Direct3D10Renderer& renderer, const 
 	{
 		static_cast<Direct3D10Texture*>(model.getNormalMap())->apply(*renderer.getShader());
 	}
-
 	if (model.getTexture() != NULL)
 	{
 		static_cast<Direct3D10Texture*>(model.getTexture())->apply(*renderer.getShader());
-		renderer.getShader()->setVar("textured", true);
 	}
-	else
-	{
-		renderer.getShader()->setVar("textured", false);
-	}
-
-	renderer.getShader()->setVar("material", "ambient", model.getMaterial().ambient);
-	renderer.getShader()->setVar("material", "diffuse", model.getMaterial().diffuse);
-	renderer.getShader()->setVar("material", "emmissive", model.getMaterial().emmissive);
-	renderer.getShader()->setVar("material", "specular", model.getMaterial().specular);
-	renderer.getShader()->setVar("material", "specularPower", model.getMaterial().specularPower);
 
 	renderer.getShader()->apply();
 
@@ -308,7 +296,7 @@ void Direct3D10RenderingEngine::renderModel(Direct3D10Renderer& renderer, const 
 void Direct3D10RenderingEngine::renderTree(Direct3D10Renderer& renderer, const SimpleTree& root,
 	const Matrix44& parentTransformation)
 {
-	Matrix44 worldTransformation = parentTransformation * root.getTransformation();
+	Matrix44 worldTransformation = root.getTransformation() * parentTransformation;
 
 	if (root.getModel() != NULL)
 	{
@@ -323,7 +311,7 @@ void Direct3D10RenderingEngine::renderTree(Direct3D10Renderer& renderer, const S
 
 void Direct3D10RenderingEngine::setCamera(Camera* camera)
 {
-	this->camera = camera;
+	this->camera = static_cast<Direct3D10Camera*>(camera);
 }
 
 void Direct3D10RenderingEngine::setClearingColour(const Vector4& clearingColour)
@@ -341,13 +329,16 @@ void Direct3D10RenderingEngine::setRendererRoot(const Renderer& renderer, const 
 	rendererRoots[&renderer] = &node;
 }
 
-void Direct3D10RenderingEngine::setTree(const SimpleTree* tree)
+void Direct3D10RenderingEngine::setTree(SimpleTree* tree)
 {
 	this->tree = tree;
 
 	for (unsigned int index = 0; index < renderers.size(); index++)
 	{
-		rendererRoots[renderers[index]] = tree;
+		if (rendererRoots.find(renderers[index]) == rendererRoots.end())
+		{
+			rendererRoots[renderers[index]] = tree;
+		}
 	}
 }
 

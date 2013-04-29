@@ -12,13 +12,11 @@ using namespace std;
 namespace GazEngine
 {
 	void addPendingEntities();
-	void removeModel(SimpleTree* node, const Model& model);
 	void removePendingEntities();
 
 	vector<Engine*> engines;
 	vector<Entity*> entities;
 	vector<Entity*> entitiesToBeAdded;
-	vector<const Entity*> entitiesToBeDeleted;
 	vector<const Entity*> entitiesToBeRemoved;
 	Timer frameTimer;
 	bool initialised = false;
@@ -26,7 +24,6 @@ namespace GazEngine
 	bool paused = false;
 	bool stopped = false;
 	Timer timer;
-	vector<SimpleTree*> worldRepresentations;
 
 	void addEngine(Engine* engine)
 	{
@@ -56,24 +53,6 @@ namespace GazEngine
 		entitiesToBeAdded.clear();
 	}
 
-	void addToWorld(SimpleTree* node)
-	{
-		for (unsigned int index = 0; index < worldRepresentations.size(); index++)
-		{
-			worldRepresentations[index]->addChild(node);
-		}
-	}
-
-	void addWorldRepresentation(SimpleTree* tree)
-	{
-		worldRepresentations.push_back(tree);
-	}
-
-	const vector<Entity*> getAllEntities()
-	{
-		return entities;
-	}
-
 	float getDeltaTime()
 	{
 		return timer.getDeltaTime();
@@ -87,11 +66,6 @@ namespace GazEngine
 	float getTotalTime()
 	{
 		return timer.getGameTime();
-	}
-
-	const vector<SimpleTree*> getWorldRepresentations()
-	{
-		return worldRepresentations;
 	}
 
 	void pause()
@@ -112,6 +86,7 @@ namespace GazEngine
 		{
 			timer.reset();
 
+			addPendingEntities();
 			for (unsigned int index = 0; index < engines.size(); index++)
 			{
 				engines[index]->init();
@@ -162,19 +137,6 @@ namespace GazEngine
 				engines[index]->destroy();
 				delete engines[index];
 			}
-
-			for (unsigned int index = 0; index < worldRepresentations.size(); index++)
-			{
-				delete worldRepresentations[index];
-			}
-		}
-	}
-
-	void removeAllEntities(bool deleteEntities)
-	{
-		for (unsigned int index = 0; index < entities.size(); index++)
-		{
-			removeEntity(*entities[index], deleteEntities);
 		}
 	}
 
@@ -188,27 +150,9 @@ namespace GazEngine
 		}
 	}
 
-	void removeEntity(const Entity& entity, bool deleteEntity)
+	void removeEntity(const Entity& entity)
 	{
 		entitiesToBeRemoved.push_back(&entity);
-
-		if (deleteEntity)
-		{
-			entitiesToBeDeleted.push_back(&entity);
-		}
-	}
-
-	void removeModel(SimpleTree* node, const Model& model)
-	{
-		if (node->getModel() == &model)
-		{
-			node->setModel(NULL);
-		}
-
-		for (unsigned int index = 0; index < node->getChildren().size(); index++)
-		{
-			removeModel(node->getChildren()[index], model);
-		}
 	}
 
 	void removePendingEntities()
@@ -223,26 +167,11 @@ namespace GazEngine
 				{
 					engines[engineIndex]->removeEntity(**entityIter);
 				}
-
-				vector<Model*> models = (*entityIter)->getComponents<Model>();
-				for (unsigned int modelIndex = 0; modelIndex < models.size(); modelIndex++)
-				{
-					for (unsigned int worldIndex = 0; worldIndex < worldRepresentations.size(); worldIndex++)
-					{
-						removeModel(worldRepresentations[worldIndex], *models[modelIndex]);
-					}
-				}
-
+				delete *entityIter;
 				entities.erase(entityIter);
 			}
 		}
 		entitiesToBeRemoved.clear();
-
-		for (unsigned int index = 0; index < entitiesToBeDeleted.size(); index++)
-		{
-			delete entitiesToBeDeleted[index];
-		}
-		entitiesToBeDeleted.clear();
 	}
 
 	void setMaxFrameRate(unsigned short maxFrameRate)

@@ -1,24 +1,28 @@
-#ifndef TEXT_H_
-#define TEXT_H_
+#ifndef GDIMESH_H_
+#define GDIMESH_H_
 
-#include "Model.h"
+#include <vector>
 
-class Text : public Model
+#include <gazengine/model/Mesh.h>
+
+class GDIMesh : public Mesh
 {
 	public:
-		Text(const Vector2& position, const std::string& text);
+		GDIMesh(std::vector<Vector2> vertices, const Vector4& colour);
+
+		virtual ~GDIMesh();
 
 		const Vector4& getColour() const;
 
 		Texture* getNormalMap() const;
 
-		const Vector2& getPosition() const;
-
 		PrimitiveType getPrimitiveType() const;
 
-		const std::string& getText() const;
-
 		Texture* getTexture() const;
+
+		std::vector<Vector2>& getVertices();
+
+		const std::vector<Vector2>& getVertices() const;
 
 		bool isVisible() const;
 
@@ -28,11 +32,7 @@ class Text : public Model
 
 		void setNormalMap(Texture* texture);
 
-		void setPosition(const Vector2& position);
-
 		void setPrimitiveType(PrimitiveType primitiveType);
-
-		void setText(const std::string& text);
 
 		void setTexture(Texture* texture);
 
@@ -41,11 +41,11 @@ class Text : public Model
 	private:
 		Vector4 colour;
 
-		Vector2 position;
+		PrimitiveType primitiveType;
 
-		std::string text;
+		std::vector<Vector2> vertices;
 
 		bool visible;
 };
 
-#endif /* TEXT_H_ */
+#endif /* GDIMESH_H_ */

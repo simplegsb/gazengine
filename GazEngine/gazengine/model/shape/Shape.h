@@ -45,8 +45,6 @@ class Shape : public Model
 
 		Vector2 position;
 
-		PrimitiveType primitiveType;
-
 		bool visible;
 };
 

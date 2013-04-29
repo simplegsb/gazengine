@@ -63,6 +63,8 @@ class OpenGLRenderingEngine : public RenderingEngine
 
 		std::vector<Light*> lights;
 
+		std::vector<Model*> models;
+
 		std::map<const Renderer*, const SimpleTree*> rendererRoots;
 
 		std::vector<Renderer*> renderers;

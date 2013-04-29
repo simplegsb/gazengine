@@ -4,7 +4,6 @@ Shape::Shape(const Vector2& position) :
 	colour(0.0f, 0.0f, 0.0f, 1.0f),
 	levelOfDetail(1),
 	position(position),
-	primitiveType(TRIANGLE_LIST),
 	visible(true)
 {
 }
@@ -35,7 +34,7 @@ const Vector2& Shape::getPosition() const
 
 Model::PrimitiveType Shape::getPrimitiveType() const
 {
-	return primitiveType;
+	return Model::NA;
 }
 
 Texture* Shape::getTexture() const
@@ -67,9 +66,8 @@ void Shape::setPosition(const Vector2& position)
 	this->position = position;
 }
 
-void Shape::setPrimitiveType(PrimitiveType primitiveType)
+void Shape::setPrimitiveType(PrimitiveType)
 {
-	this->primitiveType = primitiveType;
 }
 
 void Shape::setTexture(Texture*)

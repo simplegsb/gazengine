@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GazEngine-Direct3D"
-	ProjectGUID="{672C4A05-B20F-4365-B265-6ADDE567466D}"
-	RootNamespace="GazEngineDirect3D"
+	Name="GazEngine-GDI"
+	ProjectGUID="{A0E8D1E6-DDAB-4084-A736-7D1583510BBB}"
+	RootNamespace="GazEngineGDI"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include&quot;;../GazEngine"
+				AdditionalIncludeDirectories="../GazEngine"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,8 +61,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3dx10d.lib dxerr.lib"
-				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -107,7 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include&quot;;../GazEngine"
+				AdditionalIncludeDirectories="../GazEngine"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -126,8 +124,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3dx10.lib dxerr.lib"
-				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -155,59 +151,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\gazengine\rendering\DepthClearingDirect3D10Renderer.cpp"
+				RelativePath=".\gazengine\model\GDIMesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\scene\Direct3D10Camera.cpp"
+				RelativePath=".\gazengine\model\GDIQuadTree.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\scene\Direct3D10Light.cpp"
+				RelativePath=".\gazengine\rendering\GDIRenderer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\Direct3D10LODMesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10Mesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10ModelFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10RenderingEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10ShaderFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10TerrainFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Texture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\SimpleDirect3D10Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\StencilClearingDirect3D10Renderer.cpp"
+				RelativePath=".\gazengine\rendering\GDIRenderingEngine.cpp"
 				>
 			</File>
 		</Filter>
@@ -217,63 +173,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\gazengine\rendering\DepthClearingDirect3D10Renderer.h"
+				RelativePath=".\gazengine\model\GDIMesh.h"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\scene\Direct3D10Camera.h"
+				RelativePath=".\gazengine\model\GDIQuadTree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\scene\Direct3D10Light.h"
+				RelativePath=".\gazengine\rendering\GDIRenderer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\gazengine\model\Direct3D10LODMesh.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10Mesh.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10ModelFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Renderer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10RenderingEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Shader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10ShaderFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Direct3D10TerrainFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\Direct3D10Texture.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\SimpleDirect3D10Renderer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\rendering\StencilClearingDirect3D10Renderer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazengine\model\Vertex.h"
+				RelativePath=".\gazengine\rendering\GDIRenderingEngine.h"
 				>
 			</File>
 		</Filter>

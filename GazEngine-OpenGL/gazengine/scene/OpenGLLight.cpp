@@ -7,16 +7,16 @@
 using namespace std;
 
 OpenGLLight::OpenGLLight(const string& name) :
-	ambient(0.5f, 0.5f, 0.5f, 1.0f),
-	attenuation(0.5f, 0.5f, 0.5f),
+	ambient(),
+	attenuation(),
 	active(false),
-	diffuse(0.5f, 0.5f, 0.5f, 1.0f),
-	direction(0.0f, 0.0f, -1.0f),
+	diffuse(),
+	direction(),
 	name(name),
 	range(100.0f),
-	specular(0.5f, 0.5f, 0.5f, 1.0f),
+	specular(),
 	strength(1.0f),
-	translation(0.0f, 0.0f, 0.0f)
+	translation()
 {
 	activate();
 }

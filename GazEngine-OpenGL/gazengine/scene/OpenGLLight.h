@@ -8,47 +8,47 @@ class OpenGLLight : public Light
 	public:
 		OpenGLLight(const std::string& name);
 
-		void activate();
+		virtual void activate() = 0;
 
 		void apply();
 
-		void deactivate();
+		virtual void deactivate() = 0;
 
 		const Vector4& getAmbientComponent() const;
 
-		const Vector3& getAttenuation() const;
+		virtual const Vector3& getAttenuation() const = 0;
 
 		const Vector4& getDiffuseComponent() const;
 
-		const Vector3& getDirection() const;
+		virtual const Vector3& getDirection() const = 0;
 
-		const std::string& getName() const;
+		virtual const std::string& getName() const = 0;
 
-		float getRange() const;
+		virtual float getRange() const = 0;
 
 		const Vector4& getSpecularComponent() const;
 
-		float getStrength() const;
+		virtual float getStrength() const = 0;
 
-		const Vector3& getTranslation() const;
+		virtual const Vector3& getTranslation() const = 0;
 
-		bool isActive() const;
+		virtual bool isActive() const = 0;
 
 		void setAmbientComponent(const Vector4& ambient);
 
-		void setAttenuation(const Vector3& attenuation);
+		virtual void setAttenuation(const Vector3& attenuation) = 0;
 
 		void setDiffuseComponent(const Vector4& diffuse);
 
-		void setDirection(const Vector3& direction);
+		virtual void setDirection(const Vector3& direction) = 0;
 
-		void setRange(float range);
+		virtual void setRange(float range) = 0;
 
 		void setSpecularComponent(const Vector4& specular);
 
-		void setStrength(float strength);
+		virtual void setStrength(float strength) = 0;
 
-		void setTranslation(const Vector3& translation);
+		virtual void setTranslation(const Vector3& translation) = 0;
 
 	private:
 		bool active;

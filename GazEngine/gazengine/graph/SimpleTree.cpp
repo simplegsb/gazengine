@@ -32,7 +32,7 @@ Matrix44 SimpleTree::getAbsoluteTransformation() const
 	const SimpleTree* currentNode = this;
 	while (currentNode != NULL)
 	{
-		absoluteMatrix = currentNode->getTransformation() * absoluteMatrix;
+		absoluteMatrix *= currentNode->getTransformation();
 		currentNode = currentNode->getParent();
 	}
 

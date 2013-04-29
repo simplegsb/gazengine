@@ -26,7 +26,7 @@ Matrix44 Direct3D10Camera::getFinalTransformation() const
 		Matrix44 nodeView = node->getAbsoluteTransformation();
 		nodeView.invert();
 
-		return projection * nodeView;
+		return nodeView * projection;
 	}
 
 	return view * projection;
