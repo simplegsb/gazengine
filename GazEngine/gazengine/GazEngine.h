@@ -2,12 +2,15 @@
 #define GAZENGINE_H_
 
 #include "engine/Engine.h"
+#include "graph/SimpleTree.h"
 
 namespace GazEngine
 {
 	void addEngine(Engine* engine);
 
 	void addEntity(Entity* entity);
+
+	void addWorldRepresentation(SimpleTree* tree);
 
 	float getDeltaTime();
 
@@ -19,9 +22,11 @@ namespace GazEngine
 
 	void play();
 
+	void removeAllEntities(bool deleteEntities = true);
+
 	void removeEngine(const Engine& engine);
 
-	void removeEntity(const Entity& entity);
+	void removeEntity(const Entity& entity, bool deleteEntity = true);
 
 	void setMaxFrameRate(unsigned short maxFrameRate);
 

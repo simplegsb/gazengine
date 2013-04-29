@@ -6,9 +6,11 @@
 class SimpleBody : public Body
 {
 	public:
-		SimpleBody(Material material, Model* model, Vector3 position, bool dynamic);
+		SimpleBody(const Material& material, Model* model, const Matrix44& transformation, bool dynamic);
 
 		void applyForce(const Vector3& force, const Vector3& position);
+
+		void applyTorque(const Vector3& torque);
 
 		void clearForces();
 
@@ -22,7 +24,9 @@ class SimpleBody : public Body
 
 		const Model* getModel() const;
 
-		const Vector3& getPosition() const;
+		Matrix44& getTransformation();
+
+		const Matrix44& getTransformation() const;
 
 		bool isDynamic();
 
@@ -36,7 +40,7 @@ class SimpleBody : public Body
 
 		void setNode(SimpleTree* node);
 
-		void setPosition(const Vector3& position);
+		void setTransformation(const Matrix44& transformation);
 
 	private:
 		bool dynamic;
@@ -53,7 +57,7 @@ class SimpleBody : public Body
 
 		SimpleTree* node;
 
-		Vector3 position;
+		Matrix44 transformation;
 };
 
 #endif /* SIMPLEBODY_H_ */

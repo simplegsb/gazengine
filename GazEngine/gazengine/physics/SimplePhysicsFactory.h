@@ -6,7 +6,7 @@
 class SimplePhysicsFactory : public PhysicsFactory
 {
 	public:
-		Body* createBody(Body::Material material, Model* model, Vector3 position, bool dynamic);
+		Body* createBody(const Body::Material& material, Model* model, const Matrix44& transformation, bool dynamic);
 };
 
 #endif /* SIMPLEPHYSICSFACTORY_H_ */

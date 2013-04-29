@@ -84,6 +84,7 @@ namespace Keyboard
 		PAGE_DOWN,
 		PAGE_UP,
 		PERIOD,
+		PLUS,
 		RETURN,
 		RIGHT_ALT,
 		RIGHT_BRACKET,

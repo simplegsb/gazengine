@@ -1,6 +1,6 @@
 #include "SimpleBody.h"
 
-SimpleBody::SimpleBody(Material material, Model* model, Vector3 position, bool dynamic) :
+SimpleBody::SimpleBody(const Material& material, Model* model, const Matrix44& transformation, bool dynamic) :
 	node(NULL),
 	dynamic(dynamic),
 	linearAcceleration(0.0f, 0.0f),
@@ -8,13 +8,17 @@ SimpleBody::SimpleBody(Material material, Model* model, Vector3 position, bool d
 	mass(1.0f),
 	material(material),
 	model(model),
-	position(position)
+	transformation(transformation)
 {
 }
 
 void SimpleBody::applyForce(const Vector3& force, const Vector3&) // Ignore position, no angular simulation yet...
 {
 	linearAcceleration += force;// / mass;
+}
+
+void SimpleBody::applyTorque(const Vector3& /*torque*/)
+{
 }
 
 void SimpleBody::clearForces()
@@ -47,9 +51,14 @@ const Model* SimpleBody::getModel() const
 	return model;
 }
 
-const Vector3& SimpleBody::getPosition() const
+Matrix44& SimpleBody::getTransformation()
 {
-	return position;
+	return transformation;
+}
+
+const Matrix44& SimpleBody::getTransformation() const
+{
+	return transformation;
 }
 
 bool SimpleBody::isDynamic()
@@ -82,7 +91,7 @@ void SimpleBody::setNode(SimpleTree* node)
 	this->node = node;
 }
 
-void SimpleBody::setPosition(const Vector3& position)
+void SimpleBody::setTransformation(const Matrix44& transformation)
 {
-	this->position = position;
+	this->transformation = transformation;
 }

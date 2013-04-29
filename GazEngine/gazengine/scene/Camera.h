@@ -12,7 +12,11 @@ class Camera
 		{
 		}
 
+		//virtual Vector3 getFacingDirection() const = 0;
+
 		virtual float getFarClippingDistance() const = 0;
+
+		virtual Matrix44 getFinalTransformation() const = 0;
 
 		virtual float getFrameHeight() const = 0;
 
@@ -23,6 +27,8 @@ class Camera
 		virtual SimpleTree* getNode() = 0;
 
 		virtual Vector3 getTranslation() const = 0;
+
+		//virtual Vector3 getUpDirection() const = 0;
 
 		virtual void lookAt(const Vector3& target, const Vector3& up) = 0;
 

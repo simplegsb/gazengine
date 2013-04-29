@@ -8,12 +8,14 @@
 class PhysXBody : public Body
 {
 	public:
-		PhysXBody(physx::PxPhysics& physics, const Material& material, const Model* model, const Vector3& position,
-			bool dynamic);
+		PhysXBody(physx::PxPhysics& physics, physx::PxCooking& cooking, const Material& material, const Model* model,
+			const Matrix44& transformation, bool dynamic);
 
 		~PhysXBody();
 
 		void applyForce(const Vector3& force, const Vector3& position);
+
+		void applyTorque(const Vector3& torque);
 
 		void clearForces();
 
@@ -29,7 +31,11 @@ class PhysXBody : public Body
 
 		const Model* getModel() const;
 
-		const Vector3& getPosition() const;
+		physx::PxGeometry* getPhysXModel();
+
+		Matrix44& getTransformation();
+
+		const Matrix44& getTransformation() const;
 
 		bool isDynamic();
 
@@ -43,7 +49,7 @@ class PhysXBody : public Body
 
 		void setNode(SimpleTree* node);
 
-		void setPosition(const Vector3& position);
+		void setTransformation(const Matrix44& transformation);
 
 	private:
 		physx::PxActor* actor;
@@ -62,7 +68,7 @@ class PhysXBody : public Body
 
 		physx::PxGeometry* physxModel;
 
-		mutable Vector3 position;
+		mutable Matrix44 transformation;
 };
 
 #endif /* PHYSXBODY_H_ */

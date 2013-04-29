@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "../GazEngine.h"
+#include "../math/MathFunctions.h"
 #include "VerletIntegrator.h"
 
 VerletIntegrator::VerletIntegrator(float damping) :
@@ -13,13 +14,13 @@ void VerletIntegrator::integrate(Body& body)
 {
 	if (previousPositions.find(&body) == previousPositions.end())
 	{
-		previousPositions[&body] = body.getPosition();
+		previousPositions[&body] = getTranslation3(body.getTransformation());
 	}
 
-	Vector3 newPosition = body.getPosition() * (1 + damping) - previousPositions[&body] * damping +
+	Vector3 newPosition = getTranslation3(body.getTransformation()) * (1 + damping) - previousPositions[&body] * damping +
 		body.getLinearAcceleration() * pow(GazEngine::getDeltaTime() * 2.0f, 2.0f); // Delta is doubled to speed up sim!!!
 
-	previousPositions[&body] = body.getPosition();
-	body.setPosition(newPosition);
+	previousPositions[&body] = getTranslation3(body.getTransformation());
+	setTranslation(body.getTransformation(), newPosition);
 	body.clearForces();
 }

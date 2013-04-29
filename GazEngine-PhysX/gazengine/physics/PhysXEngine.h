@@ -2,13 +2,14 @@
 #define PHYSXENGINE_H_
 
 #include <gazengine/engine/Engine.h>
+#include <gazengine/math/Vector.h>
 
 #include "PhysXBody.h"
 
 class PhysXEngine : public Engine
 {
 	public:
-		PhysXEngine(const Vector3& gravity, float fixedTimeStep = 0.0f);
+		PhysXEngine(const Vector3& gravity, float fixedTimeStep);
 
 		~PhysXEngine();
 
@@ -18,16 +19,22 @@ class PhysXEngine : public Engine
 
 		void destroy();
 
+		physx::PxCooking* getCooking();
+
 		physx::PxPhysics* getPhysics();
 
 		void init();
 
 		void removeEntity(const Entity& entity);
 
+		void setSimulationEventCallback(physx::PxSimulationEventCallback* simulationEventCallback);
+
+		void setSimulationFilterShader(physx::PxSimulationFilterShader simulationFilterShader);
+
 	private:
 		physx::PxDefaultAllocator allocator;
 
-		std::vector<PhysXBody*> bodies;
+		physx::PxCooking* cooking;
 
 		physx::PxDefaultCpuDispatcher* cpuDispatcher;
 
@@ -46,6 +53,10 @@ class PhysXEngine : public Engine
 		physx::PxPhysics* physics;
 
 		physx::PxScene* scene;
+
+		physx::PxSimulationEventCallback* simulationEventCallback;
+
+		physx::PxSimulationFilterShader simulationFilterShader;
 };
 
 #endif /* PHYSXENGINE_H_ */

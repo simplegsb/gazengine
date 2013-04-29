@@ -21,8 +21,6 @@ class BulletEngine : public Engine
 		void removeEntity(const Entity& entity);
 
 	private:
-		std::vector<BulletBody*> bodies;
-
 		btBroadphaseInterface* broadphase;
 
 		btCollisionConfiguration* collisionConfiguration;

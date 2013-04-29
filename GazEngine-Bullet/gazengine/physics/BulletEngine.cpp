@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include <gazengine/GazEngine.h>
 
 #include "../math/BulletMatrix.h"
@@ -7,7 +5,6 @@
 #include "BulletEngine.h"
 
 BulletEngine::BulletEngine(const Vector3& gravity, float fixedTimeStep) :
-	bodies(NULL),
 	broadphase(NULL),
 	collisionConfiguration(NULL),
 	dispatcher(NULL),
@@ -23,7 +20,6 @@ void BulletEngine::addEntity(Entity* entity)
 	vector<BulletBody*> entityBodies = entity->getComponents<BulletBody>();
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
-		bodies.push_back(entityBodies[index]);
 		world->addRigidBody(entityBodies[index]->getBody());
 	}
 }
@@ -32,11 +28,11 @@ void BulletEngine::advance()
 {
 	if (fixedTimeStep == 0.0f)
 	{
-		world->stepSimulation(GazEngine::getDeltaTime(), 10); // Magic!
+		world->stepSimulation(GazEngine::getDeltaTime(), 10); // 10 is magic!
 	}
 	else
 	{
-		world->stepSimulation(fixedTimeStep);
+		world->stepSimulation(fixedTimeStep, 1, fixedTimeStep);
 	}
 
 	btCollisionObjectArray& collisionObjects = world->getCollisionObjectArray();
@@ -92,6 +88,5 @@ void BulletEngine::removeEntity(const Entity& entity)
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
 		world->removeRigidBody(entityBodies[index]->getBody());
-		bodies.erase(remove(bodies.begin(), bodies.end(), entityBodies[index]));
 	}
 }

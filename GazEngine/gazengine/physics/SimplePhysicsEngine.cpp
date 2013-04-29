@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include "../math/MathFunctions.h"
 #include "SimplePhysicsEngine.h"
 
 using namespace std;
@@ -40,8 +41,8 @@ void SimplePhysicsEngine::advance()
 	{
 		if (bodies[index]->isDynamic())
 		{
-			bodies[index]->applyForce(gravity, bodies[index]->getPosition());
-			//bodies[index]->applyForce(gravity * bodies[index]->getMass(), bodies[index]->getPosition());
+			bodies[index]->applyForce(gravity, getTranslation3(bodies[index]->getTransformation()));
+			//bodies[index]->applyForce(gravity * bodies[index]->getMass(), getTranslation3(bodies[index]->getTransformation()));
 			integrator->integrate(*bodies[index]);
 		}
 	}

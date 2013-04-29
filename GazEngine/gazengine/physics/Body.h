@@ -27,7 +27,7 @@ class Body : public Component
 
 		//virtual void applyLinearImpulse(const Vector3& impulse, const Vector3& position) = 0;
 
-		//virtual void applyTorque(float torque) = 0;
+		virtual void applyTorque(const Vector3& torque) = 0;
 
 		virtual void clearForces() = 0;
 
@@ -41,7 +41,9 @@ class Body : public Component
 
 		virtual const Model* getModel() const = 0;
 
-		virtual const Vector3& getPosition() const = 0;
+		virtual Matrix44& getTransformation() = 0;
+
+		virtual const Matrix44& getTransformation() const = 0;
 
 		virtual bool isDynamic() = 0;
 
@@ -55,7 +57,7 @@ class Body : public Component
 
 		virtual void setNode(SimpleTree* node) = 0;
 
-		virtual void setPosition(const Vector3& position) = 0;
+		virtual void setTransformation(const Matrix44& transformation) = 0;
 };
 
 #endif /* BODY_H_ */

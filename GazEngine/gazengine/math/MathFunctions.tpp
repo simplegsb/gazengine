@@ -226,7 +226,7 @@ void rotate(Vector<Data, 2>& vector, const Data angle)
 }
 
 template<typename Data>
-void setTranslation(Matrix<Data, 4, 4> matrix, const Vector<Data, 3>& translation)
+void setTranslation(Matrix<Data, 4, 4>& matrix, const Vector<Data, 3>& translation)
 {
 	matrix[12] = translation.X();
 	matrix[13] = translation.Y();
@@ -235,7 +235,7 @@ void setTranslation(Matrix<Data, 4, 4> matrix, const Vector<Data, 3>& translatio
 }
 
 template<typename Data>
-void setTranslation(Matrix<Data, 4, 4> matrix, const Vector<Data, 4>& translation)
+void setTranslation(Matrix<Data, 4, 4>& matrix, const Vector<Data, 4>& translation)
 {
 	matrix[12] = translation.X();
 	matrix[13] = translation.Y();
@@ -244,7 +244,7 @@ void setTranslation(Matrix<Data, 4, 4> matrix, const Vector<Data, 4>& translatio
 }
 
 template<typename Data>
-void translate(Matrix<Data, 4, 4> matrix, const Vector<Data, 4>& translation)
+void translate(Matrix<Data, 4, 4>& matrix, const Vector<Data, 4>& translation)
 {
 	matrix[12] += matrix[0] * translation.X() + matrix[4] * translation.Y() + matrix[8] * translation.Z();
 	matrix[13] += matrix[1] * translation.X() + matrix[5] * translation.Y() + matrix[9] * translation.Z();

@@ -107,6 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="../GazEngine;../bullet/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -125,6 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="BulletCollision_vs2008.lib BulletDynamics_vs2008.lib LinearMath_vs2008.lib"
 				AdditionalLibraryDirectories="../bullet/lib"
 			/>
 			<Tool

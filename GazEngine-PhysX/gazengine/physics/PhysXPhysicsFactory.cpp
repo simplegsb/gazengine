@@ -3,12 +3,14 @@
 
 using namespace physx;
 
-PhysXPhysicsFactory::PhysXPhysicsFactory(PxPhysics* physics) :
+PhysXPhysicsFactory::PhysXPhysicsFactory(PxPhysics* physics, PxCooking* cooking) :
+	cooking(cooking),
 	physics(physics)
 {
 }
 
-Body* PhysXPhysicsFactory::createBody(Body::Material material, Model* model, Vector3 position, bool dynamic)
+Body* PhysXPhysicsFactory::createBody(const Body::Material& material, Model* model, const Matrix44& transformation,
+									  bool dynamic)
 {
-	return new PhysXBody(*physics, material, model, position, dynamic);
+	return new PhysXBody(*physics, *cooking, material, model, transformation, dynamic);
 }

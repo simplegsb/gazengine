@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include <gazengine/GazEngine.h>
 #include <gazengine/graph/SimpleTree.h>
 
@@ -8,18 +6,22 @@
 #include "PhysXEngine.h"
 
 using namespace physx;
+#if defined(DEBUG) || defined(_DEBUG)
 using namespace PVD;
+#endif
 
 PhysXEngine::PhysXEngine(const Vector3& gravity, float fixedTimeStep) :
 	allocator(),
-	bodies(NULL),
+	cooking(),
 	cpuDispatcher(NULL),
 	errorCallback(),
 	fixedTimeStep(fixedTimeStep),
 	foundation(NULL),
 	gravity(gravity),
 	physics(NULL),
-	scene(NULL)
+	scene(NULL),
+	simulationEventCallback(NULL),
+	simulationFilterShader(PxDefaultSimulationFilterShader)
 {
 	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
 
@@ -35,8 +37,10 @@ PhysXEngine::PhysXEngine(const Vector3& gravity, float fixedTimeStep) :
 			5425, 100, PxVisualDebuggerExt::getAllConnectionFlags());
 	}
 #else
-	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), false, NULL);
+	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale());
 #endif
+
+	cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, PxCookingParams());
 }
 
 PhysXEngine::~PhysXEngine()
@@ -54,7 +58,7 @@ void PhysXEngine::addEntity(Entity* entity)
 	vector<PhysXBody*> entityBodies = entity->getComponents<PhysXBody>();
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
-		bodies.push_back(entityBodies[index]);
+		entityBodies[index]->getActor()->userData = entity;
 		scene->addActor(*entityBodies[index]->getActor());
 	}
 }
@@ -77,13 +81,20 @@ void PhysXEngine::advance()
 
 	for (PxU32 index = 0; index < activeTransformCount; index++)
 	{
-		SimpleTree* node = static_cast<SimpleTree*>(activeTransforms[index].userData);
+		PxShape* shapes;
+		static_cast<PxRigidBody*>(activeTransforms[index].actor)->getShapes(&shapes, 1);
+		SimpleTree* node = static_cast<SimpleTree*>(shapes->userData);
 		node->setTransformation(PhysXMatrix::toMatrix44(activeTransforms[index].actor2World));
 	}
 }
 
 void PhysXEngine::destroy()
 {
+	if (simulationEventCallback != NULL)
+	{
+		delete simulationEventCallback;
+	}
+
 	if (physics != NULL)
 	{
 		physics->release();
@@ -93,6 +104,11 @@ void PhysXEngine::destroy()
 	{
 		foundation->release();
 	}
+}
+
+PxCooking* PhysXEngine::getCooking()
+{
+	return cooking;
 }
 
 PxPhysics* PhysXEngine::getPhysics()
@@ -107,7 +123,8 @@ void PhysXEngine::init()
 	sceneDesc.cpuDispatcher = cpuDispatcher;
 	sceneDesc.flags = PxSceneFlag::eENABLE_ACTIVETRANSFORMS;
 	sceneDesc.gravity = PhysXVector::toPxVec3(gravity);
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = simulationFilterShader;
+	sceneDesc.simulationEventCallback = simulationEventCallback;
 
 	scene = physics->createScene(sceneDesc);
 }
@@ -117,7 +134,16 @@ void PhysXEngine::removeEntity(const Entity& entity)
 	vector<PhysXBody*> entityBodies = entity.getComponents<PhysXBody>();
 	for (unsigned int index = 0; index < entityBodies.size(); index++)
 	{
-		bodies.erase(remove(bodies.begin(), bodies.end(), entityBodies[index]));
 		scene->removeActor(*entityBodies[index]->getActor());
 	}
+}
+
+void PhysXEngine::setSimulationEventCallback(PxSimulationEventCallback* simulationEventCallback)
+{
+	this->simulationEventCallback = simulationEventCallback;
+}
+
+void PhysXEngine::setSimulationFilterShader(PxSimulationFilterShader simulationFilterShader)
+{
+	this->simulationFilterShader = simulationFilterShader;
 }

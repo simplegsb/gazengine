@@ -8,11 +8,13 @@
 class BulletBody : public Body
 {
 	public:
-		BulletBody(const Material& material, const Model* model, const Vector3& position);
+		BulletBody(const Material& material, Model* model, const Matrix44& transformation);
 
 		~BulletBody();
 
 		void applyForce(const Vector3& force, const Vector3& position);
+
+		void applyTorque(const Vector3& torque);
 
 		void clearForces();
 
@@ -28,7 +30,9 @@ class BulletBody : public Body
 
 		const Model* getModel() const;
 
-		const Vector3& getPosition() const;
+		Matrix44& getTransformation();
+
+		const Matrix44& getTransformation() const;
 
 		bool isDynamic();
 
@@ -42,7 +46,7 @@ class BulletBody : public Body
 
 		void setNode(SimpleTree* node);
 
-		void setPosition(const Vector3& position);
+		void setTransformation(const Matrix44& transformation);
 
 	private:
 		btRigidBody* body;
@@ -55,11 +59,11 @@ class BulletBody : public Body
 
 		Material material;
 
-		const Model* model;
+		Model* model;
 
 		btMotionState* motionState;
 
-		mutable Vector3 position;
+		mutable Matrix44 transformation;
 };
 
 #endif /* BULLETBODY_H_ */

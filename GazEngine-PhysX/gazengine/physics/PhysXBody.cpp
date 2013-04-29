@@ -1,14 +1,16 @@
+#include <gazengine/model/Mesh.h>
 #include <gazengine/model/Plane.h>
 #include <gazengine/model/shape/Cube.h>
 #include <gazengine/model/shape/Sphere.h>
 
+#include "../math/PhysXMatrix.h"
 #include "../math/PhysXVector.h"
 #include "PhysXBody.h"
 
 using namespace physx;
 
-PhysXBody::PhysXBody(PxPhysics& physics, const Material& material, const Model* model, const Vector3& position,
-					 bool dynamic) :
+PhysXBody::PhysXBody(PxPhysics& physics, PxCooking& cooking, const Material& material, const Model* model,
+					 const Matrix44& transformation, bool dynamic) :
 	actor(NULL),
 	dynamic(dynamic),
 	linearAcceleration(0.0f, 0.0f, 0.0f),
@@ -17,7 +19,7 @@ PhysXBody::PhysXBody(PxPhysics& physics, const Material& material, const Model* 
 	model(model),
 	physxMaterial(NULL),
 	physxModel(NULL),
-	position(position)
+	transformation(transformation)
 {
 	physxMaterial = physics.createMaterial(material.friction, material.friction, material.restitution);
 
@@ -35,6 +37,36 @@ PhysXBody::PhysXBody(PxPhysics& physics, const Material& material, const Model* 
 		physxModel = new PxBoxGeometry(cube->getHalfEdgeLength(), cube->getHalfEdgeLength(),
 			cube->getHalfEdgeLength());
 	}
+	const Mesh* mesh = dynamic_cast<const Mesh*>(model);
+	if (mesh != NULL)
+	{
+		// Need a concurrent block of data...
+		vector<int> indices = mesh->getIndices();
+		vector<Vertex> vertices = mesh->getVertices();
+		vector<PxVec3> convexMeshData;
+		convexMeshData.reserve(indices.size());
+		for (unsigned int index = 0; index < indices.size(); index++)
+		{
+			PxVec3 vertex;
+			vertex.x = vertices[indices[index]].position.X();
+			vertex.y = vertices[indices[index]].position.Y();
+			vertex.z = vertices[indices[index]].position.Z();
+			convexMeshData.push_back(vertex);
+		}
+
+		PxConvexMeshDesc convexMeshDesc;
+		convexMeshDesc.points.count = convexMeshData.size();
+		convexMeshDesc.points.stride = sizeof(PxVec3);
+		convexMeshDesc.points.data = &convexMeshData[0];
+		convexMeshDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		// Roasting...
+		PxDefaultMemoryOutputStream buffer;
+		cooking.cookConvexMesh(convexMeshDesc, buffer);
+		PxDefaultMemoryInputData input(buffer.getData(), buffer.getSize());
+
+		physxModel = new PxConvexMeshGeometry(physics.createConvexMesh(input));
+	}
 	const Sphere* sphere = dynamic_cast<const Sphere*>(model);
 	if (sphere != NULL)
 	{
@@ -43,12 +75,13 @@ PhysXBody::PhysXBody(PxPhysics& physics, const Material& material, const Model* 
 
 	if (dynamic)
 	{
-		actor = PxCreateDynamic(physics, PxTransform(PhysXVector::toPxVec3(position)), *physxModel, *physxMaterial,
+		actor = PxCreateDynamic(physics, PhysXMatrix::toPxTransform(transformation), *physxModel, *physxMaterial,
 			material.density);
+		PxRigidBodyExt::updateMassAndInertia(*static_cast<PxRigidBody*>(actor), &material.density, 1);
 	}
 	else
 	{
-		actor = PxCreateStatic(physics, PxTransform(PhysXVector::toPxVec3(position)), *physxModel, *physxMaterial);
+		actor = PxCreateStatic(physics, PhysXMatrix::toPxTransform(transformation), *physxModel, *physxMaterial);
 	}
 }
 
@@ -66,6 +99,15 @@ void PhysXBody::applyForce(const Vector3& force, const Vector3&)
 	if (rigidBody != NULL)
 	{
 		rigidBody->addForce(PhysXVector::toPxVec3(force));
+	}
+}
+
+void PhysXBody::applyTorque(const Vector3& torque)
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		rigidBody->addTorque(PhysXVector::toPxVec3(torque));
 	}
 }
 
@@ -120,15 +162,31 @@ const Model* PhysXBody::getModel() const
 	return model;
 }
 
-const Vector3& PhysXBody::getPosition() const
+physx::PxGeometry* PhysXBody::getPhysXModel()
+{
+	return physxModel;
+}
+
+Matrix44& PhysXBody::getTransformation()
 {
 	PxRigidBody* rigidBody = actor->isRigidBody();
 	if (rigidBody != NULL)
 	{
-		position = PhysXVector::toVector3(rigidBody->getGlobalPose().p);
+		transformation = PhysXMatrix::toMatrix44(rigidBody->getGlobalPose());
 	}
 
-	return position;
+	return transformation;
+}
+
+const Matrix44& PhysXBody::getTransformation() const
+{
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		transformation = PhysXMatrix::toMatrix44(rigidBody->getGlobalPose());
+	}
+
+	return transformation;
 }
 
 bool PhysXBody::isDynamic()
@@ -165,16 +223,20 @@ void PhysXBody::setMaterial(const Material&)
 
 void PhysXBody::setNode(SimpleTree* node)
 {
-	actor->userData = node;
+	PxRigidBody* rigidBody = actor->isRigidBody();
+	if (rigidBody != NULL)
+	{
+		PxShape* shapes;
+		rigidBody->getShapes(&shapes, 1);
+		shapes->userData = node;
+	}
 }
 
-void PhysXBody::setPosition(const Vector3& position)
+void PhysXBody::setTransformation(const Matrix44& transformation)
 {
 	PxRigidBody* rigidBody = actor->isRigidBody();
 	if (rigidBody != NULL)
 	{
-		PxTransform transform = rigidBody->getGlobalPose();
-		transform.p = PhysXVector::toPxVec3(position);
-		rigidBody->setGlobalPose(transform);
+		rigidBody->setGlobalPose(PhysXMatrix::toPxTransform(transformation));
 	}
 }

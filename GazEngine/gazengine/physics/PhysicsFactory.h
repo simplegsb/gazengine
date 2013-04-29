@@ -10,7 +10,8 @@ class PhysicsFactory
 		{
 		}
 
-		virtual Body* createBody(Body::Material material, Model* model, Vector3 position, bool dynamic = true) = 0;
+		virtual Body* createBody(const Body::Material& material, Model* model, const Matrix44& transformation,
+			bool dynamic = true) = 0;
 
 		static PhysicsFactory* getInstance();
 

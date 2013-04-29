@@ -8,11 +8,13 @@
 class PhysXPhysicsFactory : public PhysicsFactory
 {
 	public:
-		PhysXPhysicsFactory(physx::PxPhysics* physics);
+		PhysXPhysicsFactory(physx::PxPhysics* physics, physx::PxCooking* cooking);
 
-		Body* createBody(Body::Material material, Model* model, Vector3 position, bool dynamic);
+		Body* createBody(const Body::Material& material, Model* model, const Matrix44& transformation, bool dynamic);
 
 	private:
+		physx::PxCooking* cooking;
+
 		physx::PxPhysics* physics;
 };
 
