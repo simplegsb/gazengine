@@ -17,11 +17,21 @@ class GDIMesh : public Mesh
 
 		COLORREF getColour() const;
 
+		Texture* getNormalMap() const;
+
 		PrimitiveType getPrimitiveType() const;
 
-		virtual const std::vector<Vector2>& getVertices() const;
+		Texture* getTexture() const;
+
+		std::vector<Vector2>& getVertices();
+
+		const std::vector<Vector2>& getVertices() const;
 
 		void render(Renderer& renderer) const;
+
+		void setNormalMap(Texture* texture);
+
+		void setTexture(Texture* texture);
 
 	private:
 		COLORREF colour;

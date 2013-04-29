@@ -10,6 +10,10 @@ class GDIRenderer : public Renderer
 	public:
 		GDIRenderer(HDC buffer);
 
+		void dispose();
+
+		void init();
+
 		void render(const Circle& model);
 
 		void render(const Mesh& model);

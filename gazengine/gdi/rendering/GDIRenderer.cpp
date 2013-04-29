@@ -9,6 +9,14 @@ GDIRenderer::GDIRenderer(HDC buffer) :
 {
 }
 
+void GDIRenderer::dispose()
+{
+}
+
+void GDIRenderer::init()
+{
+}
+
 void GDIRenderer::render(const Circle& model)
 {
 	const GDICircle& gdiCircle = static_cast<const GDICircle&>(model);

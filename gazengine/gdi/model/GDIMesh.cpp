@@ -16,9 +16,24 @@ COLORREF GDIMesh::getColour() const
 	return colour;
 }
 
+Texture* GDIMesh::getNormalMap() const
+{
+	return NULL;
+}
+
 Model::PrimitiveType GDIMesh::getPrimitiveType() const
 {
 	return Model::NA;
+}
+
+Texture* GDIMesh::getTexture() const
+{
+	return NULL;
+}
+
+vector<Vector2>& GDIMesh::getVertices()
+{
+	return vertices;
 }
 
 const vector<Vector2>& GDIMesh::getVertices() const
@@ -29,4 +44,12 @@ const vector<Vector2>& GDIMesh::getVertices() const
 void GDIMesh::render(Renderer& renderer) const
 {
 	renderer.render(*this);
+}
+
+void GDIMesh::setNormalMap(Texture*)
+{
+}
+
+void GDIMesh::setTexture(Texture*)
+{
 }
